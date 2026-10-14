@@ -289,21 +289,27 @@ export const VOICES: Voice[] = [
   },
 ];
 
-export function normalizeLanguageCode(language: string): LanguageCode {
+export function normalizeLanguageCode(
+  language: string,
+  languages: ReadonlyArray<{ code: string }> = LANGUAGES,
+): LanguageCode {
   const normalized = language.trim().toLowerCase();
   const baseLanguage = normalized.split("-", 1)[0];
-  const matched = LANGUAGES.find(
-    (option) => option.code === normalized || option.code === baseLanguage,
+  const matched = languages.find(
+    (option) => option.code.toLowerCase() === normalized,
+  ) ?? languages.find(
+    (option) => option.code.toLowerCase() === baseLanguage,
   );
 
-  return matched?.code ?? "en";
+  return matched?.code ?? language.trim();
 }
 
 function supportsLanguage(
   option: { languages: LanguageCode[] },
   language: string,
+  languages: ReadonlyArray<{ code: string }>,
 ) {
-  return option.languages.includes(normalizeLanguageCode(language));
+  return option.languages.includes(normalizeLanguageCode(language, languages));
 }
 
 export function getVoicesForTtsModel(
@@ -313,7 +319,7 @@ export function getVoicesForTtsModel(
 ) {
   return options.voices.filter(
     (voice) =>
-      voice.ttsModels.includes(ttsModel) && supportsLanguage(voice, language),
+      voice.ttsModels.includes(ttsModel) && supportsLanguage(voice, language, options.languages),
   );
 }
 
@@ -484,14 +490,14 @@ export function getSttModelsForLanguage(
   language: string,
   options: VoiceOptions = STATIC_VOICE_OPTIONS,
 ) {
-  return options.sttModels.filter((model) => supportsLanguage(model, language));
+  return options.sttModels.filter((model) => supportsLanguage(model, language, options.languages));
 }
 
 export function getTtsModelsForLanguage(
   language: string,
   options: VoiceOptions = STATIC_VOICE_OPTIONS,
 ) {
-  return options.ttsModels.filter((model) => supportsLanguage(model, language));
+  return options.ttsModels.filter((model) => supportsLanguage(model, language, options.languages));
 }
 
 export function getDefaultSttModelForLanguage(
