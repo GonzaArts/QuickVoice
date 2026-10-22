@@ -35,8 +35,9 @@ test("all literal Trans children have Spanish translations", () => {
   const sourceFiles = walk(join(root, "src")).filter((f) => f.endsWith(".tsx"));
   for (const filename of sourceFiles) {
     const source = readFileSync(filename, "utf8");
-    for (const match of source.matchAll(/<Trans>([^<>{]+)<\/Trans>/g)) {
-      assert.ok(Object.hasOwn(es, match[1].trim()), `${filename}: ${match[1]}`);
+    for (const match of source.matchAll(/<Trans>\{("(?:\\.|[^"\\])*")\}<\/Trans>/g)) {
+      const key = JSON.parse(match[1]);
+      assert.ok(Object.hasOwn(es, key), `${filename}: ${key}`);
     }
   }
 });

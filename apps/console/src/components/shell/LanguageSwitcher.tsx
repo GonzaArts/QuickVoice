@@ -1,6 +1,5 @@
 "use client";
 
-import { Trans } from "@/src/i18n/Trans";
 import { Languages } from "lucide-react";
 import { useLocale } from "@/src/i18n/provider";
 
@@ -16,8 +15,8 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         value={locale}
         onChange={(event) => setLocale(event.target.value === "en" ? "en" : "es")}
       >
-        <option value="es"><Trans>{"Español"}</Trans></option>
-        <option value="en"><Trans>{"English"}</Trans></option>
+        <option value="es">Español</option>
+        <option value="en">English</option>
       </select>
     </label>
   );

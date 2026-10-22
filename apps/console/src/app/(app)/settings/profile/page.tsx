@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
+import { LanguageSwitcher } from "@/src/components/shell/LanguageSwitcher";
+import { useT } from "@/src/i18n/provider";
 
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -43,6 +45,7 @@ const passwordSchema = z
  });
 
 export default function ProfilePage() {
+ const t = useT();
  const { data: session } = authClient.useSession();
  const [saving, setSaving] = useState(false);
  const [changingPw, setChangingPw] = useState(false);
@@ -98,6 +101,11 @@ export default function ProfilePage() {
 
  return (
  <div className="space-y-6">
+ <section className="border bg-card p-6">
+  <h2 className="text-base font-semibold">{t("Appearance and language")}</h2>
+  <p className="mb-4 mt-1 text-sm text-muted-foreground">{t("Choose the language used by the QuickVoice console.")}</p>
+  <LanguageSwitcher />
+ </section>
  <section className="border bg-card p-6">
  <div className="mb-5 space-y-1">
  <h2 className="text-base font-semibold"><Trans>{"Account"}</Trans></h2>
