@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -94,7 +95,7 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
               htmlFor="agent-name"
               className="text-sm font-medium text-foreground"
             >
-              Agent name
+              <Trans>{"Agent name"}</Trans>
             </label>
             <Input
               id="agent-name"
@@ -109,7 +110,7 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
               id="agent-name-description"
               className="text-xs text-muted-foreground"
             >
-              This name is shown throughout the console.
+              <Trans>{"This name is shown throughout the console."}</Trans>
             </p>
           </div>
 
@@ -119,7 +120,7 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
                 htmlFor="agent-active"
                 className="text-sm font-medium text-foreground"
               >
-                Active status
+                <Trans>{"Active status"}</Trans>
               </label>
               <p className="mt-1 text-xs text-muted-foreground">
                 {draftIsActive
@@ -149,11 +150,11 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
         >
           {updateAgent.isPending ? (
             <>
-              <Loader2 className="animate-spin" /> Saving...
+              <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
             </>
           ) : (
             <>
-              <Save /> Save changes
+              <Save /> <Trans>{"Save changes"}</Trans>
             </>
           )}
         </Button>
@@ -188,7 +189,7 @@ export default function AgentConfigPage() {
           href="/agents"
           className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="size-3.5" /> Back to agents
+          <ArrowLeft className="size-3.5" /> <Trans>{"Back to agents"}</Trans>
         </Link>
       </div>
 
@@ -200,13 +201,13 @@ export default function AgentConfigPage() {
             <Bot className="size-6" />
           </div>
           <h1 className="mt-4 text-lg font-semibold text-foreground">
-            Agent not found
+            <Trans>{"Agent not found"}</Trans>
           </h1>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            This agent may have been removed, or you may not have access to it.
+            <Trans>{"This agent may have been removed, or you may not have access to it."}</Trans>
           </p>
           <Button asChild className="mt-5">
-            <Link href="/agents">Go back to agents</Link>
+            <Link href="/agents"><Trans>{"Go back to agents"}</Trans></Link>
           </Button>
         </div>
       ) : (
@@ -256,14 +257,14 @@ export default function AgentConfigPage() {
                     className="w-full lg:w-auto"
                     onClick={() => setPreviewOpen(true)}
                   >
-                    <Radio /> Preview
+                    <Radio /> <Trans>{"Preview"}</Trans>
                   </Button>
                   <Button
                     variant="outline"
                     className="w-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive lg:w-auto"
                     onClick={() => setDeleteOpen(true)}
                   >
-                    <Trash2 /> Delete agent
+                    <Trash2 /> <Trans>{"Delete agent"}</Trans>
                   </Button>
                 </div>
                 <div className="grid grid-cols-2 border bg-background text-xs sm:grid-cols-4 lg:min-w-[420px]">
@@ -272,7 +273,7 @@ export default function AgentConfigPage() {
                       {agent.phoneNumbersCount}
                     </p>
                     <p className="mt-1 inline-flex items-center gap-1 text-muted-foreground">
-                      <Phone className="size-3" /> Numbers
+                      <Phone className="size-3" /> <Trans>{"Numbers"}</Trans>
                     </p>
                   </div>
                   <div className="border-r px-4 py-3">
@@ -280,7 +281,7 @@ export default function AgentConfigPage() {
                       {agent.callLogsCount}
                     </p>
                     <p className="mt-1 inline-flex items-center gap-1 text-muted-foreground">
-                      <Settings className="size-3" /> Calls
+                      <Settings className="size-3" /> <Trans>{"Calls"}</Trans>
                     </p>
                   </div>
                   <div className="border-r px-4 py-3">
@@ -288,7 +289,7 @@ export default function AgentConfigPage() {
                       {agent.knowledgeSourcesCount}
                     </p>
                     <p className="mt-1 inline-flex items-center gap-1 text-muted-foreground">
-                      <BookOpen className="size-3" /> Docs
+                      <BookOpen className="size-3" /> <Trans>{"Docs"}</Trans>
                     </p>
                   </div>
                   <div className="px-4 py-3">
@@ -296,7 +297,7 @@ export default function AgentConfigPage() {
                       {agent.toolsCount}
                     </p>
                     <p className="mt-1 inline-flex items-center gap-1 text-muted-foreground">
-                      <Wrench className="size-3" /> Tools
+                      <Wrench className="size-3" /> <Trans>{"Tools"}</Trans>
                     </p>
                   </div>
                 </div>
@@ -316,14 +317,14 @@ export default function AgentConfigPage() {
           <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete this agent?</AlertDialogTitle>
+                <AlertDialogTitle><Trans>{"Delete this agent?"}</Trans></AlertDialogTitle>
                 <AlertDialogDescription>
                   This deletes {agent.name} and detaches it from phone numbers,
                   tools, and knowledge sources. This cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
                 <AlertDialogAction
                   onClick={confirmDelete}
                   disabled={deleteAgent.isPending}
@@ -331,7 +332,7 @@ export default function AgentConfigPage() {
                 >
                   {deleteAgent.isPending ? (
                     <>
-                      <Loader2 className="animate-spin" /> Deleting...
+                      <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
                     </>
                   ) : (
                     "Delete"
