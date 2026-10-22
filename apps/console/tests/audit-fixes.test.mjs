@@ -367,12 +367,20 @@ test("agent privacy controls are writable and enforce compatible settings", () =
 
 test("sidebar exposes a direct theme toggle and transcript bubbles keep readable contrast", () => {
   const sidebar = read("src/components/shell/AppSidebar.tsx");
+  const provider = read("src/providers/theme-provider.tsx");
+  const rootLayout = read("src/app/layout.tsx");
   const transcript = read("src/components/calls/Transcript.tsx");
 
   assert.match(sidebar, /useTheme/);
   assert.match(sidebar, /function ThemeToggle/);
-  assert.match(sidebar, /setTheme\(nextTheme\)/);
-  assert.match(sidebar, /aria-label=\{t\(`Switch to \$\{nextTheme\} mode`\)\}/);
+  assert.match(sidebar, /setTheme\(resolvedTheme === "dark" \? "light" : "dark"\)/);
+  assert.match(sidebar, /aria-label=\{t\("Theme"\)\}/);
+  assert.match(sidebar, /<Moon className="dark:hidden" \/>/);
+  assert.match(sidebar, /<Sun className="hidden dark:block" \/>/);
+  assert.match(sidebar, /className="hidden dark:inline">\{t\("Switch to light mode"\)\}/);
+  assert.match(sidebar, /className="dark:hidden">\{t\("Switch to dark mode"\)\}/);
+  assert.match(provider, /type: typeof window === "undefined" \? "text\/javascript" : "text\/plain"/);
+  assert.match(rootLayout, /<body[^>]*suppressHydrationWarning>/);
   assert.match(sidebar, /<ThemeToggle \/>/);
 
   assert.doesNotMatch(transcript, /bg-\[#0f2142\] text-foreground/);
