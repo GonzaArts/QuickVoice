@@ -166,7 +166,7 @@ test("dashboard range switching is labelled, responsive, and exposes loading sta
   const source = read("src/components/dashboard/RangeSwitcher.tsx");
 
   assert.match(page, /<RangeSwitcher[\s\S]*current=\{range\}/);
-  assert.match(source, /aria-label="Dashboard date range"/);
+  assert.match(source, /aria-label=\{t\("Dashboard date range"\)\}/);
   assert.match(source, /aria-busy=\{busy\}/);
   assert.match(source, /role="status"/);
   assert.match(source, /aria-live="polite"/);
