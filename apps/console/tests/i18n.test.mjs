@@ -1,4 +1,6 @@
 import test from "node:test";
+import vm from "node:vm";
+import ts from "typescript";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -48,5 +50,42 @@ test("native select options contain text, not translation components", () => {
   for (const filename of sourceFiles) {
     const source = readFileSync(filename, "utf8");
     assert.doesNotMatch(source, /<option[^>]*>\s*<Trans\b/, filename);
+  }
+});
+
+test("i18n helper executes with Spanish default, English override and safe fallback", () => {
+  const source = read("src/i18n/config.ts");
+  const code = ts.transpileModule(source, {
+    compilerOptions: {module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true},
+  }).outputText;
+  const moduleValue = {exports: {}};
+  vm.runInNewContext(code, {
+    exports: moduleValue.exports,
+    module: moduleValue,
+    Intl,
+    require: (name) => name === "./messages/en.json" ? en : name === "./messages/es.json" ? es : (() => {throw new Error(name)})(),
+  });
+  const {normalizeLocale, translate, localeCode, formatNumber, formatDate} = moduleValue.exports;
+  assert.equal(normalizeLocale(undefined), "es");
+  assert.equal(normalizeLocale("es-ES"), "es");
+  assert.equal(normalizeLocale("en-US"), "en");
+  assert.equal(translate("es", "Agents"), "Asistentes");
+  assert.equal(translate("en", "Agents"), "Agents");
+  assert.equal(translate("es", "__unknown_message__"), "__unknown_message__");
+  assert.equal(translate("es", "Language"), "Idioma");
+  assert.equal(localeCode("es"), "es-ES");
+  assert.match(formatNumber("es", 1234.5), /1[.\u00a0]234,5/);
+  assert.ok(typeof formatDate("es", new Date("2026-10-22T10:00:00Z")) === "string");
+});
+
+test("all console TSX files parse without syntax diagnostics", () => {
+  const sourceFiles = walk(join(root, "src")).filter((f) => f.endsWith(".tsx"));
+  for (const filename of sourceFiles) {
+    const source = ts.createSourceFile(filename, readFileSync(filename, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    assert.deepEqual(
+      source.parseDiagnostics.map((problem) => problem.messageText),
+      [],
+      filename,
+    );
   }
 });

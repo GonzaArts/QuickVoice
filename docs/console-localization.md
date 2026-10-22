@@ -15,4 +15,9 @@ The customer console uses English source messages as stable lookup keys with nat
 
 ## Validation
 
+GitHub Actions must be enabled for the fork before merging the PR. The pull request is not a passing build merely because it has no checks; run the complete console CI job and visually inspect both locales before merge.
+
+This first translation pass deliberately falls back to original English strings where coverage has not yet been added, notably third-party provider errors and some complex UI descriptions. Do not claim 100% translation coverage until those are audited.
+
+
 From the repository root run `node --test apps/console/tests/i18n.test.mjs`, `pnpm --filter console check-types`, `pnpm --filter console lint`, and `pnpm --filter console build`. Exercise login, menu navigation, agent voice settings and browser preview in both locales. Do not translate identifiers, telephone states or persistent business data.
