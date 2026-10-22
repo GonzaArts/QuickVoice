@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState, useEffect } from "react";
 import {
   Loader2,
@@ -111,7 +112,7 @@ function DirectionCell({ direction }: { direction: string | null }) {
       <div className="flex items-center gap-2">
         <PhoneOutgoing className="size-4 text-sky-400" />
         <span className="rounded-sm border border-sky-500/30 bg-sky-500/20 px-2 py-0.5 text-[11px] font-medium text-sky-400">
-          Outbound
+          <Trans>{"Outbound"}</Trans>
         </span>
       </div>
     );
@@ -121,7 +122,7 @@ function DirectionCell({ direction }: { direction: string | null }) {
       <div className="flex items-center gap-2">
         <PhoneIncoming className="size-4 text-emerald-400" />
         <span className="rounded-sm border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
-          Inbound
+          <Trans>{"Inbound"}</Trans>
         </span>
       </div>
     );
@@ -270,7 +271,7 @@ export function CallsTable({
             disabled={query.isFetching}
           >
             <Loader2 className={query.isFetching ? "animate-spin" : undefined} />
-            Retry
+            <Trans>{"Retry"}</Trans>
           </Button>
         }
       />
@@ -300,7 +301,7 @@ export function CallsTable({
             disabled={calls.length === 0}
           >
             <Download className="size-4" />
-            Export CSV
+            <Trans>{"Export CSV"}</Trans>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -342,21 +343,21 @@ export function CallsTable({
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <p className="text-xs text-muted-foreground">Agent</p>
+                  <p className="text-xs text-muted-foreground"><Trans>{"Agent"}</Trans></p>
                   <p className="truncate">{agentName(c.agentId)}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Duration</p>
+                  <p className="text-xs text-muted-foreground"><Trans>{"Duration"}</Trans></p>
                   <p>{fmtDuration(c.durationSeconds)}</p>
                 </div>
                 <div className="col-span-2">
-                  <p className="text-xs text-muted-foreground">Direction</p>
+                  <p className="text-xs text-muted-foreground"><Trans>{"Direction"}</Trans></p>
                   <div className="mt-1"><DirectionCell direction={c.direction} /></div>
                 </div>
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Button variant="outline" size="sm" onClick={() => setTranscriptCall(c)}>
-                  <FileText className="size-4" /> Transcript
+                  <FileText className="size-4" /> <Trans>{"Transcript"}</Trans>
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => setMetadataCall(c)}>
                   <Info className="size-4" /> Metadata
@@ -367,7 +368,7 @@ export function CallsTable({
                   className="border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
                   onClick={() => setDeleteTarget(c)}
                 >
-                  <Trash2 className="size-4" /> Delete
+                  <Trash2 className="size-4" /> <Trans>{"Delete"}</Trans>
                 </Button>
               </div>
             </div>
@@ -380,12 +381,12 @@ export function CallsTable({
             <TableHeader>
               <TableRow className="border-b bg-muted/20 hover:bg-muted/20">
                 {visibleCols.has("startTime") && <TableHead className="pl-4 whitespace-nowrap">Start Time</TableHead>}
-                {visibleCols.has("number")    && <TableHead className="whitespace-nowrap">Number</TableHead>}
-                {visibleCols.has("agent")     && <TableHead className="whitespace-nowrap">Agent</TableHead>}
-                {visibleCols.has("duration")  && <TableHead className="whitespace-nowrap">Duration</TableHead>}
-                {visibleCols.has("direction") && <TableHead className="whitespace-nowrap">Direction</TableHead>}
-                {visibleCols.has("status")    && <TableHead className="whitespace-nowrap">Status</TableHead>}
-                <TableHead className="w-16 pr-4 text-right">Actions</TableHead>
+                {visibleCols.has("number")    && <TableHead className="whitespace-nowrap"><Trans>{"Number"}</Trans></TableHead>}
+                {visibleCols.has("agent")     && <TableHead className="whitespace-nowrap"><Trans>{"Agent"}</Trans></TableHead>}
+                {visibleCols.has("duration")  && <TableHead className="whitespace-nowrap"><Trans>{"Duration"}</Trans></TableHead>}
+                {visibleCols.has("direction") && <TableHead className="whitespace-nowrap"><Trans>{"Direction"}</Trans></TableHead>}
+                {visibleCols.has("status")    && <TableHead className="whitespace-nowrap"><Trans>{"Status"}</Trans></TableHead>}
+                <TableHead className="w-16 pr-4 text-right"><Trans>{"Actions"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -431,7 +432,7 @@ export function CallsTable({
                           onClick={() => setDeleteTarget(c)}
                           className="text-destructive focus:text-destructive"
                         >
-                          <Trash2 className="size-4" /> Delete
+                          <Trash2 className="size-4" /> <Trans>{"Delete"}</Trans>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -535,13 +536,13 @@ export function CallsTable({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               disabled={del.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {del.isPending ? <><Loader2 className="animate-spin" /> Deleting…</> : "Delete"}
+              {del.isPending ? <><Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans></> : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

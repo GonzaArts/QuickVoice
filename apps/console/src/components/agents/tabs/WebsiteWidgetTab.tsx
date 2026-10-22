@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Check, Copy, Globe2, Loader2, Plus, Trash2 } from "lucide-react";
@@ -282,7 +283,7 @@ function WidgetEditor({
                 disabled={deleteWidget.isPending}
                 onClick={removeWidget}
               >
-                <Trash2 className="size-4" /> Delete
+                <Trash2 className="size-4" /> <Trans>{"Delete"}</Trans>
               </Button>
             ) : null}
             <Button disabled={isSaving} onClick={saveWidget}>
@@ -310,7 +311,7 @@ function WidgetEditor({
                 </Field>
                 <div className="flex items-center justify-between border bg-card px-3 py-2">
                   <div>
-                    <Label className="text-sm font-medium">Enabled</Label>
+                    <Label className="text-sm font-medium"><Trans>{"Enabled"}</Trans></Label>
                     <p className="mt-1 text-xs text-muted-foreground">
                       Allow approved websites to start calls.
                     </p>

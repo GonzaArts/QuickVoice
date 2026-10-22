@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import {
   CheckCircle2,
   PhoneIncoming,
@@ -37,14 +38,14 @@ function DirectionValue({ direction }: { direction: string | null }) {
   if (direction === "outbound") {
     return (
       <span className="inline-flex items-center gap-1.5 font-semibold text-sky-600 dark:text-sky-400">
-        <PhoneOutgoing className="size-4" /> Outbound
+        <PhoneOutgoing className="size-4" /> <Trans>{"Outbound"}</Trans>
       </span>
     );
   }
   if (direction === "inbound") {
     return (
       <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
-        <PhoneIncoming className="size-4" /> Inbound
+        <PhoneIncoming className="size-4" /> <Trans>{"Inbound"}</Trans>
       </span>
     );
   }
@@ -55,7 +56,7 @@ function StatusValue({ status }: { status: CallStatus }) {
   if (status === "COMPLETED") {
     return (
       <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
-        <CheckCircle2 className="size-4" /> Completed
+        <CheckCircle2 className="size-4" /> <Trans>{"Completed"}</Trans>
       </span>
     );
   }

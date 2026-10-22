@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
@@ -64,7 +65,7 @@ export function CallFilters() {
           <SelectValue placeholder="All agents" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>All agents</SelectItem>
+          <SelectItem value={ALL}><Trans>{"All agents"}</Trans></SelectItem>
           {(agents ?? []).map((a) => (
             <SelectItem key={a.agentId} value={a.agentId}>
               {a.name}
@@ -79,11 +80,11 @@ export function CallFilters() {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value={ALL}>Any status</SelectItem>
-          <SelectItem value="COMPLETED">Completed</SelectItem>
-          <SelectItem value="IN_PROGRESS">In progress</SelectItem>
-          <SelectItem value="FAILED">Failed</SelectItem>
-          <SelectItem value="NOT_ANSWERED">Not answered</SelectItem>
-          <SelectItem value="SCHEDULED">Scheduled</SelectItem>
+          <SelectItem value="COMPLETED"><Trans>{"Completed"}</Trans></SelectItem>
+          <SelectItem value="IN_PROGRESS"><Trans>{"In progress"}</Trans></SelectItem>
+          <SelectItem value="FAILED"><Trans>{"Failed"}</Trans></SelectItem>
+          <SelectItem value="NOT_ANSWERED"><Trans>{"Not answered"}</Trans></SelectItem>
+          <SelectItem value="SCHEDULED"><Trans>{"Scheduled"}</Trans></SelectItem>
         </SelectContent>
       </Select>
 
@@ -93,8 +94,8 @@ export function CallFilters() {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value={ALL}>Any direction</SelectItem>
-          <SelectItem value="inbound">Inbound</SelectItem>
-          <SelectItem value="outbound">Outbound</SelectItem>
+          <SelectItem value="inbound"><Trans>{"Inbound"}</Trans></SelectItem>
+          <SelectItem value="outbound"><Trans>{"Outbound"}</Trans></SelectItem>
         </SelectContent>
       </Select>
 
@@ -113,7 +114,7 @@ export function CallFilters() {
 
       {hasFilters ? (
         <Button variant="ghost" size="sm" onClick={reset}>
-          <X /> Clear
+          <X /> <Trans>{"Clear"}</Trans>
         </Button>
       ) : null}
     </div>
