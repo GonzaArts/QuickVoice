@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -27,25 +29,28 @@ export function useBillingTransactions(organizationId: string | null) {
 }
 
 export function useCreateTopUpCheckout() {
+  const translateUi = useT();
   return useMutation({
     mutationFn: (input: CreateTopUpCheckoutInput) =>
       billingApi.createTopUpCheckout(input),
     onError: (error: Error) => {
-      toast.error(error.message || "Could not start the top-up");
+      toast.error(error.message || translateUi("Could not start the top-up"));
     },
   });
 }
 
 export function useCreatePaymentMethodSetup() {
+  const translateUi = useT();
   return useMutation({
     mutationFn: billingApi.createPaymentMethodSetup,
     onError: (error: Error) => {
-      toast.error(error.message || "Could not start card setup");
+      toast.error(error.message || translateUi("Could not start card setup"));
     },
   });
 }
 
 export function useUpdateAutoRecharge() {
+  const translateUi = useT();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -55,10 +60,10 @@ export function useUpdateAutoRecharge() {
       await queryClient.invalidateQueries({
         queryKey: queryKeys.billing.all,
       });
-      toast.success("Auto-recharge settings saved");
+      toast.success(translateUi("Auto-recharge settings saved"));
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Could not save auto-recharge settings");
+      toast.error(error.message || translateUi("Could not save auto-recharge settings"));
     },
   });
 }

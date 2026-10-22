@@ -63,7 +63,7 @@ function StatusValue({ status }: { status: CallStatus }) {
   if (status === "FAILED" || status === "NOT_ANSWERED") {
     return (
       <span className="inline-flex items-center gap-1.5 font-semibold text-red-600 dark:text-red-400">
-        <XCircle className="size-4" /> {status === "FAILED" ? "Failed" : "Not Answered"}
+        <XCircle className="size-4" /> {status === "FAILED" ? <Trans>{"Failed"}</Trans> : <Trans>{"Not Answered"}</Trans>}
       </span>
     );
   }
@@ -151,7 +151,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
     <Sheet open={!!call} onOpenChange={(open) => { if (!open) onClose(); }}>
       <SheetContent side="right" className="flex !w-full flex-col gap-0 overflow-hidden p-0 sm:!max-w-xl lg:!max-w-2xl">
         <SheetHeader className="border-b bg-background/95 p-5 backdrop-blur sm:p-6">
-          <SheetTitle className="text-lg font-semibold">Call Details</SheetTitle>
+          <SheetTitle className="text-lg font-semibold"><Trans>{"Call Details"}</Trans></SheetTitle>
           <SheetDescription className="truncate pr-8">
             {call?.callId.slice(0, 8)}… · {call ? new Date(call.startTime ?? "").toLocaleString() : ""}
           </SheetDescription>
@@ -163,7 +163,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
           <div className="rounded-2xl border bg-card p-3 shadow-sm">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <StatCell label="Caller">
-                <span className="font-semibold">{call?.callerId ?? "Unknown"}</span>
+                <span className="font-semibold">{call?.callerId ?? <Trans>{"Unknown"}</Trans>}</span>
               </StatCell>
               <StatCell label="Duration">
                 <span className="font-semibold">{fmtDuration(call?.durationSeconds ?? null)}</span>
@@ -181,7 +181,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
           {meta.intent ? (
             <>
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold text-foreground">Call Intent</h3>
+                <h3 className="text-sm font-semibold text-foreground"><Trans>{"Call Intent"}</Trans></h3>
                 <p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{String(meta.intent)}</p>
               </div>
               <Separator />
@@ -192,7 +192,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
           {meta.summary ? (
             <>
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold text-foreground">Call Summary</h3>
+                <h3 className="text-sm font-semibold text-foreground"><Trans>{"Call Summary"}</Trans></h3>
                 <p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{String(meta.summary)}</p>
               </div>
               <Separator />
@@ -203,7 +203,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
           {meta.reason ? (
             <>
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold text-foreground">Call Reason</h3>
+                <h3 className="text-sm font-semibold text-foreground"><Trans>{"Call Reason"}</Trans></h3>
                 <p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{String(meta.reason)}</p>
               </div>
               <Separator />
@@ -214,7 +214,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
           {additionalMetadata.length > 0 ? (
             <>
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">Additional Metadata</h3>
+                <h3 className="text-sm font-semibold text-foreground"><Trans>{"Additional Metadata"}</Trans></h3>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {additionalMetadata.map(([key, value]) => (
                     <div key={key} className="space-y-1 rounded-xl border bg-card p-4 shadow-sm dark:bg-muted/20">
@@ -232,7 +232,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
           {extracted.length > 0 ? (
             <>
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">Extracted Data</h3>
+                <h3 className="text-sm font-semibold text-foreground"><Trans>{"Extracted Data"}</Trans></h3>
                 {extracted.map((item, i) => (
                   <div key={i} className="space-y-1 rounded-xl border bg-card p-4 shadow-sm dark:bg-muted/20">
                     <div className="flex items-center justify-between">
@@ -255,12 +255,12 @@ export function CallMetadataSheet({ call, onClose }: Props) {
           {/* ── Evaluation ── */}
           {evaluation.length > 0 ? (
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">Evaluation</h3>
+              <h3 className="text-sm font-semibold text-foreground"><Trans>{"Evaluation"}</Trans></h3>
               {evaluation.map((item, i) => (
                 <div key={i} className="space-y-1 rounded-xl border bg-card p-4 shadow-sm dark:bg-muted/20">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{item.identifier}</span>
-                    <Badge variant="secondary" className="text-[10px]">eval</Badge>
+                    <Badge variant="secondary" className="text-[10px]"><Trans>{"eval"}</Trans></Badge>
                   </div>
                   <p className="text-sm font-semibold text-foreground">{displayValue(item.value)}</p>
                   {item.description ? (
@@ -273,7 +273,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
 
           {/* ── Empty state ── */}
           {!meta.intent && !meta.summary && !meta.reason && additionalMetadata.length === 0 && extracted.length === 0 && evaluation.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No additional data recorded for this call.</p>
+            <p className="text-sm text-muted-foreground"><Trans>{"No additional data recorded for this call."}</Trans></p>
           ) : null}
 
         </div>

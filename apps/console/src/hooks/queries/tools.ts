@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -25,6 +27,7 @@ export function useAgentTools(agentId: string) {
 }
 
 export function useCreateTool() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: CreateToolInput) => toolsApi.create(input),
@@ -32,12 +35,13 @@ export function useCreateTool() {
       qc.invalidateQueries({ queryKey: queryKeys.tools.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not create tool");
+      toast.error(err.message || translateUi("Could not create tool"));
     },
   });
 }
 
 export function useUpdateTool(toolId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: UpdateToolInput) => toolsApi.update(toolId, input),
@@ -46,12 +50,13 @@ export function useUpdateTool(toolId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.tools.detail(toolId) });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not update tool");
+      toast.error(err.message || translateUi("Could not update tool"));
     },
   });
 }
 
 export function useDeleteTool() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (toolId: string) => toolsApi.remove(toolId),
@@ -59,12 +64,13 @@ export function useDeleteTool() {
       qc.invalidateQueries({ queryKey: queryKeys.tools.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not delete tool");
+      toast.error(err.message || translateUi("Could not delete tool"));
     },
   });
 }
 
 export function useAttachTool(agentId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (toolId: string) => toolsApi.attach(toolId, agentId),
@@ -73,12 +79,13 @@ export function useAttachTool(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not attach tool");
+      toast.error(err.message || translateUi("Could not attach tool"));
     },
   });
 }
 
 export function useDetachTool(agentId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (toolId: string) => toolsApi.detach(toolId, agentId),
@@ -87,12 +94,13 @@ export function useDetachTool(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not detach tool");
+      toast.error(err.message || translateUi("Could not detach tool"));
     },
   });
 }
 
 export function useAttachAgentToTool(toolId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (agentId: string) => toolsApi.attach(toolId, agentId),
@@ -101,12 +109,13 @@ export function useAttachAgentToTool(toolId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not link agent");
+      toast.error(err.message || translateUi("Could not link agent"));
     },
   });
 }
 
 export function useDetachAgentFromTool(toolId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (agentId: string) => toolsApi.detach(toolId, agentId),
@@ -115,7 +124,7 @@ export function useDetachAgentFromTool(toolId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not unlink agent");
+      toast.error(err.message || translateUi("Could not unlink agent"));
     },
   });
 }

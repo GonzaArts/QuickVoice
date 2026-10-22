@@ -32,11 +32,9 @@ export default function SecretsPage() {
           <KeyRound className="size-5" />
         </div>
         <div className="space-y-1">
-          <h2 className="text-sm font-semibold">Encrypted workspace values</h2>
+          <h2 className="text-sm font-semibold"><Trans>{"Encrypted workspace values"}</Trans></h2>
           <p className="max-w-3xl text-sm text-muted-foreground">
-            Secret values are encrypted on save and are never returned by the
-            API. Use the generated reference when configuring authenticated
-            tools or webhook fields.
+            <Trans>{"Secret values are encrypted on save and are never returned by the API. Use the generated reference when configuring authenticated tools or webhook fields."}</Trans>
           </p>
         </div>
       </div>

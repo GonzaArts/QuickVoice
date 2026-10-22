@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { FormEvent, useMemo, useRef, useState } from "react";
 import {
@@ -214,6 +216,7 @@ function parseRecipientsFromCsv(file: File, maxRows: number): Promise<CampaignRe
 }
 
 export function BatchCallForm() {
+  const translateUi = useT();
   const {
     data: agents = [],
     isLoading: agentsLoading,
@@ -320,7 +323,7 @@ export function BatchCallForm() {
 
   async function copyHeader() {
     await navigator.clipboard.writeText(templateHeader);
-    toast.success("Template header copied");
+    toast.success(translateUi("Template header copied"));
   }
 
   function downloadTemplate() {
@@ -394,7 +397,7 @@ export function BatchCallForm() {
         request,
       );
       setPreflightResult(result);
-      toast.success("Personalization preflight completed");
+      toast.success(translateUi("Personalization preflight completed"));
     } catch (error) {
       setPreflightError(
         error instanceof Error ? error.message : "Could not run personalization preflight",
@@ -507,9 +510,9 @@ export function BatchCallForm() {
     <form onSubmit={onSubmit} className="border bg-card">
       <div className="flex flex-col gap-2 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-base font-semibold text-foreground">
-          Batch campaigns
+          <Trans>{"Batch campaigns"}</Trans>
         </h2>
-        <Badge variant="outline">CSV or XLSX</Badge>
+        <Badge variant="outline"><Trans>{"CSV or XLSX"}</Trans></Badge>
       </div>
 
       <div className="grid gap-5 p-5">
@@ -518,14 +521,14 @@ export function BatchCallForm() {
             <Label htmlFor="batchName"><Trans>{"Campaign"}</Trans></Label>
             <Input
               id="batchName"
-              placeholder="June renewals"
+              placeholder={translateUi("June renewals")}
               value={name}
               onChange={(event) => setName(event.target.value)}
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="ringTimeout">Ring timeout</Label>
+            <Label htmlFor="ringTimeout"><Trans>{"Ring timeout"}</Trans></Label>
             <Input
               id="ringTimeout"
               type="number"
@@ -544,7 +547,7 @@ export function BatchCallForm() {
             <Label htmlFor="batchAgent"><Trans>{"Agent"}</Trans></Label>
             <Select value={agentId} onValueChange={selectAgent}>
               <SelectTrigger id="batchAgent" className="w-full">
-                <SelectValue placeholder="Select agent" />
+                <SelectValue placeholder={translateUi("Select agent")} />
               </SelectTrigger>
               <SelectContent>
                 {dialableAgents.map((agent) => (
@@ -557,10 +560,10 @@ export function BatchCallForm() {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="batchFromNumber">From</Label>
+            <Label htmlFor="batchFromNumber"><Trans>{"From"}</Trans></Label>
             <Select value={fromNumber} onValueChange={setRequestedFromNumber}>
               <SelectTrigger id="batchFromNumber" className="w-full">
-                <SelectValue placeholder="Select caller ID" />
+                <SelectValue placeholder={translateUi("Select caller ID")} />
               </SelectTrigger>
               <SelectContent>
                 {(selectedAgent?.numbers ?? []).map((number) => (
@@ -575,7 +578,7 @@ export function BatchCallForm() {
 
         <div className="grid gap-2">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <Label>Recipient file</Label>
+            <Label><Trans>{"Recipient file"}</Trans></Label>
             <div className="flex flex-wrap gap-2">
               <Button
                 type="button"
@@ -583,7 +586,7 @@ export function BatchCallForm() {
                 size="sm"
                 onClick={copyHeader}
               >
-                <Copy /> Copy header
+                <Copy /> <Trans>{"Copy header"}</Trans>
               </Button>
               <Button
                 type="button"
@@ -591,7 +594,7 @@ export function BatchCallForm() {
                 size="sm"
                 onClick={downloadTemplate}
               >
-                <Download /> Download CSV
+                <Download /> <Trans>{"Download CSV"}</Trans>
               </Button>
             </div>
           </div>
@@ -602,22 +605,20 @@ export function BatchCallForm() {
           >
             <UploadCloud className="size-8 text-muted-foreground" />
             <span className="text-sm font-medium text-foreground">
-              {file ? file.name : "Select recipient file"}
+              {file ? file.name : <Trans>{"Select recipient file"}</Trans>}
             </span>
             <span className="max-w-full break-all font-mono text-xs text-muted-foreground">
               {templateHeader}
             </span>
             <span className="text-xs text-muted-foreground">
-              language and voice_id can be blank to use the agent defaults. Add
-              patient_name and question_1, question_2 columns for
-              questionnaires.
+              <Trans>{"language and voice_id can be blank to use the agent defaults. Add patient_name and question_1, question_2 columns for questionnaires."}</Trans>
             </span>
           </button>
           {dynamicVariableNames.length > 0 ? (
             <div className="border border-dashed bg-muted/20 p-4">
               <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
                 <Braces className="size-4 text-muted-foreground" />
-                Template variables
+                <Trans>{"Template variables"}</Trans>
                 <Badge variant="outline">{dynamicVariableNames.length}</Badge>
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -662,14 +663,14 @@ export function BatchCallForm() {
             <div className="flex items-center gap-2">
               <Settings2 className="size-4 text-muted-foreground" />
               <div>
-                <h3 className="text-sm font-semibold">Campaign Intelligence</h3>
+                <h3 className="text-sm font-semibold"><Trans>{"Campaign Intelligence"}</Trans></h3>
                 <p className="text-xs text-muted-foreground">
-                  Personalization, A/B testing, and conversion goals
+                  <Trans>{"Personalization, A/B testing, and conversion goals"}</Trans>
                 </p>
               </div>
             </div>
             <Badge variant="outline" className="ml-2">
-              {personalizationFields.length + experiments.length + goals.length} configured
+              {personalizationFields.length + experiments.length + goals.length} <Trans>{"configured"}</Trans>
             </Badge>
           </button>
 
@@ -700,9 +701,9 @@ export function BatchCallForm() {
                 <div className="pt-4 border-t">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium">Test Personalization</p>
+                      <p className="text-sm font-medium"><Trans>{"Test Personalization"}</Trans></p>
                       <p className="text-xs text-muted-foreground">
-                        Verify your fields match the CSV data
+                        <Trans>{"Verify your fields match the CSV data"}</Trans>
                       </p>
                     </div>
                     <Button
@@ -714,7 +715,7 @@ export function BatchCallForm() {
                       {isPreflighting ? (
                         <Loader2 className="size-4 animate-spin" />
                       ) : null}
-                      Run Preflight Check
+                      <Trans>{"Run Preflight Check"}</Trans>
                     </Button>
                   </div>
 
@@ -727,12 +728,10 @@ export function BatchCallForm() {
                   {preflightResult && (
                     <div className="mt-3 p-3 rounded-lg border bg-background">
                       <p className="text-sm font-medium text-emerald-600">
-                        ✓ Preflight successful
+                        <Trans>{"✓ Preflight successful"}</Trans>
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Selected: {preflightResult.selectedRecipients} • 
-                        Valid: {preflightResult.validRecipients} • 
-                        Skipped: {preflightResult.skippedRecipients}
+                        <Trans>{"Selected:"}</Trans> {preflightResult.selectedRecipients} <Trans>{"• Valid:"}</Trans> {preflightResult.validRecipients} <Trans>{"• Skipped:"}</Trans> {preflightResult.skippedRecipients}
                       </p>
                       {preflightResult.rows.length > 0 && (
                         <div className="mt-2 max-h-40 overflow-auto rounded border bg-muted/30 p-2 text-xs font-mono">
@@ -755,14 +754,14 @@ export function BatchCallForm() {
               variant={scheduleMode === "instant" ? "default" : "outline"}
               onClick={() => setScheduleMode("instant")}
             >
-              <Clock /> Instant
+              <Clock /> <Trans>{"Instant"}</Trans>
             </Button>
             <Button
               type="button"
               variant={scheduleMode === "later" ? "default" : "outline"}
               onClick={() => setScheduleMode("later")}
             >
-              <CalendarClock /> Later
+              <CalendarClock /> <Trans>{"Later"}</Trans>
             </Button>
           </div>
           {scheduleMode === "later" ? (
@@ -783,7 +782,7 @@ export function BatchCallForm() {
             aria-live="polite"
             className="border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
           >
-            Queued {createdCampaignName}.
+            <Trans>{"Queued"}</Trans> {createdCampaignName}.
           </div>
         ) : null}
 
@@ -793,7 +792,7 @@ export function BatchCallForm() {
           </Button>
           <Button type="submit" disabled={!canSubmit}>
             {isBusy ? <Loader2 className="animate-spin" /> : <UploadCloud />}
-            Queue batch
+            <Trans>{"Queue batch"}</Trans>
           </Button>
         </div>
       </div>

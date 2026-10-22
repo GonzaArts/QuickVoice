@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -37,20 +39,22 @@ export function useKbSources(agentId?: string) {
 }
 
 export function useCreateKb() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: CreateKbInput) => kbApi.create(input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.kb.all });
-      toast.success("Document added");
+      toast.success(translateUi("Document added"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not add document");
+      toast.error(err.message || translateUi("Could not add document"));
     },
   });
 }
 
 export function useUpdateKb() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ kbId, input }: { kbId: string; input: UpdateKbInput }) =>
@@ -58,39 +62,41 @@ export function useUpdateKb() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.kb.all });
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
-      toast.success("Document updated and queued for processing");
+      toast.success(translateUi("Document updated and queued for processing"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not update document");
+      toast.error(err.message || translateUi("Could not update document"));
     },
   });
 }
 
 export function useDeleteKb() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (kbId: string) => kbApi.remove(kbId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.kb.all });
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
-      toast.success("Document deleted");
+      toast.success(translateUi("Document deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not delete document");
+      toast.error(err.message || translateUi("Could not delete document"));
     },
   });
 }
 
 export function useRetryKb() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (kbId: string) => kbApi.retry(kbId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.kb.all });
-      toast.success("Document queued for retry");
+      toast.success(translateUi("Document queued for retry"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not retry document");
+      toast.error(err.message || translateUi("Could not retry document"));
     },
   });
 }

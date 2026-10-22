@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Download, Eye, Loader2, Save } from "lucide-react";
@@ -84,6 +86,7 @@ function EditKbDialogContent({
   agents,
   onOpenChange,
 }: EditKbDialogContentProps) {
+  const translateUi = useT();
   const [name, setName] = useState(source.name);
   const [agentId, setAgentId] = useState(source.agentId ?? "");
   const [url, setUrl] = useState(
@@ -149,7 +152,7 @@ function EditKbDialogContent({
       const blob = await kbApi.file(source.kbId, "attachment", controller.signal);
       if (!controller.signal.aborted) downloadBlobAsFile(fileName, blob);
     } catch (error) {
-      if (!controller.signal.aborted) toast.error(error instanceof Error ? error.message : "Could not download this document");
+      if (!controller.signal.aborted) toast.error(error instanceof Error ? error.message : translateUi("Could not download this document"));
     } finally {
       downloadRequest.current = null;
       if (!controller.signal.aborted) setDownloading(false);
@@ -168,24 +171,23 @@ function EditKbDialogContent({
     <Dialog open={!!source} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Knowledge source details</DialogTitle>
+          <DialogTitle><Trans>{"Knowledge source details"}</Trans></DialogTitle>
           <DialogDescription>
-            Review stored data and edit supported fields. Saving changes queues
-            the source for reprocessing.
+            <Trans>{"Review stored data and edit supported fields. Saving changes queues the source for reprocessing."}</Trans>
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           <section className="space-y-3" aria-labelledby="kb-status-heading">
             <h3 id="kb-status-heading" className="text-sm font-semibold">
-              Processing status
+              <Trans>{"Processing status"}</Trans>
             </h3>
             <div className="border p-3">
               <KnowledgeSourceStatus source={source} />
             </div>
             {isProcessing ? (
               <p className="text-xs leading-5 text-muted-foreground">
-                Wait for processing to finish before editing this entry.
+                <Trans>{"Wait for processing to finish before editing this entry."}</Trans>
               </p>
             ) : null}
           </section>
@@ -193,15 +195,15 @@ function EditKbDialogContent({
           <section className="space-y-4" aria-labelledby="kb-edit-heading">
             <div>
               <h3 id="kb-edit-heading" className="text-sm font-semibold">
-                Editable configuration
+                <Trans>{"Editable configuration"}</Trans>
               </h3>
               <p className="mt-1 text-xs text-muted-foreground">
-                File type and uploaded file content cannot be changed here.
+                <Trans>{"File type and uploaded file content cannot be changed here."}</Trans>
               </p>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="kb-entry-name">Display name</Label>
+              <Label htmlFor="kb-entry-name"><Trans>{"Display name"}</Trans></Label>
               <Input
                 id="kb-entry-name"
                 value={name}
@@ -212,14 +214,14 @@ function EditKbDialogContent({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="kb-entry-agent">Assigned agent</Label>
+              <Label htmlFor="kb-entry-agent"><Trans>{"Assigned agent"}</Trans></Label>
               <Select
                 value={agentId}
                 onValueChange={setAgentId}
                 disabled={isProcessing || update.isPending}
               >
                 <SelectTrigger id="kb-entry-agent">
-                  <SelectValue placeholder="Select an agent" />
+                  <SelectValue placeholder={translateUi("Select an agent")} />
                 </SelectTrigger>
                 <SelectContent>
                   {agents.map((agent) => (
@@ -233,7 +235,7 @@ function EditKbDialogContent({
 
             {source.sourceType === "URL" ? (
               <div className="space-y-1.5">
-                <Label htmlFor="kb-entry-url">Source URL</Label>
+                <Label htmlFor="kb-entry-url"><Trans>{"Source URL"}</Trans></Label>
                 <Input
                   id="kb-entry-url"
                   type="url"
@@ -242,7 +244,7 @@ function EditKbDialogContent({
                   disabled={isProcessing || update.isPending}
                 />
                 <p className="text-xs text-muted-foreground">
-                  The URL must be publicly accessible over HTTP or HTTPS.
+                  <Trans>{"The URL must be publicly accessible over HTTP or HTTPS."}</Trans>
                 </p>
               </div>
             ) : null}
@@ -250,7 +252,7 @@ function EditKbDialogContent({
 
           <section className="space-y-3" aria-labelledby="kb-stored-heading">
             <h3 id="kb-stored-heading" className="text-sm font-semibold">
-              Stored details
+              <Trans>{"Stored details"}</Trans>
             </h3>
             <div className="grid gap-3 sm:grid-cols-2">
               <Detail label="Knowledge source ID" value={source.kbId} />
@@ -275,16 +277,16 @@ function EditKbDialogContent({
                   {canPreviewFile ? (
                     <Button type="button" variant="outline" disabled={downloading} onClick={() => setShowPreview(true)}>
                       <Eye />
-                      Preview document
+                      <Trans>{"Preview document"}</Trans>
                     </Button>
                   ) : null}
                   <Button type="button" variant="outline" disabled={downloading} onClick={() => void downloadFile()}>
                     {downloading ? <Loader2 className="animate-spin" /> : <Download />}
-                    Download file
+                    <Trans>{"Download file"}</Trans>
                   </Button>
                 </div>
                 {!canPreviewFile ? (
-                  <p className="text-xs text-muted-foreground">Download this file to review it in a compatible app.</p>
+                  <p className="text-xs text-muted-foreground"><Trans>{"Download this file to review it in a compatible app."}</Trans></p>
                 ) : null}
               </div>
             ) : null}
@@ -292,7 +294,7 @@ function EditKbDialogContent({
 
           <section className="space-y-3" aria-labelledby="kb-metadata-heading">
             <h3 id="kb-metadata-heading" className="text-sm font-semibold">
-              Metadata
+              <Trans>{"Metadata"}</Trans>
             </h3>
             <pre className="max-h-56 overflow-auto whitespace-pre-wrap break-words border bg-muted/20 p-3 font-mono text-xs leading-5 text-muted-foreground">
               {metadata}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { X } from "lucide-react";
@@ -23,6 +25,7 @@ const RANGE_LABELS: Record<string, string> = {
 };
 
 export function CallFilters() {
+  const translateUi = useT();
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -62,7 +65,7 @@ export function CallFilters() {
       ) : null}
       <Select value={agentId} onValueChange={(v) => update("agentId", v)}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="All agents" />
+          <SelectValue placeholder={translateUi("All agents")} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value={ALL}><Trans>{"All agents"}</Trans></SelectItem>
@@ -76,10 +79,10 @@ export function CallFilters() {
 
       <Select value={status} onValueChange={(v) => update("status", v)}>
         <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="Any status" />
+          <SelectValue placeholder={translateUi("Any status")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>Any status</SelectItem>
+          <SelectItem value={ALL}><Trans>{"Any status"}</Trans></SelectItem>
           <SelectItem value="COMPLETED"><Trans>{"Completed"}</Trans></SelectItem>
           <SelectItem value="IN_PROGRESS"><Trans>{"In progress"}</Trans></SelectItem>
           <SelectItem value="FAILED"><Trans>{"Failed"}</Trans></SelectItem>
@@ -90,10 +93,10 @@ export function CallFilters() {
 
       <Select value={direction} onValueChange={(v) => update("direction", v)}>
         <SelectTrigger className="w-[130px]">
-          <SelectValue placeholder="Any direction" />
+          <SelectValue placeholder={translateUi("Any direction")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>Any direction</SelectItem>
+          <SelectItem value={ALL}><Trans>{"Any direction"}</Trans></SelectItem>
           <SelectItem value="inbound"><Trans>{"Inbound"}</Trans></SelectItem>
           <SelectItem value="outbound"><Trans>{"Outbound"}</Trans></SelectItem>
         </SelectContent>

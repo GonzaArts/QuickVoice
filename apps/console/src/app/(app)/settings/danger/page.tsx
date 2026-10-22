@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -23,6 +25,7 @@ import {
 import { authClient } from "@/src/lib/auth-client";
 
 export default function DangerZonePage() {
+  const translateUi = useT();
  const router = useRouter();
  const { data: session } = authClient.useSession();
  const orgId = session?.session?.activeOrganizationId ?? null;
@@ -43,10 +46,10 @@ export default function DangerZonePage() {
  if (!org.leave) throw new Error("Leave is not available");
  const { error } = await org.leave({ organizationId: orgId });
  if (error) throw new Error(error.message);
- toast.success("You left the organization");
+ toast.success(translateUi("You left the organization"));
  router.push("/orgs");
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not leave");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not leave"));
  } finally {
  setLeaving(false);
  }
@@ -60,10 +63,10 @@ export default function DangerZonePage() {
  organizationId: orgId,
  });
  if (error) throw new Error(error.message);
- toast.success("Organization deleted");
+ toast.success(translateUi("Organization deleted"));
  router.push("/orgs");
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not delete");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not delete"));
  } finally {
  setDeleting(false);
  }
@@ -81,7 +84,7 @@ export default function DangerZonePage() {
  <Trans>{"Danger zone"}</Trans>
  </h2>
  <p className="text-sm text-muted-foreground">
- These actions cannot be undone. Proceed carefully.
+ <Trans>{"These actions cannot be undone. Proceed carefully."}</Trans>
  </p>
  </div>
  </div>
@@ -89,24 +92,22 @@ export default function DangerZonePage() {
  <div className="space-y-4">
  <div className="flex flex-col gap-3 border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
  <div className="space-y-1">
- <p className="text-sm font-semibold">Leave this organization</p>
+ <p className="text-sm font-semibold"><Trans>{"Leave this organization"}</Trans></p>
  <p className="text-xs text-muted-foreground">
- You&apos;ll lose access. An owner must transfer ownership first
- if you&apos;re the only one.
+ <Trans>{"You'll lose access. An owner must transfer ownership first if you're the only one."}</Trans>
  </p>
  </div>
  <AlertDialog>
  <AlertDialogTrigger asChild>
  <Button variant="outline">
- <LogOut /> Leave
+ <LogOut /> <Trans>{"Leave"}</Trans>
  </Button>
  </AlertDialogTrigger>
  <AlertDialogContent>
  <AlertDialogHeader>
- <AlertDialogTitle>Leave this organization?</AlertDialogTitle>
+ <AlertDialogTitle><Trans>{"Leave this organization?"}</Trans></AlertDialogTitle>
  <AlertDialogDescription>
- You&apos;ll be removed from members and lose access to every
- resource here.
+ <Trans>{"You'll be removed from members and lose access to every resource here."}</Trans>
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
@@ -114,10 +115,10 @@ export default function DangerZonePage() {
  <AlertDialogAction onClick={onLeave} disabled={leaving}>
  {leaving ? (
  <>
- <Loader2 className="animate-spin" /> Leaving…
+ <Loader2 className="animate-spin" /> <Trans>{"Leaving…"}</Trans>
  </>
  ) : (
- "Leave"
+ <Trans>{"Leave"}</Trans>
  )}
  </AlertDialogAction>
  </AlertDialogFooter>
@@ -127,9 +128,9 @@ export default function DangerZonePage() {
 
  <div className="flex flex-col gap-3 border border-destructive/40 bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
  <div className="space-y-1">
- <p className="text-sm font-semibold">Delete this organization</p>
+ <p className="text-sm font-semibold"><Trans>{"Delete this organization"}</Trans></p>
  <p className="text-xs text-muted-foreground">
- Permanently deletes all agents, numbers, calls, and documents.
+ <Trans>{"Permanently deletes all agents, numbers, calls, and documents."}</Trans>
  </p>
  </div>
  <AlertDialog
@@ -137,17 +138,17 @@ export default function DangerZonePage() {
  >
  <AlertDialogTrigger asChild>
  <Button variant="destructive">
- <Trash2 /> Delete organization
+ <Trash2 /> <Trans>{"Delete organization"}</Trans>
  </Button>
  </AlertDialogTrigger>
  <AlertDialogContent>
  <AlertDialogHeader>
  <AlertDialogTitle>
- Delete this organization?
+ <Trans>{"Delete this organization?"}</Trans>
  </AlertDialogTitle>
  <AlertDialogDescription>
  <Trans>{"Type"}</Trans> <span className="font-mono font-semibold">DELETE</span>{" "}
- to confirm. This cannot be undone.
+ <Trans>{"to confirm. This cannot be undone."}</Trans>
  </AlertDialogDescription>
  </AlertDialogHeader>
  <div className="space-y-1.5">
@@ -171,7 +172,7 @@ export default function DangerZonePage() {
  <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
  </>
  ) : (
- "Delete organization"
+ <Trans>{"Delete organization"}</Trans>
  )}
  </AlertDialogAction>
  </AlertDialogFooter>

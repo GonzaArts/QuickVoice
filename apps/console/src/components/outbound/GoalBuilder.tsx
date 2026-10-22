@@ -1,5 +1,9 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
+import { Trans } from "@/src/i18n/Trans";
+
 import { Plus, Trash2, ChevronDown, ChevronUp, Target, AlertCircle, CheckCircle2, Info } from "lucide-react";
 import { useState, useCallback } from "react";
 import { Button } from "@/src/components/ui/button";
@@ -74,6 +78,7 @@ function GoalEditor({
   isExpanded: boolean;
   onToggleExpand: () => void;
 }) {
+  const translateUi = useT();
   const hasError = !goal.key.trim();
   const selectedMetric = METRIC_OPTIONS.find(m => m.value === goal.metric);
   
@@ -93,11 +98,11 @@ function GoalEditor({
             <CheckCircle2 className="size-4 text-emerald-500" />
           )}
           <span className="font-medium text-sm">
-            {goal.key.trim() || "New Goal"}
+            {goal.key.trim() || <Trans>{"New Goal"}</Trans>}
           </span>
           {selectedMetric && (
             <span className="text-xs bg-muted px-2 py-0.5 rounded">
-              {selectedMetric.label}
+              {translateUi(selectedMetric.label)}
             </span>
           )}
         </button>
@@ -131,16 +136,15 @@ function GoalEditor({
           <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100 flex gap-2">
             <Info className="size-4 text-emerald-600 mt-0.5 shrink-0" />
             <div className="text-sm text-emerald-800">
-              <strong>Conversion Goals:</strong> Define what success looks like for your campaign. 
-              The system will track when recipients complete these actions.
+              <strong><Trans>{"Conversion Goals:"}</Trans></strong> <Trans>{"Define what success looks like for your campaign. The system will track when recipients complete these actions."}</Trans>
             </div>
           </div>
           
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Goal Key *</Label>
+              <Label><Trans>{"Goal Key *"}</Trans></Label>
               <Input
-                placeholder="e.g., appointment_booked"
+                placeholder={translateUi("e.g., appointment_booked")}
                 value={goal.key}
                 onChange={(e) => onChange({ 
                   ...goal, 
@@ -148,12 +152,12 @@ function GoalEditor({
                 })}
               />
               <p className="text-xs text-muted-foreground">
-                A unique identifier for this goal (no spaces)
+                <Trans>{"A unique identifier for this goal (no spaces)"}</Trans>
               </p>
             </div>
             
             <div className="space-y-2">
-              <Label>Success Metric</Label>
+              <Label><Trans>{"Success Metric"}</Trans></Label>
               <Select
                 value={goal.metric}
                 onValueChange={(value) => onChange({ ...goal, metric: value })}
@@ -165,7 +169,7 @@ function GoalEditor({
                   {METRIC_OPTIONS.map((metric) => (
                     <SelectItem key={metric.value} value={metric.value}>
                       <div className="flex flex-col items-start">
-                        <span>{metric.label}</span>
+                        <span>{translateUi(metric.label)}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -176,23 +180,23 @@ function GoalEditor({
           
           {goal.metric === "custom" && (
             <div className="space-y-2">
-              <Label>Custom Metric Definition</Label>
+              <Label><Trans>{"Custom Metric Definition"}</Trans></Label>
               <Textarea
-                placeholder="Describe what constitutes a successful conversion"
+                placeholder={translateUi("Describe what constitutes a successful conversion")}
                 rows={2}
                 value={goal.customMetric || ""}
                 onChange={(e) => onChange({ ...goal, customMetric: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                Define the criteria for this goal (e.g., Recipient said &quot;yes&quot; to appointment offer)
+                <Trans>{"Define the criteria for this goal (e.g., Recipient said \"yes\" to appointment offer)"}</Trans>
               </p>
             </div>
           )}
           
           <div className="space-y-2">
-            <Label>Description (optional)</Label>
+            <Label><Trans>{"Description (optional)"}</Trans></Label>
             <Textarea
-              placeholder="What does achieving this goal mean for your campaign?"
+              placeholder={translateUi("What does achieving this goal mean for your campaign?")}
               rows={2}
               value={goal.description || ""}
               onChange={(e) => onChange({ ...goal, description: e.target.value })}
@@ -201,7 +205,7 @@ function GoalEditor({
           
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Attribution Model</Label>
+              <Label><Trans>{"Attribution Model"}</Trans></Label>
               <Select
                 value={goal.attributionModel}
                 onValueChange={(value) => onChange({ 
@@ -216,8 +220,8 @@ function GoalEditor({
                   {ATTRIBUTION_MODELS.map((model) => (
                     <SelectItem key={model.value} value={model.value}>
                       <div className="flex flex-col items-start">
-                        <span>{model.label}</span>
-                        <span className="text-xs text-muted-foreground">{model.description}</span>
+                        <span>{translateUi(model.label)}</span>
+                        <span className="text-xs text-muted-foreground">{translateUi(model.description)}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -226,7 +230,7 @@ function GoalEditor({
             </div>
             
             <div className="space-y-2">
-              <Label>Time Window (optional)</Label>
+              <Label><Trans>{"Time Window (optional)"}</Trans></Label>
               <Select
                 value={goal.timeWindow || ""}
                 onValueChange={(value) => onChange({ 
@@ -235,18 +239,18 @@ function GoalEditor({
                 })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="No limit" />
+                  <SelectValue placeholder={translateUi("No limit")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No limit</SelectItem>
-                  <SelectItem value="1h">1 hour</SelectItem>
-                  <SelectItem value="24h">24 hours</SelectItem>
-                  <SelectItem value="7d">7 days</SelectItem>
-                  <SelectItem value="30d">30 days</SelectItem>
+                  <SelectItem value=""><Trans>{"No limit"}</Trans></SelectItem>
+                  <SelectItem value="1h"><Trans>{"1 hour"}</Trans></SelectItem>
+                  <SelectItem value="24h"><Trans>{"24 hours"}</Trans></SelectItem>
+                  <SelectItem value="7d"><Trans>{"7 days"}</Trans></SelectItem>
+                  <SelectItem value="30d"><Trans>{"30 days"}</Trans></SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                How long after the call to track this goal
+                <Trans>{"How long after the call to track this goal"}</Trans>
               </p>
             </div>
           </div>
@@ -295,9 +299,9 @@ export function GoalBuilder({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold">Conversion Goals</h3>
+          <h3 className="text-sm font-semibold"><Trans>{"Conversion Goals"}</Trans></h3>
           <p className="text-xs text-muted-foreground">
-            Define what success looks like for your campaign
+            <Trans>{"Define what success looks like for your campaign"}</Trans>
           </p>
         </div>
         <Button
@@ -307,7 +311,7 @@ export function GoalBuilder({
           onClick={handleAddGoal}
         >
           <Plus className="size-4" />
-          Add Goal
+          <Trans>{"Add Goal"}</Trans>
         </Button>
       </div>
       
@@ -315,10 +319,10 @@ export function GoalBuilder({
         <div className="rounded-lg border border-dashed bg-muted/20 p-8 text-center">
           <Target className="size-8 mx-auto text-muted-foreground mb-3" />
           <p className="text-sm font-medium text-muted-foreground mb-2">
-            No goals defined
+            <Trans>{"No goals defined"}</Trans>
           </p>
           <p className="text-xs text-muted-foreground mb-4">
-            Goals help you measure campaign success. Common goals include replies, appointments, and transfers.
+            <Trans>{"Goals help you measure campaign success. Common goals include replies, appointments, and transfers."}</Trans>
           </p>
           <Button
             type="button"
@@ -327,7 +331,7 @@ export function GoalBuilder({
             onClick={handleAddGoal}
           >
             <Plus className="size-4" />
-            Add Your First Goal
+            <Trans>{"Add Your First Goal"}</Trans>
           </Button>
         </div>
       ) : (

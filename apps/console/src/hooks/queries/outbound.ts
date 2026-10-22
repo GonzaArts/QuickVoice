@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -28,6 +30,7 @@ export function useOutboundCall(outboundId?: string | null) {
 }
 
 export function useCancelOutboundCall() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (outboundId: string) =>
@@ -35,15 +38,16 @@ export function useCancelOutboundCall() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.outbound.all });
       qc.invalidateQueries({ queryKey: queryKeys.calls.all });
-      toast.success("Outbound call cancelled");
+      toast.success(translateUi("Outbound call cancelled"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not cancel outbound call");
+      toast.error(err.message || translateUi("Could not cancel outbound call"));
     },
   });
 }
 
 export function useRetryOutboundCall() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (outboundId: string) =>
@@ -52,15 +56,16 @@ export function useRetryOutboundCall() {
       qc.invalidateQueries({ queryKey: queryKeys.outbound.all });
       qc.invalidateQueries({ queryKey: queryKeys.calls.all });
       qc.invalidateQueries({ queryKey: queryKeys.dashboard.all });
-      toast.success("Outbound call retry started");
+      toast.success(translateUi("Outbound call retry started"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not retry outbound call");
+      toast.error(err.message || translateUi("Could not retry outbound call"));
     },
   });
 }
 
 export function useQuickOutboundCall() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: QuickCallInput) => outboundApi.quickCall(input),
@@ -68,10 +73,10 @@ export function useQuickOutboundCall() {
       qc.invalidateQueries({ queryKey: queryKeys.calls.all });
       qc.invalidateQueries({ queryKey: queryKeys.dashboard.all });
       qc.invalidateQueries({ queryKey: queryKeys.outbound.all });
-      toast.success("Outbound call started");
+      toast.success(translateUi("Outbound call started"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not start outbound call");
+      toast.error(err.message || translateUi("Could not start outbound call"));
     },
   });
 }
@@ -92,45 +97,48 @@ export function useBatchCampaign(campaignId?: string | null) {
 }
 
 export function useCreateBatchCampaign() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: CreateBatchCampaignInput) =>
       outboundApi.createBatchCampaign(input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.outbound.all });
-      toast.success("Batch campaign queued");
+      toast.success(translateUi("Batch campaign queued"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not queue batch campaign");
+      toast.error(err.message || translateUi("Could not queue batch campaign"));
     },
   });
 }
 
 export function useCancelBatchCampaign() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (campaignId: string) =>
       outboundApi.cancelBatchCampaign(campaignId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.outbound.all });
-      toast.success("Campaign cancelled");
+      toast.success(translateUi("Campaign cancelled"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not cancel campaign");
+      toast.error(err.message || translateUi("Could not cancel campaign"));
     },
   });
 }
 
 export function useDownloadBatchCampaignResults() {
+  const translateUi = useT();
   return useMutation({
     mutationFn: (campaignId: string) =>
       outboundApi.downloadBatchCampaignResultsCsv(campaignId),
     onSuccess: ({ blob, filename }) => {
       downloadBlobAsFile(filename, blob);
-      toast.success("Campaign results downloaded");
+      toast.success(translateUi("Campaign results downloaded"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not download campaign results");
+      toast.error(err.message || translateUi("Could not download campaign results"));
     },
   });
 }

@@ -152,8 +152,8 @@ test("dashboard charts expose accessible summaries, unit labels, and data tables
   assert.match(volume, /Failed calls/);
   assert.match(volume, /aria-describedby=\{summaryId\}/);
 
-  assert.match(breakdown, /aria-label="Call outcome status breakdown chart"/);
-  assert.match(breakdown, /aria-label="Inbound and outbound direction mix chart"/);
+  assert.match(breakdown, /aria-label=\{translateUi\("Call outcome status breakdown chart"\)\}/);
+  assert.match(breakdown, /aria-label=\{translateUi\("Inbound and outbound direction mix chart"\)\}/);
   assert.match(breakdown, /statusStyles/);
   assert.match(breakdown, /directionStyles/);
   assert.match(breakdown, /motion-safe:animate-in/);
@@ -196,7 +196,7 @@ test("dashboard recent calls use semantic table and list context", () => {
   assert.match(source, /agentLabel/);
   assert.match(source, /Agent name unavailable/);
 
-  assert.match(source, /aria-label=\{`Open call \$\{call\.callId\}/);
+  assert.match(source, /aria-label=\{t\("Open call \{id\}: \{caller\} to \{callee\}", \{ id: call\.callId/);
   assert.match(source, /focus-visible:ring-2/);
   assert.match(source, /focus-visible:ring-offset-2/);
 });

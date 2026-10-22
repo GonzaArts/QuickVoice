@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { Webhook, MoreVertical, Pencil, Trash2, Bot } from "lucide-react";
@@ -34,6 +36,7 @@ const METHOD_COLORS: Record<string, string> = {
 };
 
 export function ToolCard({ tool }: { tool: Tool }) {
+  const translateUi = useT();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const deleteTool = useDeleteTool();
@@ -41,7 +44,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
   const handleDelete = async () => {
     try {
       await deleteTool.mutateAsync(tool.toolId, {
-        onSuccess: () => toast.success("Tool deleted"),
+        onSuccess: () => toast.success(translateUi("Tool deleted")),
       });
     } catch {
       // The mutation hook displays the API error; preserve the current state for retry.
@@ -82,7 +85,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
               ))}
               {tool.agent.length > 3 && (
                 <span className="text-[11px] text-muted-foreground">
-                  +{tool.agent.length - 3} more
+                  +{tool.agent.length - 3} <Trans>{"more"}</Trans>
                 </span>
               )}
             </div>
@@ -94,7 +97,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
           <DropdownMenuTrigger asChild>
             <button
               className="flex size-8 shrink-0 items-center justify-center rounded-md border bg-background text-muted-foreground transition-colors hover:text-foreground"
-              aria-label="Tool actions"
+              aria-label={translateUi("Tool actions")}
             >
               <MoreVertical className="size-4" />
             </button>
@@ -120,9 +123,9 @@ export function ToolCard({ tool }: { tool: Tool }) {
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete tool?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"Delete tool?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove <span className="font-medium">{tool.name}</span> from your organization and detach it from all agents. This cannot be undone.
+              <Trans>{"This will remove"}</Trans> <span className="font-medium">{tool.name}</span> <Trans>{"from your organization and detach it from all agents. This cannot be undone."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

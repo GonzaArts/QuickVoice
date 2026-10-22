@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import {
@@ -66,6 +68,7 @@ function SecretSkeleton() {
 }
 
 export function SecretsTable({ onCreate }: { onCreate: () => void }) {
+  const translateUi = useT();
   const { data: secrets = [], isLoading, isError, isFetching, refetch } =
     useSecrets();
   const deleteSecret = useDeleteSecret();
@@ -73,7 +76,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
 
   async function copyReference(secret: Secret) {
     await navigator.clipboard.writeText(secret.reference);
-    toast.success("Secret reference copied");
+    toast.success(translateUi("Secret reference copied"));
   }
 
   async function confirmDelete() {
@@ -81,7 +84,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
       if (!deleteTarget) return;
       await deleteSecret.mutateAsync(deleteTarget.secretId, {
         onSuccess: () => {
-          toast.success("Secret deleted");
+          toast.success(translateUi("Secret deleted"));
           setDeleteTarget(null);
         },
       });
@@ -126,7 +129,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
           <TableHeader>
             <TableRow>
               <TableHead><Trans>{"Name"}</Trans></TableHead>
-              <TableHead>Reference</TableHead>
+              <TableHead><Trans>{"Reference"}</Trans></TableHead>
               <TableHead><Trans>{"Updated"}</Trans></TableHead>
               <TableHead className="w-12 text-right"><Trans>{"Actions"}</Trans></TableHead>
             </TableRow>
@@ -142,7 +145,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
                     <div className="min-w-0">
                       <p className="font-medium">{secret.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        Secret value hidden
+                        <Trans>{"Secret value hidden"}</Trans>
                       </p>
                     </div>
                   </div>
@@ -161,16 +164,16 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        aria-label={`Actions for ${secret.name}`}
+                        aria-label={translateUi("Actions for {name}", {name: secret.name})}
                       >
                         <MoreHorizontal className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Secret actions</DropdownMenuLabel>
+                      <DropdownMenuLabel><Trans>{"Secret actions"}</Trans></DropdownMenuLabel>
                       <DropdownMenuItem onClick={() => copyReference(secret)}>
                         <Clipboard className="size-4" />
-                        Copy reference
+                        <Trans>{"Copy reference"}</Trans>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
@@ -178,7 +181,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
                         onClick={() => setDeleteTarget(secret)}
                       >
                         <Trash2 className="size-4" />
-                        Delete secret
+                        <Trans>{"Delete secret"}</Trans>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -197,10 +200,9 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete secret?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"Delete secret?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
-              This removes the secret named {deleteTarget?.name}. Existing tools
-              or webhooks using its reference may fail until they are updated.
+              <Trans>{"This removes the secret named"}</Trans> {deleteTarget?.name}<Trans>{". Existing tools or webhooks using its reference may fail until they are updated."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -218,7 +220,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
               {deleteSecret.isPending ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : null}
-              Delete secret
+              <Trans>{"Delete secret"}</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

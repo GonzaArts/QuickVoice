@@ -136,7 +136,7 @@ export function KVEditor({
           disabled={disabled}
         >
           <Plus className="size-3.5" />
-          Add row
+          <Trans>{"Add row"}</Trans>
         </Button>
       )}
     </div>

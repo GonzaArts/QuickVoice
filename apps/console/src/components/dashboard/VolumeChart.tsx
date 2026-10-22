@@ -1,8 +1,11 @@
 "use client";
 
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode, formatNumber } from "@/src/i18n/config";
+
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
-import { useId } from "react";
+import { useId, useMemo } from "react";
 import { PhoneCall } from "lucide-react";
 import {
   Area,
@@ -43,12 +46,12 @@ const config = {
   },
 } satisfies ChartConfig;
 
-function formatTick(iso: string, range: DashboardRange) {
+function formatTick(iso: string, range: DashboardRange, locale: string) {
   const d = new Date(iso);
   if (range === "24h") {
-    return d.toLocaleTimeString([], { hour: "numeric" });
+    return d.toLocaleTimeString(locale, { hour: "numeric" });
   }
-  return d.toLocaleDateString([], { month: "short", day: "numeric" });
+  return d.toLocaleDateString(locale, { month: "short", day: "numeric" });
 }
 
 function totalFor(data: DashboardSeriesPoint[], key: keyof DashboardSeriesPoint) {
@@ -67,9 +70,16 @@ export function VolumeChart({
   range: DashboardRange;
   loading?: boolean;
 }) {
+  const { t: translateUi, locale } = useLocale();
   const titleId = useId();
   const summaryId = useId();
   const bucketUnit = range === "24h" ? "hour" : "day";
+  const localizedUnit = translateUi(bucketUnit);
+  const chartConfig = useMemo(() => ({
+    calls: { ...config.calls, label: translateUi("Calls") },
+    minutes: { ...config.minutes, label: translateUi("Minutes") },
+    failed: { ...config.failed, label: translateUi("Failed") },
+  }), [translateUi]);
 
   if (loading) {
     return (
@@ -100,31 +110,32 @@ export function VolumeChart({
       <div className="flex flex-col gap-4 border-b bg-muted/20 p-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-            Traffic timeline
+            <Trans>{"Traffic timeline"}</Trans>
           </p>
           <h3
             id={titleId}
             className="mt-1 text-lg font-semibold tracking-tight text-foreground"
           >
-            Calls, minutes, and outcome pressure
+            <Trans>{"Calls, minutes, and outcome pressure"}</Trans>
           </h3>
           <p id={summaryId} className="mt-1 text-sm text-muted-foreground">
-            Bucketed by {bucketUnit}. X-axis shows {bucketUnit}; left axis shows
-            calls and failed calls; right axis shows minutes.
+            {translateUi("Bucketed by {unit}. X-axis shows {unit}; left axis shows calls and failed calls; right axis shows minutes.", {
+              unit: localizedUnit,
+            })}
           </p>
         </div>
         <div className="grid grid-cols-3 overflow-hidden rounded-xl border bg-background/80 text-center text-xs shadow-sm backdrop-blur sm:min-w-96">
           <div className="border-r border-border/70 px-3 py-2.5">
-            <p className="font-semibold text-blue-400 tabular-nums">{calls}</p>
-            <p className="text-muted-foreground">calls</p>
+            <p className="font-semibold text-blue-400 tabular-nums">{formatNumber(locale, calls)}</p>
+            <p className="text-muted-foreground"><Trans>{"calls"}</Trans></p>
           </div>
           <div className="border-r border-border/70 px-3 py-2.5">
-            <p className="font-semibold text-foreground tabular-nums">{minutes}</p>
-            <p className="text-muted-foreground">minutes</p>
+            <p className="font-semibold text-foreground tabular-nums">{formatNumber(locale, minutes)}</p>
+            <p className="text-muted-foreground"><Trans>{"minutes"}</Trans></p>
           </div>
           <div className="px-3 py-2.5">
-            <p className="font-semibold text-muted-foreground tabular-nums">{peak}</p>
-            <p className="text-muted-foreground">peak</p>
+            <p className="font-semibold text-muted-foreground tabular-nums">{formatNumber(locale, peak)}</p>
+            <p className="text-muted-foreground"><Trans>{"peak"}</Trans></p>
           </div>
         </div>
       </div>
@@ -137,10 +148,10 @@ export function VolumeChart({
           action={
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button asChild size="sm">
-                <Link href="/outbound">Place a test call</Link>
+                <Link href="/outbound"><Trans>{"Place a test call"}</Trans></Link>
               </Button>
               <Button asChild size="sm" variant="outline">
-                <Link href="/numbers">Connect number</Link>
+                <Link href="/numbers"><Trans>{"Connect number"}</Trans></Link>
               </Button>
             </div>
           }
@@ -148,16 +159,16 @@ export function VolumeChart({
       ) : (
         <>
           <ChartContainer
-            config={config}
+            config={chartConfig}
             className="h-[22rem] w-full p-5"
             role="group"
-            aria-label="Traffic timeline chart"
+            aria-label={translateUi("Traffic timeline chart")}
           >
             <ComposedChart
               accessibilityLayer
               data={data}
               margin={{ top: 12, right: 44, left: 18, bottom: 28 }}
-              aria-label="Calls, minutes, and failed calls over time"
+              aria-label={translateUi("Calls, minutes, and failed calls over time")}
               aria-describedby={summaryId}
             >
               <defs>
@@ -187,13 +198,13 @@ export function VolumeChart({
               />
               <XAxis
                 dataKey="t"
-                tickFormatter={(v) => formatTick(v, range)}
+                tickFormatter={(v) => formatTick(v, range, localeCode(locale))}
                 stroke="currentColor"
                 className="text-xs text-muted-foreground"
                 tickLine={false}
                 axisLine={false}
                 label={{
-                  value: bucketUnit === "hour" ? "Hour" : "Day",
+                  value: translateUi(bucketUnit === "hour" ? "Hour" : "Day"),
                   position: "insideBottom",
                   offset: -18,
                 }}
@@ -206,7 +217,7 @@ export function VolumeChart({
                 axisLine={false}
                 width={42}
                 label={{
-                  value: `Calls by ${bucketUnit}`,
+                  value: translateUi("Calls by {bucket}", { bucket: localizedUnit }),
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -220,7 +231,7 @@ export function VolumeChart({
                 axisLine={false}
                 width={48}
                 label={{
-                  value: "Minutes (right axis)",
+                  value: translateUi("Minutes (right axis)"),
                   angle: 90,
                   position: "insideRight",
                 }}
@@ -228,7 +239,7 @@ export function VolumeChart({
               <ChartTooltip
                 content={
                   <ChartTooltipContent
-                    labelFormatter={(v) => formatTick(String(v), range)}
+                    labelFormatter={(v) => formatTick(String(v), range, localeCode(locale))}
                   />
                 }
               />
@@ -236,7 +247,7 @@ export function VolumeChart({
                 yAxisId="right"
                 type="monotone"
                 dataKey="minutes"
-                name="Minutes (right axis)"
+                name={translateUi("Minutes (right axis)")}
                 stroke="var(--color-minutes)"
                 strokeWidth={2.5}
                 fill="url(#dashboard-minutes-fill)"
@@ -244,7 +255,7 @@ export function VolumeChart({
               <Bar
                 yAxisId="left"
                 dataKey="calls"
-                name={`Calls by ${bucketUnit}`}
+                name={translateUi("Calls by {bucket}", { bucket: localizedUnit })}
                 fill="var(--color-calls)"
                 fillOpacity={0.72}
                 barSize={18}
@@ -254,7 +265,7 @@ export function VolumeChart({
                 yAxisId="left"
                 type="monotone"
                 dataKey="failed"
-                name="Failed calls"
+                name={translateUi("Failed calls")}
                 stroke={failedCalls > 0 ? "#f87171" : "hsl(var(--muted-foreground))"}
                 strokeWidth={2.5}
                 dot={false}
@@ -264,45 +275,45 @@ export function VolumeChart({
           </ChartContainer>
           <ul
             className="grid gap-2 px-5 pb-5 text-xs text-muted-foreground sm:grid-cols-3"
-            aria-label="Traffic timeline legend"
+            aria-label={translateUi("Traffic timeline legend")}
           >
             <li className="flex items-center gap-2">
               <span
                 aria-hidden
                 className="h-4 w-2 rounded-sm border border-blue-500/50 bg-blue-500/70"
               />
-              <span>Calls by {bucketUnit} - bar series</span>
+              <span>{translateUi("Calls by {bucket} - bar series", { bucket: localizedUnit })}</span>
             </li>
             <li className="flex items-center gap-2">
               <span
                 aria-hidden
                 className="h-3 w-5 rounded-sm border border-slate-500 bg-slate-500/20"
               />
-              <span>Minutes (right axis) - shaded area</span>
+              <span><Trans>{"Minutes (right axis) - shaded area"}</Trans></span>
             </li>
             <li className="flex items-center gap-2">
               <span
                 aria-hidden
                 className={failedCalls > 0 ? "h-px w-6 border-t-2 border-red-400/70" : "h-px w-6 border-t-2 border-muted-foreground/60"}
               />
-              <span>Failed calls - line series</span>
+              <span><Trans>{"Failed calls - line series"}</Trans></span>
             </li>
           </ul>
           <div className="sr-only">
             <table aria-describedby={summaryId}>
-              <caption>Traffic timeline data table</caption>
+              <caption><Trans>{"Traffic timeline data table"}</Trans></caption>
               <thead>
                 <tr>
-                  <th scope="col">{bucketUnit}</th>
+                  <th scope="col">{localizedUnit}</th>
                   <th scope="col"><Trans>{"Calls"}</Trans></th>
-                  <th scope="col">Minutes</th>
-                  <th scope="col">Failed calls</th>
+                  <th scope="col"><Trans>{"Minutes"}</Trans></th>
+                  <th scope="col"><Trans>{"Failed calls"}</Trans></th>
                 </tr>
               </thead>
               <tbody>
                 {data.map((point) => (
                   <tr key={point.t}>
-                    <th scope="row">{formatTick(point.t, range)}</th>
+                    <th scope="row">{formatTick(point.t, range, localeCode(locale))}</th>
                     <td>{point.calls}</td>
                     <td>{point.minutes}</td>
                     <td>{point.failed}</td>

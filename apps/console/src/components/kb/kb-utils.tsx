@@ -1,3 +1,6 @@
+"use client";
+
+import { useT } from "@/src/i18n/provider";
 import { Trans } from "@/src/i18n/Trans";
 import { AlertCircle, FileSpreadsheet, FileText, Globe } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -80,6 +83,7 @@ export function KnowledgeSourceStatus({
   source: KnowledgeSource;
   compact?: boolean;
 }) {
+  const translateUi = useT();
   if (source.status !== "ERROR") {
     return <StatusChip status={source.status} />;
   }
@@ -94,20 +98,20 @@ export function KnowledgeSourceStatus({
           : "min-w-0 max-w-full space-y-2"
       }
       role="status"
-      aria-label={`Document processing failed: ${copy.reason}`}
+      aria-label={translateUi("Document processing failed: {reason}", {reason: translateUi(copy.reason)})}
     >
       <StatusChip status={source.status} />
       <div className="space-y-1 border-l-2 border-red-500/40 pl-2.5">
         <p className="break-words text-xs font-medium leading-5 text-foreground">
-          {copy.reason}
+          {translateUi(copy.reason)}
         </p>
         <p className="break-words text-xs leading-5 text-muted-foreground">
-          <span className="font-medium text-foreground/80">How to fix:</span>{" "}
-          {copy.guidance}
+          <span className="font-medium text-foreground/80"><Trans>{"How to fix:"}</Trans></span>{" "}
+          {translateUi(copy.guidance)}
         </p>
         {source.errorCode ? (
           <p className="break-all font-mono text-[10px] leading-4 text-muted-foreground/80">
-            Error code: {source.errorCode}
+            <Trans>{"Error code:"}</Trans> {source.errorCode}
           </p>
         ) : null}
       </div>

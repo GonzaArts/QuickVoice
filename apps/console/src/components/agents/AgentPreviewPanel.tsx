@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -88,6 +90,7 @@ export function AgentPreviewPanel({
   open,
   onOpenChange,
 }: AgentPreviewPanelProps) {
+  const translateUi = useT();
   const createPreview = useCreateAgentPreviewSession(agentId);
   const { data: config } = useAgentConfig(agentId);
   const roomRef = useRef<Room | null>(null);
@@ -429,8 +432,8 @@ export function AgentPreviewPanel({
                     </p>
                     <p className="mt-1 text-lg font-semibold text-foreground">
                       {isLive
-                        ? "Conversation active"
-                        : "Test before callers do"}
+                        ? <Trans>{"Conversation active"}</Trans>
+                        : <Trans>{"Test before callers do"}</Trans>}
                     </p>
                   </div>
                   <div
@@ -475,7 +478,7 @@ export function AgentPreviewPanel({
                 <p className="mt-4 text-sm text-muted-foreground">
                   {expiresAt
                     ? `Temporary preview access expires around ${expiresAt}.`
-                    : "Starts a temporary 3-hour LiveKit preview room."}
+                    : <Trans>{"Starts a temporary 3-hour LiveKit preview room."}</Trans>}
                 </p>
               </div>
 
@@ -484,7 +487,7 @@ export function AgentPreviewPanel({
                   variableNames={previewVariableNames}
                   values={previewVariableValues}
                   placeholders={agentVariables.placeholders}
-                  title="Preview variables"
+                  title={translateUi("Preview variables")}
                   description="Values entered here are used for this preview session and override saved fallback values."
                   disabled={isBusy}
                   idPrefix="preview-variable"
@@ -500,7 +503,7 @@ export function AgentPreviewPanel({
                     <Trans>{"Conversation"}</Trans>
                   </p>
                   <p className="mt-1 truncate text-base font-semibold text-foreground">
-                    {isLive ? "Call started" : "Preparing preview"}
+                    {isLive ? <Trans>{"Call started"}</Trans> : <Trans>{"Preparing preview"}</Trans>}
                   </p>
                 </div>
                 <div
@@ -520,7 +523,7 @@ export function AgentPreviewPanel({
               <p className="mt-2 text-xs text-muted-foreground">
                 {expiresAt
                   ? `Preview access expires around ${expiresAt}.`
-                  : "Temporary LiveKit room is starting."}
+                  : <Trans>{"Temporary LiveKit room is starting."}</Trans>}
               </p>
             </div>
           )}
@@ -593,7 +596,7 @@ export function AgentPreviewPanel({
             <div className="grid grid-cols-2 gap-2">
               <Button variant="outline" onClick={toggleMute}>
                 {muted ? <Mic /> : <MicOff />}
-                {muted ? "Unmute" : "Mute"}
+                {muted ? <Trans>{"Unmute"}</Trans> : <Trans>{"Mute"}</Trans>}
               </Button>
               <Button
                 variant="destructive"

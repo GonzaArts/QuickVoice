@@ -88,10 +88,10 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0 space-y-2">
               <SheetDescription className="font-medium text-muted-foreground">
-                Recording &amp; transcript
+                <Trans>{"Recording & transcript"}</Trans>
               </SheetDescription>
               <SheetTitle className="truncate text-xl font-semibold tracking-tight sm:text-2xl">
-                {call?.callerId ?? "Unknown caller"}
+                {call?.callerId ?? <Trans>{"Unknown caller"}</Trans>}
               </SheetTitle>
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" className="gap-1.5 rounded-full px-3 py-1">
@@ -138,9 +138,9 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
             <aside className="border-b bg-muted/20 p-4 sm:p-6 lg:border-r lg:border-b-0 lg:p-6">
               <AudioPlayer src={call?.audioRecordingPath ?? null} callId={call?.callId ?? ""} />
               <div className="mt-5 rounded-xl border bg-background/70 p-4 text-sm text-muted-foreground">
-                <p className="font-medium text-foreground">Review tip</p>
+                <p className="font-medium text-foreground"><Trans>{"Review tip"}</Trans></p>
                 <p className="mt-1 leading-relaxed">
-                  Use the transcript to inspect handoff quality, caller intent, and any missed follow-up details.
+                  <Trans>{"Use the transcript to inspect handoff quality, caller intent, and any missed follow-up details."}</Trans>
                 </p>
               </div>
             </aside>
@@ -149,7 +149,7 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
               <div className="flex items-center justify-between border-b px-4 py-3 sm:px-6">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground"><Trans>{"Transcript"}</Trans></h3>
-                  <p className="text-xs text-muted-foreground">Conversation messages in chronological order.</p>
+                  <p className="text-xs text-muted-foreground"><Trans>{"Conversation messages in chronological order."}</Trans></p>
                 </div>
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto bg-muted/10 p-4 sm:p-6">

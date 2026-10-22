@@ -176,7 +176,7 @@ export function CSVPreview({
     return (
       <div className="rounded-lg border bg-card p-4 flex items-center justify-center gap-3">
         <Loader2 className="size-4 animate-spin text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">Parsing CSV...</span>
+        <span className="text-sm text-muted-foreground"><Trans>{"Parsing CSV..."}</Trans></span>
       </div>
     );
   }
@@ -187,7 +187,7 @@ export function CSVPreview({
         <div className="flex items-start gap-3">
           <AlertCircle className="size-4 text-destructive mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-medium text-destructive">Parse Error</p>
+            <p className="text-sm font-medium text-destructive"><Trans>{"Parse Error"}</Trans></p>
             <p className="text-xs text-muted-foreground mt-1">{error}</p>
           </div>
         </div>
@@ -226,9 +226,9 @@ export function CSVPreview({
         <div className="flex items-center gap-3">
           <Table className="size-4 text-muted-foreground" />
           <div>
-            <p className="text-sm font-medium">CSV Preview</p>
+            <p className="text-sm font-medium"><Trans>{"CSV Preview"}</Trans></p>
             <p className="text-xs text-muted-foreground">
-              {parsed.totalRows} total rows • Showing {Math.min(parsed.rows.length, maxRows)} rows
+              {parsed.totalRows} <Trans>{"total rows • Showing"}</Trans> {Math.min(parsed.rows.length, maxRows)} <Trans>{"rows"}</Trans>
             </p>
           </div>
         </div>
@@ -238,7 +238,7 @@ export function CSVPreview({
           size="sm"
           onClick={() => setShowPreview(!showPreview)}
         >
-          {showPreview ? "Hide" : "Show"}
+          {showPreview ? <Trans>{"Hide"}</Trans> : <Trans>{"Show"}</Trans>}
         </Button>
       </div>
 
@@ -280,7 +280,7 @@ export function CSVPreview({
                     {header}
                     {header === "phone_number" && (
                       <Badge variant="outline" className="ml-1.5 text-[10px]">
-                        Required
+                        <Trans>{"Required"}</Trans>
                       </Badge>
                     )}
                   </th>
@@ -296,7 +296,7 @@ export function CSVPreview({
                   {parsed.headers.map((_, colIndex) => (
                     <td key={colIndex} className="px-3 py-2 max-w-[200px] truncate">
                       {row[colIndex] || (
-                        <span className="text-muted-foreground italic">empty</span>
+                        <span className="text-muted-foreground italic"><Trans>{"empty"}</Trans></span>
                       )}
                     </td>
                   ))}
@@ -311,7 +311,7 @@ export function CSVPreview({
         <div className="p-8 text-center">
           <FileSpreadsheet className="size-8 mx-auto text-muted-foreground mb-2" />
           <p className="text-sm text-muted-foreground">
-            No data rows found in this file
+            <Trans>{"No data rows found in this file"}</Trans>
           </p>
         </div>
       )}
@@ -320,7 +320,7 @@ export function CSVPreview({
         <div className="p-3 border-t bg-emerald-50 flex items-center gap-2">
           <CheckCircle2 className="size-4 text-emerald-600" />
           <span className="text-sm text-emerald-700">
-            File looks good! Ready to use for your campaign.
+            <Trans>{"File looks good! Ready to use for your campaign."}</Trans>
           </span>
         </div>
       )}

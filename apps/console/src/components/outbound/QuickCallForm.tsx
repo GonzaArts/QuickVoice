@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { FormEvent, useMemo, useState } from "react";
 import { CheckCircle2, Loader2, PhoneOutgoing, RefreshCw } from "lucide-react";
@@ -53,6 +55,7 @@ function formatProvider(provider: PhoneNumber["provider"]) {
 }
 
 export function QuickCallForm() {
+  const translateUi = useT();
   const { data: agents = [], isLoading: agentsLoading, refetch: refetchAgents } = useAgents();
   const { data: numbers = [], isLoading: numbersLoading, refetch: refetchNumbers } = useNumbers();
   const quickCall = useQuickOutboundCall();
@@ -207,7 +210,7 @@ export function QuickCallForm() {
               <Label htmlFor="agent"><Trans>{"Agent"}</Trans></Label>
               <Select value={agentId} onValueChange={selectAgent}>
                 <SelectTrigger id="agent" className="w-full">
-                  <SelectValue placeholder="Select agent" />
+                  <SelectValue placeholder={translateUi("Select agent")} />
                 </SelectTrigger>
                 <SelectContent>
                   {dialableAgents.map((agent) => (
@@ -220,10 +223,10 @@ export function QuickCallForm() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="fromNumber">From</Label>
+              <Label htmlFor="fromNumber"><Trans>{"From"}</Trans></Label>
               <Select value={fromNumber} onValueChange={setRequestedFromNumber}>
                 <SelectTrigger id="fromNumber" className="w-full">
-                  <SelectValue placeholder="Select caller ID" />
+                  <SelectValue placeholder={translateUi("Select caller ID")} />
                 </SelectTrigger>
                 <SelectContent>
                   {(selectedAgent?.numbers ?? []).map((number) => (
@@ -238,7 +241,7 @@ export function QuickCallForm() {
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="phoneNumber">To</Label>
+              <Label htmlFor="phoneNumber"><Trans>{"To"}</Trans></Label>
               <Input
                 id="phoneNumber"
                 type="tel"
@@ -253,7 +256,7 @@ export function QuickCallForm() {
               <Label htmlFor="username"><Trans>{"Name"}</Trans></Label>
               <Input
                 id="username"
-                placeholder="Contact name"
+                placeholder={translateUi("Contact name")}
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
               />
@@ -265,18 +268,18 @@ export function QuickCallForm() {
             <Textarea
               id="firstMessage"
               rows={3}
-              placeholder="Hi, this is a quick call from QuickVoice."
+              placeholder={translateUi("Hi, this is a quick call from QuickVoice.")}
               value={firstMessage}
               onChange={(event) => setFirstMessage(event.target.value)}
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="systemPrompt">System prompt override</Label>
+            <Label htmlFor="systemPrompt"><Trans>{"System prompt override"}</Trans></Label>
             <Textarea
               id="systemPrompt"
               rows={4}
-              placeholder="Keep the call brief and confirm the requested information."
+              placeholder={translateUi("Keep the call brief and confirm the requested information.")}
               value={systemPrompt}
               onChange={(event) => setSystemPrompt(event.target.value)}
             />
@@ -284,12 +287,12 @@ export function QuickCallForm() {
 
           {selectedAgentConfigLoading ? (
             <div className="border border-dashed bg-muted/20 p-4 text-sm text-muted-foreground">
-              Loading agent variables...
+              <Trans>{"Loading agent variables..."}</Trans>
             </div>
           ) : dynamicVariableNames.length > 0 ? (
             <DynamicVariableInputs
               idPrefix="quick-call-variable"
-              title="Call variables"
+              title={translateUi("Call variables")}
               description="Values sent only for this outbound call."
               variableNames={dynamicVariableNames}
               values={dynamicVariableValues}
@@ -308,7 +311,7 @@ export function QuickCallForm() {
               aria-live="polite"
               className="border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
             >
-              Started call to {startedCall.phoneNumber} from {startedCall.fromNumber}.
+              <Trans>{"Started call to"}</Trans> {startedCall.phoneNumber} <Trans>{"from"}</Trans> {startedCall.fromNumber}.
             </div>
           ) : null}
 
@@ -318,7 +321,7 @@ export function QuickCallForm() {
             </Button>
             <Button type="submit" disabled={!canSubmit}>
               {quickCall.isPending ? <Loader2 className="animate-spin" /> : <PhoneOutgoing />}
-              Start call
+              <Trans>{"Start call"}</Trans>
             </Button>
           </div>
         </div>
@@ -327,7 +330,7 @@ export function QuickCallForm() {
       <aside className="border bg-card p-5">
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <CheckCircle2 className="size-4 text-emerald-500" />
-          Ready lines
+          <Trans>{"Ready lines"}</Trans>
         </div>
         <div className="mt-4 space-y-3">
           {dialableAgents.map((agent: DialableAgent) => (

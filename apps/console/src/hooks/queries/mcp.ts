@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { mcpApi, type ConnectMcpInput, type McpCatalogParams } from "@/src/lib/api/resources/mcp";
 import { queryKeys } from "@/src/lib/query-keys";
+import { useT } from "@/src/i18n/provider";
 
 const isSafeSetupUrl = (setupUrl: string) => {
   try {
@@ -22,15 +23,16 @@ const isSafeSetupUrl = (setupUrl: string) => {
 const openSetupAndPoll = (
   setupUrl: string,
   mcpConnectionId: string,
-  qc: ReturnType<typeof useQueryClient>
+  qc: ReturnType<typeof useQueryClient>,
+  t: ReturnType<typeof useT>
 ): (() => void) => {
   if (!isSafeSetupUrl(setupUrl)) {
-    toast.error("Setup URL is invalid or uses an unsupported protocol.");
+    toast.error(t("Setup URL is invalid or uses an unsupported protocol."));
     return () => {};
   }
 
   window.open(setupUrl, "_blank", "noopener,noreferrer");
-  toast.info("Complete setup in the new tab. QuickVoice will refresh automatically.");
+  toast.info(t("Complete setup in the new tab. QuickVoice will refresh automatically."));
   let attempts = 0;
   let refreshing = false;
   const maxAttempts = 24;
@@ -49,7 +51,7 @@ const openSetupAndPoll = (
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       if (connection.status === "CONNECTED") {
         stop();
-        toast.success(`${connection.displayName} connected`);
+        toast.success(t("{name} connected", { name: connection.displayName }));
       }
     } catch {
       // Keep polling while Smithery is still settling after OAuth.
@@ -90,6 +92,7 @@ export function useAgentMcpConnections(agentId: string) {
 }
 
 export function useConnectMcp() {
+  const t = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: ConnectMcpInput) => mcpApi.connect(input),
@@ -97,29 +100,31 @@ export function useConnectMcp() {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.all });
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       if (connection.setupUrl) {
-        toast.info("Setup is required. Click the Setup button to continue.");
+        toast.info(t("Setup is required. Click the Setup button to continue."));
         return;
       }
-      toast.success("MCP connection created");
+      toast.success(t("MCP connection created"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not connect MCP server");
+      toast.error(err.message || t("Could not connect MCP server"));
     },
   });
 }
 
 export function useOpenMcpSetup() {
+  const t = useT();
   const qc = useQueryClient();
   const cleanup = useRef<(() => void) | null>(null);
   useEffect(() => () => cleanup.current?.(), []);
   return (setupUrl: string, mcpConnectionId: string) => {
     if (typeof window === "undefined") return;
     cleanup.current?.();
-    cleanup.current = openSetupAndPoll(setupUrl, mcpConnectionId, qc);
+    cleanup.current = openSetupAndPoll(setupUrl, mcpConnectionId, qc, t);
   };
 }
 
 export function useRefreshMcpConnection() {
+  const t = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (mcpConnectionId: string) => mcpApi.refresh(mcpConnectionId),
@@ -127,24 +132,26 @@ export function useRefreshMcpConnection() {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       qc.invalidateQueries({ queryKey: queryKeys.mcp.all });
     },
-    onError: (err: Error) => toast.error(err.message || "Could not refresh MCP connection"),
+    onError: (err: Error) => toast.error(err.message || t("Could not refresh MCP connection")),
   });
 }
 
 export function useDisconnectMcpConnection() {
+  const t = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (mcpConnectionId: string) => mcpApi.disconnect(mcpConnectionId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.all });
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
-      toast.success("MCP connection disconnected");
+      toast.success(t("MCP connection disconnected"));
     },
-    onError: (err: Error) => toast.error(err.message || "Could not disconnect MCP connection"),
+    onError: (err: Error) => toast.error(err.message || t("Could not disconnect MCP connection")),
   });
 }
 
 export function useAttachMcpConnection(agentId: string) {
+  const t = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (mcpConnectionId: string) => mcpApi.attach(mcpConnectionId, agentId),
@@ -153,11 +160,12 @@ export function useAttachMcpConnection(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
-    onError: (err: Error) => toast.error(err.message || "Could not attach MCP connection"),
+    onError: (err: Error) => toast.error(err.message || t("Could not attach MCP connection")),
   });
 }
 
 export function useDetachMcpConnection(agentId: string) {
+  const t = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (mcpConnectionId: string) => mcpApi.detach(mcpConnectionId, agentId),
@@ -166,6 +174,6 @@ export function useDetachMcpConnection(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
-    onError: (err: Error) => toast.error(err.message || "Could not detach MCP connection"),
+    onError: (err: Error) => toast.error(err.message || t("Could not detach MCP connection")),
   });
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -55,16 +57,16 @@ import { cn } from "@/src/lib/utils";
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
-function formatDate(value: string) {
-    return new Date(value).toLocaleDateString([], {
+function formatDate(value: string, language: string) {
+    return new Date(value).toLocaleDateString(language, {
         month: "short",
         day: "numeric",
         year: "numeric",
     });
 }
 
-function formatDateTime(value: string) {
-    return new Date(value).toLocaleString([], {
+function formatDateTime(value: string, language: string) {
+    return new Date(value).toLocaleString(language, {
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -76,11 +78,12 @@ function formatDateTime(value: string) {
 
 function formatRentalPrice(
     value: PhoneNumber["rentalPriceMicros"] | undefined,
+    language: string,
 ) {
     if (value === null || value === undefined) return null;
     const micros = Number(value);
     if (!Number.isFinite(micros)) return null;
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(language, {
         style: "currency",
         currency: "USD",
         minimumFractionDigits: 2,
@@ -115,10 +118,12 @@ const BILLING_STATUS_META: Record<
 };
 
 function NumberBillingSummary({ number }: { number: PhoneNumber }) {
+    const { locale, t } = useLocale();
     const status = number.billingStatus ?? "ACTIVE";
     const meta = BILLING_STATUS_META[status];
     const rentalPrice = formatRentalPrice(
         number.rentalPriceMicros ?? number.monthlyPriceMicros,
+        localeCode(locale),
     );
     const atRisk =
         status === "SUSPENDED" ||
@@ -134,18 +139,18 @@ function NumberBillingSummary({ number }: { number: PhoneNumber }) {
         >
             <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="outline" className={meta.className}>
-                    {meta.label}
+                    {t(meta.label)}
                 </Badge>
                 <span className="font-medium text-foreground">
-                    {rentalPrice ? `${rentalPrice} / 30 days` : "Rental price pending"}
+                    {rentalPrice ? t("{price} / 30 days", { price: rentalPrice }) : <Trans>{"Rental price pending"}</Trans>}
                 </span>
             </div>
             {status === "ACTIVE" ? (
                 <p className="flex items-center gap-1 text-muted-foreground">
                     <CalendarClock className="size-3" />
                     {number.nextBillingAt
-                        ? `Renews ${formatDateTime(number.nextBillingAt)}`
-                        : "Renewal date pending"}
+                        ? t("Renews {date}", { date: formatDateTime(number.nextBillingAt, localeCode(locale)) })
+                        : <Trans>{"Renewal date pending"}</Trans>}
                 </p>
             ) : status === "RELEASED" ? (
                 <p className="font-medium text-destructive">
@@ -158,8 +163,8 @@ function NumberBillingSummary({ number }: { number: PhoneNumber }) {
                     </p>
                     <p className="text-muted-foreground">
                         {number.scheduledReleaseAt
-                            ? `Scheduled for release ${formatDateTime(number.scheduledReleaseAt)}`
-                            : "Release time pending"}
+                            ? t("Scheduled for release {date}", { date: formatDateTime(number.scheduledReleaseAt, localeCode(locale)) })
+                            : <Trans>{"Release time pending"}</Trans>}
                     </p>
                 </>
             )}
@@ -223,6 +228,8 @@ function NumbersPageSkeleton() {
 // ── page ──────────────────────────────────────────────────────────────────────
 
 export default function NumbersPage() {
+    const { locale, t } = useLocale();
+    const translateUi = t;
     const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
     const [bannerDismissed, setBannerDismissed] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -394,7 +401,12 @@ export default function NumbersPage() {
                         <div className="flex flex-col gap-3 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm sm:flex-row sm:items-center">
                             <AlertCircle className="size-4 shrink-0 text-destructive" />
                             <span className="flex-1">
-                                {atRiskNumbers.length} phone number{atRiskNumbers.length === 1 ? " is" : "s are"} suspended or pending release. Recharge paid credit before the shown release time or the number may be permanently lost.
+                                {t(
+                                    atRiskNumbers.length === 1
+                                        ? "{count} phone number is suspended or pending release. Recharge paid credit before the shown release time or the number may be permanently lost."
+                                        : "{count} phone numbers are suspended or pending release. Recharge paid credit before the shown release time or the numbers may be permanently lost.",
+                                    { count: atRiskNumbers.length },
+                                )}
                             </span>
                             <Link
                                 href="/settings/billing"
@@ -410,12 +422,16 @@ export default function NumbersPage() {
                         <div className="flex items-center gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-400">
                             <AlertCircle className="size-4 shrink-0" />
                             <span className="flex-1">
-                                {unassignedCount} number{unassignedCount > 1 ? "s" : ""} need
-                                routing — assign an agent to start receiving calls.
+                                {t(
+                                    unassignedCount === 1
+                                        ? "{count} number needs routing — assign an agent to start receiving calls."
+                                        : "{count} numbers need routing — assign agents to start receiving calls.",
+                                    { count: unassignedCount },
+                                )}
                             </span>
                             <button
                                 onClick={() => setBannerDismissed(true)}
-                                aria-label="Dismiss"
+                                aria-label={translateUi("Dismiss")}
                                 className="shrink-0 rounded p-0.5 opacity-70 transition-opacity hover:opacity-100"
                             >
                                 <X className="size-4" />
@@ -440,7 +456,7 @@ export default function NumbersPage() {
                                 </div>
                             </div>
                             <div className="text-sm text-muted-foreground">
-                                <Trans>{"Showing"}</Trans> <span className="font-semibold text-foreground">{filteredNumbers.length}</span> of {numbers.length}
+                                <Trans>{"Showing"}</Trans> <span className="font-semibold text-foreground">{filteredNumbers.length}</span> <Trans>{"of"}</Trans> {numbers.length}
                             </div>
                         </div>
 
@@ -451,13 +467,13 @@ export default function NumbersPage() {
                                 <Input
                                     value={searchTerm}
                                     onChange={(event) => setSearchTerm(event.target.value)}
-                                    placeholder="Search number, name, provider, or SID"
+                                    placeholder={translateUi("Search number, name, provider, or SID")}
                                     className="pl-9"
                                 />
                             </label>
                             <Select value={providerFilter} onValueChange={(value) => setProviderFilter(value as typeof providerFilter)}>
-                                <SelectTrigger className="w-full" aria-label="Filter by provider">
-                                    <SelectValue placeholder="Provider" />
+                                <SelectTrigger className="w-full" aria-label={translateUi("Filter by provider")}>
+                                    <SelectValue placeholder={translateUi("Provider")} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all"><Trans>{"All providers"}</Trans></SelectItem>
@@ -466,8 +482,8 @@ export default function NumbersPage() {
                                 </SelectContent>
                             </Select>
                             <Select value={routingFilter} onValueChange={(value) => setRoutingFilter(value as typeof routingFilter)}>
-                                <SelectTrigger className="w-full" aria-label="Filter by routing state">
-                                    <SelectValue placeholder="Routing" />
+                                <SelectTrigger className="w-full" aria-label={translateUi("Filter by routing state")}>
+                                    <SelectValue placeholder={translateUi("Routing")} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all"><Trans>{"All routing states"}</Trans></SelectItem>
@@ -494,8 +510,8 @@ export default function NumbersPage() {
                                 <h2 className="text-base font-semibold text-foreground"><Trans>{"Routing table"}</Trans></h2>
                                 <p className="text-sm text-muted-foreground">
                                     {canManageNumbers
-                                        ? "Assign each inbound number to the agent that should answer it."
-                                        : "View which agent currently answers each inbound number."}
+                                        ? <Trans>{"Assign each inbound number to the agent that should answer it."}</Trans>
+                                        : <Trans>{"View which agent currently answers each inbound number."}</Trans>}
                                 </p>
                             </div>
                             <Button
@@ -540,7 +556,7 @@ export default function NumbersPage() {
                                                     type="button"
                                                     variant="ghost"
                                                     size="icon-sm"
-                                                    aria-label={`Copy ${number.number}`}
+                                                    aria-label={translateUi("Copy {number}", {number: number.number})}
                                                     onClick={() => copyNumber(number.number)}
                                                 >
                                                     {copiedNumber === number.number ? (
@@ -551,7 +567,7 @@ export default function NumbersPage() {
                                                 </Button>
                                             </div>
                                             <p className="truncate text-xs text-muted-foreground">
-                                                {number.friendlyName || "No friendly name"}
+                                                {number.friendlyName || <Trans>{"No friendly name"}</Trans>}
                                             </p>
                                         </div>
                                         <ProviderChip provider={number.provider} />
@@ -568,11 +584,11 @@ export default function NumbersPage() {
                                     <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
                                         <div>
                                             <p><Trans>{"Created"}</Trans></p>
-                                            <p className="mt-1 text-foreground">{formatDate(number.createdAt)}</p>
+                                            <p className="mt-1 text-foreground">{formatDate(number.createdAt, localeCode(locale))}</p>
                                         </div>
                                         <div>
                                             <p><Trans>{"Modified"}</Trans></p>
-                                            <p className="mt-1 text-foreground">{formatDate(number.updatedAt)}</p>
+                                            <p className="mt-1 text-foreground">{formatDate(number.updatedAt, localeCode(locale))}</p>
                                         </div>
                                         <div className="col-span-2">
                                             <p><Trans>{"SID"}</Trans></p>
@@ -627,7 +643,7 @@ export default function NumbersPage() {
                                                                 type="button"
                                                                 variant="ghost"
                                                                 size="icon-sm"
-                                                                aria-label={`Copy ${number.number}`}
+                                                                aria-label={translateUi("Copy {number}", {number: number.number})}
                                                                 onClick={() => copyNumber(number.number)}
                                                             >
                                                                 {copiedNumber === number.number ? (
@@ -638,7 +654,7 @@ export default function NumbersPage() {
                                                             </Button>
                                                         </div>
                                                         <p className="truncate text-xs text-muted-foreground">
-                                                            {number.friendlyName || "No friendly name"}
+                                                            {number.friendlyName || <Trans>{"No friendly name"}</Trans>}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -666,9 +682,9 @@ export default function NumbersPage() {
                                             {/* timeline */}
                                             <TableCell className="whitespace-nowrap">
                                                 <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
-                                                    <span>Created {formatDate(number.createdAt)}</span>
+                                                    <span><Trans>{"Created"}</Trans> {formatDate(number.createdAt, localeCode(locale))}</span>
                                                     <span className="text-muted-foreground/60">
-                                                        Modified {formatDate(number.updatedAt)}
+                                                        <Trans>{"Modified"}</Trans> {formatDate(number.updatedAt, localeCode(locale))}
                                                     </span>
                                                 </div>
                                             </TableCell>

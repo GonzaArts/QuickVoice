@@ -192,6 +192,7 @@ for (const [file, name, overrides] of cases) {
       router: { push: effect },
       toast: { success: effect },
       t: (key) => key,
+      translateUi: (key) => key,
       window: { confirm: () => true },
       searchParams: { provider: "TWILIO" },
       buyingNumber: null,

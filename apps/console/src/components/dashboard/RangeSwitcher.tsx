@@ -119,7 +119,7 @@ export function RangeSwitcher({
               onChange={(event) => setFrom(event.target.value)}
               className="h-8 rounded-md border bg-background px-2 text-xs text-foreground shadow-xs outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
             />
-            <span className="hidden text-xs text-muted-foreground sm:inline">to</span>
+            <span className="hidden text-xs text-muted-foreground sm:inline"><Trans>{"to"}</Trans></span>
             <label className="sr-only" htmlFor="dashboard-custom-to">
               <Trans>{"Custom range to"}</Trans>
             </label>
@@ -151,11 +151,11 @@ export function RangeSwitcher({
           className="flex items-center gap-1.5 text-xs text-muted-foreground"
         >
           <Loader2 className="size-3 animate-spin" />
-          Updating dashboard range
+          <Trans>{"Updating dashboard range"}</Trans>
         </div>
       ) : invalidCustomRange ? (
         <div role="alert" className="text-xs text-destructive">
-          Select an end date after the start date.
+          <Trans>{"Select an end date after the start date."}</Trans>
         </div>
       ) : null}
     </div>

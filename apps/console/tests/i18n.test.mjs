@@ -4,10 +4,13 @@ import ts from "typescript";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { inspect } from "../scripts/i18n-audit.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const es = JSON.parse(readFileSync(join(root, "src/i18n/messages/es.json"), "utf8"));
 const en = JSON.parse(readFileSync(join(root, "src/i18n/messages/en.json"), "utf8"));
+const extraEs = JSON.parse(readFileSync(join(root, "src/i18n/messages/extended.es.json"), "utf8"));
+const fullEs = { ...es, ...extraEs };
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 test("Spanish and English dictionaries have identical keys and non-empty strings", () => {
@@ -16,6 +19,11 @@ test("Spanish and English dictionaries have identical keys and non-empty strings
     const declaredKeys = [...raw.matchAll(/^ {2}("(?:\\.|[^"\\])*")\s*:/gm)].map((match) => match[1]);
     assert.equal(new Set(declaredKeys).size, declaredKeys.length, `Duplicate keys in ${locale}.json`);
   }
+  const extraRaw = readFileSync(join(root, "src/i18n/messages/extended.es.json"), "utf8");
+  const extraDeclaredKeys = [...extraRaw.matchAll(/^ {2}("(?:\\.|[^"\\])*")\s*:/gm)]
+    .map((match) => match[1]);
+  assert.equal(new Set(extraDeclaredKeys).size, extraDeclaredKeys.length,
+    "Duplicate keys in extended.es.json");
   assert.deepEqual(Object.keys(es).sort(), Object.keys(en).sort());
   assert.ok(Object.keys(es).length >= 100);
   for (const [key, value] of Object.entries(es)) {
@@ -25,31 +33,48 @@ test("Spanish and English dictionaries have identical keys and non-empty strings
       .map((match) => match[1]).sort();
     assert.deepEqual(placeholders(value), placeholders(key), `Interpolation tokens: ${key}`);
   }
+  assert.equal(Object.keys(extraEs).length, new Set(Object.keys(extraEs)).size);
+  for (const [key, value] of Object.entries(extraEs)) {
+    assert.ok(!Object.hasOwn(es, key), `Supplemental key duplicates base dictionary: ${key}`);
+    assert.ok(key.length && typeof value === "string" && value.trim(), key);
+    const placeholders = (copy) => [...copy.matchAll(/\{([a-zA-Z][a-zA-Z0-9_]*)\}/g)]
+      .map((match) => match[1]).sort();
+    assert.deepEqual(placeholders(value), placeholders(key), `Interpolation tokens: ${key}`);
+  }
 });
 
-test("literal t() calls and automatically translated titles have dictionary entries", () => {
+test("literal translation calls and automatically translated titles have dictionary entries", () => {
   const translatedProps = {
     PageHeader: new Set(["title", "description"]),
     EmptyState: new Set(["title", "description"]),
     StateView: new Set(["title", "description"]),
     StatCard: new Set(["label"]),
   };
-  const sourceFiles = walk(join(root, "src")).filter((f) => f.endsWith(".tsx"));
+  const sourceFiles = walk(join(root, "src")).filter((f) => f.endsWith(".tsx") ||
+    (f.endsWith(".ts") && f.includes("/hooks/queries/")));
   for (const filename of sourceFiles) {
     const source = readFileSync(filename, "utf8");
     for (const match of source.matchAll(/\bt\(\s*("(?:\\.|[^"\\])*")/g)) {
       const key = JSON.parse(match[1]);
-      assert.ok(Object.hasOwn(es, key), `${filename}: t(${JSON.stringify(key)})`);
+      assert.ok(Object.hasOwn(fullEs, key), `${filename}: t(${JSON.stringify(key)})`);
     }
-    const tree = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    const tree = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true,
+      filename.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
     function visit(node) {
+      if (ts.isCallExpression(node) &&
+          (node.expression.getText(tree) === "t" || node.expression.getText(tree) === "translateUi") &&
+          node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0])) {
+        const key = node.arguments[0].text;
+        assert.ok(Object.hasOwn(fullEs, key),
+          `${filename}: ${node.expression.getText(tree)}(${JSON.stringify(key)})`);
+      }
       if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
         const props = translatedProps[node.tagName.getText(tree)];
         if (props) {
           for (const attr of node.attributes.properties) {
             if (!ts.isJsxAttribute(attr) || !props.has(attr.name.text) ||
                 !attr.initializer || !ts.isStringLiteral(attr.initializer)) continue;
-            assert.ok(Object.hasOwn(es, attr.initializer.text),
+            assert.ok(Object.hasOwn(fullEs, attr.initializer.text),
               `${filename}: <${node.tagName.getText(tree)} ${attr.name.text}=${JSON.stringify(attr.initializer.text)}>`);
           }
         }
@@ -58,6 +83,20 @@ test("literal t() calls and automatically translated titles have dictionary entr
     }
     visit(tree);
   }
+});
+
+test("visible UI copy and first-party notifications remain localized", () => {
+  const { texts, attributes, expressions, toasts } = inspect();
+  const summary = (items) => items.map(({ filename, key }) =>
+    `${filename.replace(root, "")}: ${key}`);
+  assert.deepEqual(summary(texts), [], "Untranslated visible JSX text");
+  assert.deepEqual(summary(expressions), [], "Untranslated conditional JSX text");
+  assert.deepEqual(summary(toasts), [], "Untranslated notification message");
+  const unlocalizedAttributes = attributes.filter((item) =>
+    item.client && !item.auto &&
+    !/^(?:[\w.-]+@[\w.-]+|[a-z_]+(?:\d+)?|https?:\/\/\S+)$/.test(item.key)
+  );
+  assert.deepEqual(summary(unlocalizedAttributes), [], "Untranslated placeholder or accessibility label");
 });
 
 test("localization is limited to the console and does not touch voice/call configuration", () => {
@@ -80,7 +119,7 @@ test("all literal Trans children have Spanish translations", () => {
     const source = readFileSync(filename, "utf8");
     for (const match of source.matchAll(/<Trans>\{("(?:\\.|[^"\\])*")\}<\/Trans>/g)) {
       const key = JSON.parse(match[1]);
-      assert.ok(Object.hasOwn(es, key), `${filename}: ${key}`);
+      assert.ok(Object.hasOwn(fullEs, key), `${filename}: ${key}`);
     }
   }
 });
@@ -104,7 +143,8 @@ test("i18n helper executes with Spanish default, English override and safe fallb
     exports: moduleValue.exports,
     module: moduleValue,
     Intl,
-    require: (name) => name === "./messages/en.json" ? en : name === "./messages/es.json" ? es : (() => {throw new Error(name)})(),
+    require: (name) => name === "./messages/en.json" ? en : name === "./messages/es.json" ? es :
+      name === "./messages/extended.es.json" ? extraEs : (() => {throw new Error(name)})(),
   });
   const {normalizeLocale, translate, localeCode, formatNumber, formatDate} = moduleValue.exports;
   assert.equal(normalizeLocale(undefined), "es");
@@ -114,6 +154,8 @@ test("i18n helper executes with Spanish default, English override and safe fallb
   assert.equal(translate("en", "Agents"), "Agents");
   assert.equal(translate("es", "__unknown_message__"), "__unknown_message__");
   assert.equal(translate("es", "Language"), "Idioma");
+  assert.equal(translate("es", "Traffic timeline"), "Evolución del tráfico");
+  assert.equal(translate("en", "Traffic timeline"), "Traffic timeline");
   assert.equal(localeCode("es"), "es-ES");
   assert.equal(formatNumber("es", 12345.5), "12.345,5");
   assert.ok(typeof formatDate("es", new Date("2026-10-22T10:00:00Z")) === "string");

@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import {
   useInfiniteQuery,
   useMutation,
@@ -29,15 +31,16 @@ export function useLiveCalls(enabled = true) {
 }
 
 export function useEndLiveCall() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (roomName: string) => callsApi.endLive(roomName),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.calls.live() });
-      toast.success("Live call ended");
+      toast.success(translateUi("Live call ended"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not end live call");
+      toast.error(err.message || translateUi("Could not end live call"));
     },
   });
 }
@@ -83,15 +86,16 @@ export function useTranscript(callId: string, params: TranscriptParams = {}) {
 }
 
 export function useDeleteCall() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (callId: string) => callsApi.remove(callId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.calls.all });
-      toast.success("Call deleted");
+      toast.success(translateUi("Call deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not delete call");
+      toast.error(err.message || translateUi("Could not delete call"));
     },
   });
 }

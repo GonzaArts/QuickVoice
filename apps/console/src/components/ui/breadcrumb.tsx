@@ -1,17 +1,23 @@
+
+import { Trans } from "@/src/i18n/Trans";
 import * as React from "react"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/src/lib/utils"
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react"
 
-function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
+function Breadcrumb({ className, children, ...props }: React.ComponentProps<"nav">) {
+  const labelId = React.useId()
   return (
     <nav
-      aria-label="breadcrumb"
+      aria-labelledby={labelId}
       data-slot="breadcrumb"
       className={cn(className)}
       {...props}
-    />
+    >
+      <span id={labelId} className="sr-only"><Trans>{"Breadcrumb"}</Trans></span>
+      {children}
+    </nav>
   )
 }
 
@@ -106,7 +112,7 @@ function BreadcrumbEllipsis({
     >
       <MoreHorizontalIcon
       />
-      <span className="sr-only">More</span>
+      <span className="sr-only"><Trans>{"More"}</Trans></span>
     </span>
   )
 }

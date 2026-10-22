@@ -60,7 +60,7 @@ test("call metadata sheet displays reason and non-primary metadata keys", () => 
   assert.match(detailPage, /metadata=\{call\.metadata\}/);
   assert.match(
     extractedPanel,
-    /<h3 className="mb-3 text-sm font-semibold">Metadata<\/h3>/,
+    /<h3 className="mb-3 text-sm font-semibold"><Trans>\{"Metadata"\}<\/Trans><\/h3>/,
   );
   assert.match(extractedPanel, /No metadata captured for this call\./);
 });
@@ -299,7 +299,7 @@ test("mobile and accessibility fixes are present", () => {
   assert.match(read("src/components/kb/KbTable.tsx"), /overflow-x-auto/);
   assert.match(
     read("src/components/tools/ToolCard.tsx"),
-    /aria-label="Tool actions"/,
+    /aria-label=\{translateUi\("Tool actions"\)\}/,
   );
   assert.match(
     read("src/components/agents/tabs/ToolsTab.tsx"),
@@ -332,7 +332,7 @@ test("dense data tables avoid unsupported sort and bulk-selection affordances", 
 test("permission matrix exposes cell-specific checkbox names", () => {
   const source = read("src/components/settings/PermissionMatrix.tsx");
 
-  assert.match(source, /aria-label=\{`Allow \$\{r\.label\} \$\{a\}`\}/);
+  assert.match(source, /aria-label=\{t\("Allow \{resource\} \{action\}", \{ resource: t\(r\.label\), action: t\(a\) \}\)\}/);
 });
 
 test("agent advanced danger zone uses the supported delete flow", () => {

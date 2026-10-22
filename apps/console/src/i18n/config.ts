@@ -1,12 +1,18 @@
 import english from "./messages/en.json";
 import spanish from "./messages/es.json";
+import extendedSpanish from "./messages/extended.es.json";
 
 export const DEFAULT_LOCALE = "es" as const;
 export const LOCALE_COOKIE = "qv_locale";
 export type Locale = "es" | "en";
-export type MessageKey = keyof typeof english;
+export type MessageKey = keyof typeof english | keyof typeof extendedSpanish;
 type Interpolation = Record<string, string | number>;
-const dictionaries: Record<Locale, Record<string, string>> = { es: spanish, en: english };
+// Supplemental English keys are the original interface text. English falls
+// back to the key itself; Spanish resolves through both dictionaries.
+const dictionaries: Record<Locale, Record<string, string>> = {
+  es: { ...spanish, ...extendedSpanish },
+  en: english,
+};
 
 export function normalizeLocale(value: string | null | undefined): Locale {
   return value === "en" || value?.toLowerCase().startsWith("en-") ? "en" : "es";

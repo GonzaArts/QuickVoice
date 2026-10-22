@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -88,6 +90,7 @@ const runtimeFeatures = [
 ];
 
 export function AdvancedTab({ agentId }: { agentId: string }) {
+  const translateUi = useT();
   const router = useRouter();
   const { data: config, isLoading } = useAgentConfig(agentId);
   const save = useSaveAgentConfig(agentId);
@@ -139,7 +142,7 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
   async function pauseAgent() {
     try {
       await update.mutateAsync({ isActive: false });
-      toast.success("Agent paused");
+      toast.success(translateUi("Agent paused"));
     } catch {
       // The mutation hook displays the API error; preserve the current state for retry.
     }
@@ -148,7 +151,7 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
   async function resumeAgent() {
     try {
       await update.mutateAsync({ isActive: true });
-      toast.success("Agent resumed");
+      toast.success(translateUi("Agent resumed"));
     } catch {
       // The mutation hook displays the API error; preserve the current state for retry.
     }
@@ -179,7 +182,7 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
               <div className="flex items-center gap-2 border bg-background px-3 py-2 text-xs font-medium text-muted-foreground">
                 <Radio className="size-3.5" />
                 <span>
-                  {ivrEnabled ? "IVR tones enabled" : "IVR tones disabled"}
+                  {ivrEnabled ? <Trans>{"IVR tones enabled"}</Trans> : <Trans>{"IVR tones disabled"}</Trans>}
                 </span>
               </div>
             </div>
@@ -304,7 +307,7 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
                             field.onChange(event.target.valueAsNumber)
                           }
                           disabled={zeroPiiRetention}
-                          aria-label="Transcript retention in days"
+                          aria-label={translateUi("Transcript retention in days")}
                         />
                       </FormControl>
                     </div>
@@ -383,7 +386,7 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
                         <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
                       </>
                     ) : (
-                      "Delete"
+                      <Trans>{"Delete"}</Trans>
                     )}
                   </AlertDialogAction>
                 </AlertDialogFooter>

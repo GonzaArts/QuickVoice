@@ -221,6 +221,7 @@ function WidgetEditor({
   onCreated: (widget: AgentWidget) => void;
   onDeleted: () => void;
 }) {
+  const translateUi = useT();
   const t = useT();
   const [form, setForm] = useState<WidgetForm>(
     () => (widget ? formFromWidget(widget) : DEFAULT_FORM),
@@ -300,7 +301,7 @@ function WidgetEditor({
           <div className="space-y-5">
             <section className="space-y-4 border bg-background p-4">
               <SectionTitle
-                title="Publishing"
+                title={translateUi("Publishing")}
                 description="Control availability and the websites allowed to start calls."
               />
               <div className="grid gap-4 sm:grid-cols-2">
@@ -348,7 +349,7 @@ function WidgetEditor({
 
             <section className="space-y-4 border bg-background p-4">
               <SectionTitle
-                title="Brand and whitelabeling"
+                title={translateUi("Brand and whitelabeling")}
                 description="Set the visible brand, avatar, and whether QuickVoice branding appears."
               />
               <div className="grid gap-4 sm:grid-cols-2">
@@ -426,7 +427,7 @@ function WidgetEditor({
 
             <section className="space-y-4 border bg-background p-4">
               <SectionTitle
-                title="Appearance"
+                title={translateUi("Appearance")}
                 description="Match the launcher, panel, and controls to the customer site."
               />
               <div className="grid gap-4 sm:grid-cols-3">
@@ -555,7 +556,7 @@ function WidgetEditor({
 
             <section className="space-y-4 border bg-background p-4">
               <SectionTitle
-                title="Display text"
+                title={translateUi("Display text")}
                 description="Customize launcher copy, call controls, and status messages."
               />
               <div className="grid gap-4 sm:grid-cols-2">
@@ -652,7 +653,7 @@ function WidgetEditor({
 
             <section className="space-y-4 border bg-background p-4">
               <SectionTitle
-                title="Terms"
+                title={translateUi("Terms")}
                 description="Control the consent notice shown before microphone access."
               />
               <div className="flex items-center justify-between border bg-card px-3 py-2">
@@ -878,7 +879,7 @@ function WidgetPreview({ form }: { form: WidgetForm }) {
               </Button>
               {!form.whiteLabel ? (
                 <p className="text-center text-[11px]" style={{ color: form.mutedTextColor }}>
-                  Powered by QuickVoice
+                  <Trans>{"Powered by QuickVoice"}</Trans>
                 </p>
               ) : null}
             </div>

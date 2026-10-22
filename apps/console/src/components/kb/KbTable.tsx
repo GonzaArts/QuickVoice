@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import {
@@ -110,6 +112,7 @@ function RowActions({
   source: KnowledgeSource;
   onEdit: () => void;
 }) {
+  const translateUi = useT();
   const [open, setOpen] = useState(false);
   const del = useDeleteKb();
   const retry = useRetryKb();
@@ -122,14 +125,14 @@ function RowActions({
             variant="ghost"
             size="icon"
             className="size-8"
-            aria-label="Row actions"
+            aria-label={translateUi("Row actions")}
           >
             <MoreHorizontal className="size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuItem onClick={onEdit}>
-            <Pencil className="size-4" /> View / edit
+            <Pencil className="size-4" /> <Trans>{"View / edit"}</Trans>
           </DropdownMenuItem>
           {canRetry(source) ? (
             <DropdownMenuItem
@@ -141,7 +144,7 @@ function RowActions({
               ) : (
                 <RotateCcw className="size-4" />
               )}
-              Retry
+              <Trans>{"Retry"}</Trans>
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuItem
@@ -157,11 +160,10 @@ function RowActions({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Delete &quot;{source.name}&quot;?
+              <Trans>{"Delete \""}</Trans>{source.name}&quot;?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This removes the document from any agents currently referencing
-              it.
+              <Trans>{"This removes the document from any agents currently referencing it."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -183,7 +185,7 @@ function RowActions({
                   <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
                 </>
               ) : (
-                "Delete"
+                <Trans>{"Delete"}</Trans>
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -200,6 +202,7 @@ interface Props {
 }
 
 export function KbTable({ sources, agents, isLoading }: Props) {
+  const translateUi = useT();
   const [page, setPage] = useState(1);
   const [editingKbId, setEditingKbId] = useState<string | null>(null);
   const editingSource =
@@ -282,18 +285,18 @@ export function KbTable({ sources, agents, isLoading }: Props) {
                   className="mt-2 truncate font-mono text-[11px] text-muted-foreground"
                   title={job.full}
                 >
-                  Job {job.short}
+                  <Trans>{"Job"}</Trans> {job.short}
                 </p>
               ) : null}
               <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-muted-foreground">
                 <div>
-                  <p>Uploaded</p>
+                  <p><Trans>{"Uploaded"}</Trans></p>
                   <p className="mt-1 text-foreground">
                     {fmtDate(s.uploadedAt)}
                   </p>
                 </div>
                 <div>
-                  <p>Indexed</p>
+                  <p><Trans>{"Indexed"}</Trans></p>
                   <p className="mt-1 text-foreground">
                     {s.status === "ACTIVE" ? fmtDate(s.lastIndexedAt) : "—"}
                   </p>
@@ -313,8 +316,8 @@ export function KbTable({ sources, agents, isLoading }: Props) {
                 <Trans>{"Status"}</Trans>
               </TableHead>
               <TableHead className="w-36 whitespace-nowrap"><Trans>{"Agent"}</Trans></TableHead>
-              <TableHead className="w-32 whitespace-nowrap">Uploaded</TableHead>
-              <TableHead className="w-32 whitespace-nowrap">Indexed</TableHead>
+              <TableHead className="w-32 whitespace-nowrap"><Trans>{"Uploaded"}</Trans></TableHead>
+              <TableHead className="w-32 whitespace-nowrap"><Trans>{"Indexed"}</Trans></TableHead>
               <TableHead className="w-14 pr-4 text-right"><Trans>{"Actions"}</Trans></TableHead>
             </TableRow>
           </TableHeader>
@@ -414,7 +417,7 @@ export function KbTable({ sources, agents, isLoading }: Props) {
       <div className="flex flex-col gap-3 px-1 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-end">
         <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
           <span className="whitespace-nowrap font-medium text-foreground">
-            Page {currentPage} of {totalPages}
+            <Trans>{"Page"}</Trans> {currentPage} <Trans>{"of"}</Trans> {totalPages}
           </span>
           <div className="flex items-center gap-0.5">
             <Button
@@ -423,7 +426,7 @@ export function KbTable({ sources, agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(1)}
               disabled={currentPage <= 1}
-              aria-label="First page"
+              aria-label={translateUi("First page")}
             >
               <ChevronsLeft className="size-4" />
             </Button>
@@ -433,7 +436,7 @@ export function KbTable({ sources, agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(Math.max(1, currentPage - 1))}
               disabled={currentPage <= 1}
-              aria-label="Previous page"
+              aria-label={translateUi("Previous page")}
             >
               <ChevronLeft className="size-4" />
             </Button>
@@ -443,7 +446,7 @@ export function KbTable({ sources, agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage >= totalPages}
-              aria-label="Next page"
+              aria-label={translateUi("Next page")}
             >
               <ChevronRight className="size-4" />
             </Button>
@@ -453,7 +456,7 @@ export function KbTable({ sources, agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(totalPages)}
               disabled={currentPage >= totalPages}
-              aria-label="Last page"
+              aria-label={translateUi("Last page")}
             >
               <ChevronsRight className="size-4" />
             </Button>

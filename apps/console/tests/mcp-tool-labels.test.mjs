@@ -16,7 +16,9 @@ const cjsModule = { exports: {} };
 vm.runInNewContext(compiled, {
   exports: cjsModule.exports,
   module: cjsModule,
-  require: (id) => id.endsWith("/ui/badge")
+  require: (id) => id === "@/src/i18n/Trans"
+    ? { Trans: ({ children }) => React.createElement(React.Fragment, null, children) }
+    : id.endsWith("/ui/badge")
     ? { Badge: ({ children }) => React.createElement("span", null, children) }
     : require(id),
 });

@@ -75,12 +75,12 @@ export function McpConnectionsList() {
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-medium">{connection.displayName}</p>
                   <Badge className={STATUS_CLASS[connection.status]}>
-                    {missingGoogleDriveScope ? "DRIVE ACCESS NOT GRANTED" : connection.status.replace("_", " ")}
+                    {missingGoogleDriveScope ? <Trans>{"DRIVE ACCESS NOT GRANTED"}</Trans> : connection.status.replace("_", " ")}
                   </Badge>
                 </div>
                 <p className="mt-1 truncate text-sm text-muted-foreground">{connection.mcpUrl}</p>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  {(connection.tools?.length ?? 0)} tools synced
+                  {(connection.tools?.length ?? 0)} <Trans>{"tools synced"}</Trans>
                   {connection.lastSyncedAt ? ` - Last synced ${new Date(connection.lastSyncedAt).toLocaleString()}` : ""}
                 </p>
                 {typeof connection.metadata?.lastSyncError === "string" && (
@@ -88,7 +88,7 @@ export function McpConnectionsList() {
                 )}
                 {missingGoogleDriveScope && (
                   <p className="mt-2 text-xs text-blue-700 dark:text-blue-300">
-                    On the Google consent screen, check Google Drive access before continuing.
+                    <Trans>{"On the Google consent screen, check Google Drive access before continuing."}</Trans>
                   </p>
                 )}
               </div>
@@ -100,7 +100,7 @@ export function McpConnectionsList() {
                     onClick={() => openMcpSetup(connection.setupUrl as string, connection.mcpConnectionId)}
                   >
                     <ExternalLink className="size-4" />
-                    {missingGoogleDriveScope ? "Re-authorize" : "Setup"}
+                    {missingGoogleDriveScope ? <Trans>{"Re-authorize"}</Trans> : <Trans>{"Setup"}</Trans>}
                   </Button>
                 )}
                 {!connection.setupUrl && ["ERROR", "DISCONNECTED"].includes(connection.status) && (
@@ -123,7 +123,7 @@ export function McpConnectionsList() {
                     ) : (
                       <AlertCircle className="size-4" />
                     )}
-                    {missingGoogleDriveScope ? "Re-authorize" : "Retry setup"}
+                    {missingGoogleDriveScope ? <Trans>{"Re-authorize"}</Trans> : <Trans>{"Retry setup"}</Trans>}
                   </Button>
                 )}
                 <Button
@@ -137,7 +137,7 @@ export function McpConnectionsList() {
                   ) : (
                     <RefreshCw className="size-4" />
                   )}
-                  Refresh
+                  <Trans>{"Refresh"}</Trans>
                 </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -152,15 +152,14 @@ export function McpConnectionsList() {
                       ) : (
                         <Trash2 className="size-4" />
                       )}
-                      Disconnect
+                      <Trans>{"Disconnect"}</Trans>
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Disconnect MCP?</AlertDialogTitle>
+                      <AlertDialogTitle><Trans>{"Disconnect MCP?"}</Trans></AlertDialogTitle>
                       <AlertDialogDescription>
-                        This will remove <span className="font-medium">{connection.displayName}</span> from your
-                        organization and detach it from all agents.
+                        <Trans>{"This will remove"}</Trans> <span className="font-medium">{connection.displayName}</span> <Trans>{"from your organization and detach it from all agents."}</Trans>
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -169,7 +168,7 @@ export function McpConnectionsList() {
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         onClick={() => disconnect.mutate(connection.mcpConnectionId)}
                       >
-                        Disconnect
+                        <Trans>{"Disconnect"}</Trans>
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

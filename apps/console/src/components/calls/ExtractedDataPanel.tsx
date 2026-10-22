@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+
 export function ExtractedDataPanel({
  metadata,
  data,
@@ -21,7 +23,7 @@ export function ExtractedDataPanel({
  return (
  <div className="space-y-4">
  <div className="border bg-card p-5">
- <h3 className="mb-3 text-sm font-semibold">Metadata</h3>
+ <h3 className="mb-3 text-sm font-semibold"><Trans>{"Metadata"}</Trans></h3>
  {hasMetadata ? (
  <div className="space-y-3">
  {metadataEntries.map(([key, value]) => (
@@ -33,31 +35,31 @@ export function ExtractedDataPanel({
  </div>
  ) : (
  <p className="text-xs text-muted-foreground">
- No metadata captured for this call.
+ <Trans>{"No metadata captured for this call."}</Trans>
  </p>
  )}
  </div>
  <div className="border bg-card p-5">
- <h3 className="mb-3 text-sm font-semibold">Extracted data</h3>
+ <h3 className="mb-3 text-sm font-semibold"><Trans>{"Extracted data"}</Trans></h3>
  {hasData ? (
  <pre className="max-h-64 overflow-auto bg-muted/50 p-3 font-mono text-xs">
  {JSON.stringify(data, null, 2)}
  </pre>
  ) : (
  <p className="text-xs text-muted-foreground">
- Nothing extracted for this call.
+ <Trans>{"Nothing extracted for this call."}</Trans>
  </p>
  )}
  </div>
  <div className="border bg-card p-5">
- <h3 className="mb-3 text-sm font-semibold">Evaluation</h3>
+ <h3 className="mb-3 text-sm font-semibold"><Trans>{"Evaluation"}</Trans></h3>
  {hasEval ? (
  <pre className="max-h-64 overflow-auto bg-muted/50 p-3 font-mono text-xs">
  {JSON.stringify(evaluation, null, 2)}
  </pre>
  ) : (
  <p className="text-xs text-muted-foreground">
- No evaluation captured for this call.
+ <Trans>{"No evaluation captured for this call."}</Trans>
  </p>
  )}
  </div>

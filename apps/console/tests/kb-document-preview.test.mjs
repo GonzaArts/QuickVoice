@@ -10,6 +10,8 @@ function mount(sourceType, getFile) {
   const states = [], requests = [], revoked = [], created = [], effects = [];
   const dependencies = {
     react: { useState: (initial) => [initial, (value) => states.push(value)], useEffect: (fn) => effects.push(fn) },
+    "@/src/i18n/provider": { useT: () => (message) => message },
+    "@/src/i18n/Trans": { Trans: ({ children }) => children },
     "react/jsx-runtime": { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) },
     "lucide-react": {},
     "@/src/components/ui/button": { Button: "button" },

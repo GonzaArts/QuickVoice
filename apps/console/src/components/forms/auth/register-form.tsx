@@ -27,6 +27,7 @@ import { CONSOLE_URL, invitationPath } from "@/src/lib/links";
 import OAuthButtons from "../../oauth-buttons";
 
 export function RegisterForm({ invitationId = "" }: { invitationId?: string } = {}) {
+  const translateUi = useT();
   const router = useRouter();
   const t = useT();
   const [loading, setLoading] = useState(false);
@@ -79,7 +80,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="John Doe"
+                  placeholder={translateUi("John Doe")}
                   type="text"
                   autoCapitalize="none"
                   autoComplete="name"

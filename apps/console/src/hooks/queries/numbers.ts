@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -42,20 +44,22 @@ export function useNumberSearch(
 }
 
 export function useBuyNumber() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: BuyNumberInput) => numbersApi.buy(input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.numbers.list() });
-      toast.success("Number purchased");
+      toast.success(translateUi("Number purchased"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not purchase number");
+      toast.error(err.message || translateUi("Could not purchase number"));
     },
   });
 }
 
 export function useUpdateNumber() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ phId, input }: { phId: string; input: UpdateNumberInput }) =>
@@ -65,12 +69,13 @@ export function useUpdateNumber() {
       qc.invalidateQueries({ queryKey: queryKeys.agents.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not update number");
+      toast.error(err.message || translateUi("Could not update number"));
     },
   });
 }
 
 export function useReleaseNumber() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (phId: string) => numbersApi.release(phId),
@@ -79,10 +84,10 @@ export function useReleaseNumber() {
         qc.invalidateQueries({ queryKey: queryKeys.numbers.list() }),
         qc.invalidateQueries({ queryKey: queryKeys.agents.list() }),
       ]);
-      toast.success("Phone number released permanently");
+      toast.success(translateUi("Phone number released permanently"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not release number");
+      toast.error(err.message || translateUi("Could not release number"));
     },
   });
 }

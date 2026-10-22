@@ -152,6 +152,7 @@ test("invited email and Google sign-in preserve the invitation and use fixed int
         jsx: (type, props) => { elements.push({ type, props }); return { type, props }; },
         jsxs: (type, props) => { elements.push({ type, props }); return { type, props }; },
       },
+      "@/src/i18n/provider": { useT: () => identityT },
       "next/navigation": { useRouter: () => ({
         push: (path) => { nextPage = path; },
         refresh: () => { refreshed = true; },

@@ -43,6 +43,7 @@ for (const action of ["save configuration", "delete document"]) {
         useMutation: (options) => options,
       },
       sonner: { toast: { success() {}, error() {} } },
+      "@/src/i18n/provider": { useT: () => (message) => message },
       "@/src/lib/query-keys": { queryKeys },
       "@/src/lib/api/resources/agents": {
         agentsApi: {
