@@ -595,5 +595,6 @@
   "Custom range from": "Inicio del intervalo personalizado",
   "Custom range to": "Final del intervalo personalizado",
   "Dashboard date range": "Intervalo de fechas del panel",
-  "Select an end date after the start date": "La fecha de fin debe ser posterior a la fecha de inicio"
+  "Select an end date after the start date": "La fecha de fin debe ser posterior a la fecha de inicio",
+  "Batch campaigns": "Campañas por lotes"
 }

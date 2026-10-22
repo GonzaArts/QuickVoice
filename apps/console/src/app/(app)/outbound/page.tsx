@@ -18,7 +18,7 @@ export default function OutboundPage() {
       <Tabs defaultValue="quick" className="w-full">
         <TabsList>
           <TabsTrigger value="quick"><Trans>{"Quick call"}</Trans></TabsTrigger>
-          <TabsTrigger value="batch">Batch campaigns</TabsTrigger>
+          <TabsTrigger value="batch"><Trans>{"Batch campaigns"}</Trans></TabsTrigger>
           <TabsTrigger value="calls"><Trans>{"Outbound calls"}</Trans></TabsTrigger>
         </TabsList>
         <TabsContent value="quick" className="mt-4">

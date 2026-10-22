@@ -24,6 +24,7 @@ function renderPanel(generate = async () => sample) {
       useState: (value) => [value, (next) => states.push(next)],
     },
     "react/jsx-runtime": { jsx: element, jsxs: element },
+    "@/src/i18n/Trans": { Trans: ({ children }) => children },
     "lucide-react": {},
     "@/src/components/ui/badge": { Badge: "badge" },
     "@/src/components/ui/button": { Button: "button" },
