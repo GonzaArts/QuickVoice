@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -44,9 +45,9 @@ export function DynamicVariablesDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Dynamic variables</DialogTitle>
+                    <DialogTitle><Trans>{"Dynamic variables"}</Trans></DialogTitle>
                     <DialogDescription>
-                        Set fallback values for variables used by this agent.
+                        <Trans>{"Set fallback values for variables used by this agent."}</Trans>
                     </DialogDescription>
                 </DialogHeader>
 
@@ -78,7 +79,7 @@ export function DynamicVariablesDialog({
                         onClick={() => onOpenChange(false)}
                         disabled={isSaving}
                     >
-                        Cancel
+                        <Trans>{"Cancel"}</Trans>
                     </Button>
                     <Button
                         type="button"
@@ -87,7 +88,7 @@ export function DynamicVariablesDialog({
                     >
                         {isSaving ? (
                             <>
-                                <Loader2 className="animate-spin" /> Saving...
+                                <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
                             </>
                         ) : (
                             confirmLabel
