@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -61,7 +62,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
   return (
     <Form {...form}>
       <div className="flex  flex-col items-center gap-2 text-center py-2 ">
-        <h1 className="text-2xl font-bold ">Create an account</h1>
+        <h1 className="text-2xl font-bold "><Trans>{"Create an account"}</Trans></h1>
         <p className="text-muted-foreground text-sm text-balance">
           {invitationId ? "Use the email address that received the invitation. Verify your email to continue." : "Enter your details to create an account"}
         </p>
@@ -94,7 +95,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel><Trans>{"Email"}</Trans></FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -119,7 +120,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel>Password</FormLabel>
+                <FormLabel><Trans>{"Password"}</Trans></FormLabel>
               </div>
               <FormControl>
                 <Input
@@ -170,14 +171,14 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
 
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
-            Or
+            <Trans>{"Or"}</Trans>
           </span>
         </div>
         <OAuthButtons invitationId={invitationId} />
         <div className="text-center text-sm">
           Already have an account?{" "}
           <Link href={invitationPath(invitationId, "/login")} className="underline underline-offset-4">
-            Login
+            <Trans>{"Login"}</Trans>
           </Link>
         </div>
       </form>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Download, Eye, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
@@ -306,16 +307,16 @@ function EditKbDialogContent({
             onClick={() => onOpenChange(false)}
             disabled={update.isPending}
           >
-            Close
+            <Trans>{"Close"}</Trans>
           </Button>
           <Button type="button" onClick={handleSave} disabled={!canSave}>
             {update.isPending ? (
               <>
-                <Loader2 className="animate-spin" /> Saving…
+                <Loader2 className="animate-spin" /> <Trans>{"Saving…"}</Trans>
               </>
             ) : (
               <>
-                <Save /> Save changes
+                <Save /> <Trans>{"Save changes"}</Trans>
               </>
             )}
           </Button>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { useId } from "react";
 import { PhoneCall } from "lucide-react";
@@ -293,7 +294,7 @@ export function VolumeChart({
               <thead>
                 <tr>
                   <th scope="col">{bucketUnit}</th>
-                  <th scope="col">Calls</th>
+                  <th scope="col"><Trans>{"Calls"}</Trans></th>
                   <th scope="col">Minutes</th>
                   <th scope="col">Failed calls</th>
                 </tr>

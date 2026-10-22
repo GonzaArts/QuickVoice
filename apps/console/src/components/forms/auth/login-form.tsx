@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -79,7 +80,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
   return (
     <Form {...form}>
       <div className="flex  flex-col items-center gap-2 text-center py-2 ">
-        <h1 className="text-2xl font-bold ">Welcome back!</h1>
+        <h1 className="text-2xl font-bold "><Trans>{"Welcome back!"}</Trans></h1>
         <p className="text-muted-foreground text-sm text-balance">
           {invitationId ? "Sign in with the email address that received the invitation." : "Enter your details to login to your account"}
         </p>
@@ -96,7 +97,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel >Email</FormLabel>
+              <FormLabel ><Trans>{"Email"}</Trans></FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -120,12 +121,12 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center justify-between">
-                <p className="text-muted-foreground">Password</p>{" "}
+                <p className="text-muted-foreground"><Trans>{"Password"}</Trans></p>{" "}
                 <Link
                   href={invitationPath(invitationId, "/forgot-password")}
                   className="hover:underline hover:underline-offset-4"
                 >
-                  Forgot password?
+                  <Trans>{"Forgot password?"}</Trans>
                 </Link>
               </FormLabel>
               <InputGroup className="h-11">
@@ -170,7 +171,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
                   disabled={loading}
                 />
               </FormControl>
-              <FormLabel htmlFor="remember">Remember me</FormLabel>
+              <FormLabel htmlFor="remember"><Trans>{"Remember me"}</Trans></FormLabel>
             </FormItem>
           )}
         />
@@ -179,20 +180,20 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            <span>Login</span>
+            <span><Trans>{"Login"}</Trans></span>
           )}
         </Button>
 
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
-            Or
+            <Trans>{"Or"}</Trans>
           </span>
         </div>
         <OAuthButtons invitationId={invitationId} />
         <div className="text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href={invitationPath(invitationId, "/register")} className="underline underline-offset-4">
-            Sign up
+            <Trans>{"Sign up"}</Trans>
           </Link>
         </div>
       </form>

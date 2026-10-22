@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import {
   ChevronLeft,
@@ -147,7 +148,7 @@ function RowActions({
             onClick={() => setOpen(true)}
             className="text-destructive focus:text-destructive"
           >
-            <Trash2 className="size-4" /> Delete
+            <Trash2 className="size-4" /> <Trans>{"Delete"}</Trans>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -164,7 +165,7 @@ function RowActions({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
             <AlertDialogAction
               onClick={async () => {
                 try {
@@ -179,7 +180,7 @@ function RowActions({
             >
               {del.isPending ? (
                 <>
-                  <Loader2 className="animate-spin" /> Deleting…
+                  <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
                 </>
               ) : (
                 "Delete"
@@ -306,15 +307,15 @@ export function KbTable({ sources, agents, isLoading }: Props) {
         <Table className="min-w-[1080px]">
           <TableHeader>
             <TableRow className="border-b bg-muted/20 hover:bg-muted/20">
-              <TableHead className="w-12 pl-4">Type</TableHead>
-              <TableHead className="whitespace-nowrap">Name</TableHead>
+              <TableHead className="w-12 pl-4"><Trans>{"Type"}</Trans></TableHead>
+              <TableHead className="whitespace-nowrap"><Trans>{"Name"}</Trans></TableHead>
               <TableHead className="w-[360px] whitespace-nowrap">
-                Status
+                <Trans>{"Status"}</Trans>
               </TableHead>
-              <TableHead className="w-36 whitespace-nowrap">Agent</TableHead>
+              <TableHead className="w-36 whitespace-nowrap"><Trans>{"Agent"}</Trans></TableHead>
               <TableHead className="w-32 whitespace-nowrap">Uploaded</TableHead>
               <TableHead className="w-32 whitespace-nowrap">Indexed</TableHead>
-              <TableHead className="w-14 pr-4 text-right">Actions</TableHead>
+              <TableHead className="w-14 pr-4 text-right"><Trans>{"Actions"}</Trans></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
