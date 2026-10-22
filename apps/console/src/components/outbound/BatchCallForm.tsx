@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { FormEvent, useMemo, useRef, useState } from "react";
 import {
   Braces,
@@ -495,7 +496,7 @@ export function BatchCallForm() {
         description="Configure an active agent and assign a phone number before creating a batch."
         action={
           <Button variant="outline" onClick={refresh}>
-            <RefreshCw /> Refresh
+            <RefreshCw /> <Trans>{"Refresh"}</Trans>
           </Button>
         }
       />
@@ -514,7 +515,7 @@ export function BatchCallForm() {
       <div className="grid gap-5 p-5">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="grid gap-2">
-            <Label htmlFor="batchName">Campaign</Label>
+            <Label htmlFor="batchName"><Trans>{"Campaign"}</Trans></Label>
             <Input
               id="batchName"
               placeholder="June renewals"
@@ -540,7 +541,7 @@ export function BatchCallForm() {
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="grid gap-2">
-            <Label htmlFor="batchAgent">Agent</Label>
+            <Label htmlFor="batchAgent"><Trans>{"Agent"}</Trans></Label>
             <Select value={agentId} onValueChange={selectAgent}>
               <SelectTrigger id="batchAgent" className="w-full">
                 <SelectValue placeholder="Select agent" />
@@ -747,7 +748,7 @@ export function BatchCallForm() {
         </div>
 
         <div className="grid gap-3">
-          <Label>Schedule</Label>
+          <Label><Trans>{"Schedule"}</Trans></Label>
           <div className="grid grid-cols-2 gap-2">
             <Button
               type="button"
@@ -788,7 +789,7 @@ export function BatchCallForm() {
 
         <div className="flex flex-col gap-2 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
           <Button type="button" variant="outline" onClick={refresh}>
-            <RefreshCw /> Refresh
+            <RefreshCw /> <Trans>{"Refresh"}</Trans>
           </Button>
           <Button type="submit" disabled={!canSubmit}>
             {isBusy ? <Loader2 className="animate-spin" /> : <UploadCloud />}

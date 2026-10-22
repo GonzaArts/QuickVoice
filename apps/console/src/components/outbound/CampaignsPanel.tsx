@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo, useState } from "react";
 import {
   CalendarClock,
@@ -493,7 +494,7 @@ function CampaignDetailDialog({
           <div className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-4">
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Status"}</Trans></p>
                 <Badge
                   className="mt-2 capitalize"
                   variant={statusVariant(shown.status)}
@@ -502,7 +503,7 @@ function CampaignDetailDialog({
                 </Badge>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Total"}</Trans></p>
                 <p className="mt-1 text-xl font-semibold tabular-nums">
                   {shown.totalRecipients}
                 </p>
@@ -527,7 +528,7 @@ function CampaignDetailDialog({
                 <p className="mt-1 font-medium">{shown.fromNumber}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Scheduled</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Scheduled"}</Trans></p>
                 <p className="mt-1 font-medium">{fmtDate(shown.scheduledAt)}</p>
               </div>
               <div className="border p-3">
@@ -553,9 +554,9 @@ function CampaignDetailDialog({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Phone number</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Updated</TableHead>
+                      <TableHead><Trans>{"Phone number"}</Trans></TableHead>
+                      <TableHead><Trans>{"Status"}</Trans></TableHead>
+                      <TableHead><Trans>{"Updated"}</Trans></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -688,7 +689,7 @@ export function CampaignsPanel() {
             disabled={isFetching}
           >
             <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-            Retry
+            <Trans>{"Retry"}</Trans>
           </Button>
         }
       />
@@ -734,7 +735,7 @@ export function CampaignsPanel() {
           disabled={!filteredCampaigns.length}
         >
           <Download className="size-4" />
-          Export CSV
+          <Trans>{"Export CSV"}</Trans>
         </Button>
       </div>
 
@@ -749,12 +750,12 @@ export function CampaignsPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Campaign</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Recipients</TableHead>
-                <TableHead>Schedule</TableHead>
+                <TableHead><Trans>{"Campaign"}</Trans></TableHead>
+                <TableHead><Trans>{"Status"}</Trans></TableHead>
+                <TableHead><Trans>{"Recipients"}</Trans></TableHead>
+                <TableHead><Trans>{"Schedule"}</Trans></TableHead>
                 <TableHead>From</TableHead>
-                <TableHead className="w-12 text-right">Actions</TableHead>
+                <TableHead className="w-12 text-right"><Trans>{"Actions"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -817,7 +818,7 @@ export function CampaignsPanel() {
                           onClick={() => setSelectedCampaign(campaign)}
                         >
                           <FileSpreadsheet className="size-4" />
-                          View details
+                          <Trans>{"View details"}</Trans>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => exportCampaignResults(campaign)}

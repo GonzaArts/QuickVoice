@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -158,7 +159,7 @@ export function BuyNumberDrawer() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button>
-          <Plus /> Buy number
+          <Plus /> <Trans>{"Buy number"}</Trans>
         </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col gap-0 overflow-y-auto p-0 data-[side=right]:w-full data-[side=right]:sm:w-[min(94vw,940px)] data-[side=right]:sm:max-w-none">
@@ -181,7 +182,7 @@ export function BuyNumberDrawer() {
                 name="provider"
                 render={({ field }) => (
                   <FormItem className="min-w-0">
-                    <FormLabel>Provider</FormLabel>
+                    <FormLabel><Trans>{"Provider"}</Trans></FormLabel>
                     <Select value={field.value} disabled={buy.isPending} onValueChange={(value) => {
                       field.onChange(value);
                       form.setValue("country", "");
@@ -206,7 +207,7 @@ export function BuyNumberDrawer() {
                 name="country"
                 render={({ field }) => (
                   <FormItem className="min-w-0">
-                    <FormLabel>Country</FormLabel>
+                    <FormLabel><Trans>{"Country"}</Trans></FormLabel>
                     {/* Give the portaled list its own scroll lock inside the modal sheet. */}
                     <Popover modal open={countryOpen} onOpenChange={setCountryOpen}>
                       <PopoverTrigger asChild>
@@ -319,7 +320,7 @@ export function BuyNumberDrawer() {
               <dl className="mt-4 space-y-3 text-sm">
                 <div>
                   <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Provider
+                    <Trans>{"Provider"}</Trans>
                   </dt>
                   <dd className="mt-1 capitalize text-foreground">
                     {watchedProvider}
@@ -327,7 +328,7 @@ export function BuyNumberDrawer() {
                 </div>
                 <div>
                   <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Country
+                    <Trans>{"Country"}</Trans>
                   </dt>
                   <dd className="mt-1 font-mono text-foreground">
                     {selectedCountry?.name || "Select a country"}
