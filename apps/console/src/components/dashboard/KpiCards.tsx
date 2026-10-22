@@ -1,6 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale, useT } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { Trans } from "@/src/i18n/Trans";
 import type { ReactNode } from "react";
 import {
   AlertTriangle,
@@ -119,12 +122,13 @@ function Trend({
   comparisonTitle?: string | null;
   inverse?: boolean;
 }) {
+  const t = useT();
   const n = normalizeDeltaValue(value, unit);
   const positive = n >= 0;
   const good = inverse ? n <= 0 : n >= 0;
   const Icon = positive ? TrendingUp : TrendingDown;
   const deltaCopy = formatDeltaCopy(value, unit);
-  const trendCopy = `${deltaCopy} vs ${comparisonLabel}`;
+  const trendCopy = `${deltaCopy} ${t("vs")} ${t(comparisonLabel)}`;
   const accessibleCopy = comparisonTitle
     ? `${trendCopy} (${comparisonTitle})`
     : trendCopy;
@@ -152,11 +156,12 @@ function InvestigationHint({
   action: string;
   children?: ReactNode;
 }) {
+  const t = useT();
   return (
     <div className="flex flex-col gap-1">
       {children}
       <span className="inline-flex items-center gap-1 text-blue-400">
-        {action} <ArrowRight className="size-3" />
+        {t(action)} <ArrowRight className="size-3" />
       </span>
     </div>
   );
@@ -178,6 +183,7 @@ export function KpiCards({
   customFrom?: string;
   customTo?: string;
 }) {
+  const { locale, t } = useLocale();
   const totals = summary?.totals;
   const deltas = summary?.deltas;
   const previousPeriodLabel = formatPreviousPeriodLabel(summary);
@@ -188,17 +194,17 @@ export function KpiCards({
       <div className="flex items-end justify-between gap-4">
         <div>
           <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-            Period movement
+            <Trans>{"Period movement"}</Trans>
           </p>
           <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
-            KPI trends
+            <Trans>{"KPI trends"}</Trans>
           </h2>
         </div>
       </div>
       <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           label="Total calls"
-          value={totals?.calls.toLocaleString() ?? "0"}
+          value={totals?.calls.toLocaleString(localeCode(locale)) ?? "0"}
           eyebrow="All inbound and outbound activity"
           helper={
             deltas ? (
@@ -217,7 +223,7 @@ export function KpiCards({
         />
         <StatCard
           label="Minutes used"
-          value={totals?.minutes.toLocaleString() ?? "0"}
+          value={totals?.minutes.toLocaleString(localeCode(locale)) ?? "0"}
           eyebrow="Connected conversation time"
           helper={
             deltas ? (
@@ -275,11 +281,11 @@ export function KpiCards({
         <Link
           href={dashboardCallsHref({ range, status: "FAILED", from: customFrom, to: customTo })}
           className={drilldownLinkClass}
-          aria-label="Review failed calls in the selected dashboard range"
+          aria-label={t("Review failed calls in the selected dashboard range")}
         >
           <StatCard
             label="Failed"
-            value={totals?.failedCalls.toLocaleString() ?? "0"}
+            value={totals?.failedCalls.toLocaleString(localeCode(locale)) ?? "0"}
             helper={
               <InvestigationHint action="Review failed calls">
                 {deltas ? (
@@ -302,11 +308,11 @@ export function KpiCards({
         <Link
           href={dashboardCallsHref({ range, status: "NOT_ANSWERED", from: customFrom, to: customTo })}
           className={drilldownLinkClass}
-          aria-label="View missed calls in the selected dashboard range"
+          aria-label={t("View missed calls in the selected dashboard range")}
         >
           <StatCard
             label="Missed"
-            value={totals?.missedCalls.toLocaleString() ?? "0"}
+            value={totals?.missedCalls.toLocaleString(localeCode(locale)) ?? "0"}
             helper={
               <InvestigationHint action="View missed calls">
                 {deltas ? (

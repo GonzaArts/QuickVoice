@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { Webhook, MoreVertical, Pencil, Trash2, Bot } from "lucide-react";
 import { toast } from "sonner";
@@ -101,14 +102,14 @@ export function ToolCard({ tool }: { tool: Tool }) {
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setEditOpen(true)}>
               <Pencil className="size-3.5" />
-              Edit
+              <Trans>{"Edit"}</Trans>
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-destructive focus:text-destructive"
               onClick={() => setDeleteOpen(true)}
             >
               <Trash2 className="size-3.5" />
-              Delete
+              <Trans>{"Delete"}</Trans>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -125,12 +126,12 @@ export function ToolCard({ tool }: { tool: Tool }) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleDelete}
             >
-              Delete
+              <Trans>{"Delete"}</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

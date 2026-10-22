@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import {
  ArrowRight,
@@ -34,14 +35,14 @@ export function KnowledgeTab({ agentId }: { agentId: string }) {
  <section className="border bg-card p-6">
  <div className="mb-5 flex items-start justify-between gap-3">
  <div className="space-y-1">
- <h2 className="text-base font-semibold">Attached documents</h2>
+ <h2 className="text-base font-semibold"><Trans>{"Attached documents"}</Trans></h2>
  <p className="text-sm text-muted-foreground">
- When RAG is enabled in Advanced, the agent can cite these.
+ <Trans>{"When RAG is enabled in Advanced, the agent can cite these."}</Trans>
  </p>
  </div>
  <Button asChild variant="outline">
  <Link href="/kb">
- Open knowledge base <ArrowRight className="size-4" />
+ <Trans>{"Open knowledge base"}</Trans> <ArrowRight className="size-4" />
  </Link>
  </Button>
  </div>

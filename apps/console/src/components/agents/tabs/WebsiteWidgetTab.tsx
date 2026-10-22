@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Check, Copy, Globe2, Loader2, Plus, Trash2 } from "lucide-react";
@@ -106,6 +108,7 @@ const DEFAULT_FORM: WidgetForm = {
 };
 
 export function WebsiteWidgetTab({ agentId }: { agentId: string }) {
+  const t = useT();
   const { data: widgets = [], isLoading } = useAgentWidgets(agentId);
   const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
@@ -135,10 +138,10 @@ export function WebsiteWidgetTab({ agentId }: { agentId: string }) {
           <div className="flex items-center justify-between gap-3">
             <div>
               <h2 className="text-sm font-semibold text-foreground">
-                Website widgets
+                <Trans>{"Website widgets"}</Trans>
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
-                Create an embeddable voice entry point for this agent.
+                <Trans>{"Create an embeddable voice entry point for this agent."}</Trans>
               </p>
             </div>
             <Button
@@ -149,14 +152,14 @@ export function WebsiteWidgetTab({ agentId }: { agentId: string }) {
                 setCreating(true);
               }}
             >
-              <Plus className="size-4" /> New
+              <Plus className="size-4" /> <Trans>{"New"}</Trans>
             </Button>
           </div>
         </div>
         <div className="divide-y">
           {widgets.length === 0 ? (
             <div className="p-4 text-sm text-muted-foreground">
-              No widgets have been created for this agent.
+              <Trans>{"No widgets have been created for this agent."}</Trans>
             </div>
           ) : (
             widgets.map((widget) => (
@@ -181,7 +184,7 @@ export function WebsiteWidgetTab({ agentId }: { agentId: string }) {
                     </p>
                   </div>
                   <Badge variant={widget.enabled ? "default" : "secondary"}>
-                    {widget.enabled ? "Enabled" : "Disabled"}
+                    {t(widget.enabled ? "Enabled" : "Disabled")}
                   </Badge>
                 </div>
               </button>
@@ -218,6 +221,7 @@ function WidgetEditor({
   onCreated: (widget: AgentWidget) => void;
   onDeleted: () => void;
 }) {
+  const t = useT();
   const [form, setForm] = useState<WidgetForm>(
     () => (widget ? formFromWidget(widget) : DEFAULT_FORM),
   );
@@ -245,14 +249,14 @@ function WidgetEditor({
     if (!widget) return;
     await navigator.clipboard.writeText(widget.embed.snippet);
     setCopied(true);
-    toast.success("Embed snippet copied");
+    toast.success(t("Embed snippet copied"));
     window.setTimeout(() => setCopied(false), 1600);
   }
 
   async function removeWidget() {
     try {
       if (!widget) return;
-      if (!window.confirm(`Delete ${widget.name}? Embedded sites will stop loading this widget.`)) {
+      if (!window.confirm(t("Delete {name}? Embedded sites will stop loading this widget.", { name: widget.name }))) {
         return;
       }
       await deleteWidget.mutateAsync(widget.widgetId);
@@ -268,10 +272,10 @@ function WidgetEditor({
         <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-base font-semibold text-foreground">
-              {widget ? "Widget settings" : "Create widget"}
+              {t(widget ? "Widget settings" : "Create widget")}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Customize the embedded voice widget, then allow exact website origins.
+              <Trans>{"Customize the embedded voice widget, then allow exact website origins."}</Trans>
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -282,12 +286,12 @@ function WidgetEditor({
                 disabled={deleteWidget.isPending}
                 onClick={removeWidget}
               >
-                <Trash2 className="size-4" /> Delete
+                <Trash2 className="size-4" /> <Trans>{"Delete"}</Trans>
               </Button>
             ) : null}
             <Button disabled={isSaving} onClick={saveWidget}>
               {isSaving ? <Loader2 className="size-4 animate-spin" /> : null}
-              {widget ? "Save widget" : "Create widget"}
+              {t(widget ? "Save widget" : "Create widget")}
             </Button>
           </div>
         </div>
@@ -310,9 +314,9 @@ function WidgetEditor({
                 </Field>
                 <div className="flex items-center justify-between border bg-card px-3 py-2">
                   <div>
-                    <Label className="text-sm font-medium">Enabled</Label>
+                    <Label className="text-sm font-medium"><Trans>{"Enabled"}</Trans></Label>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Allow approved websites to start calls.
+                      <Trans>{"Allow approved websites to start calls."}</Trans>
                     </p>
                   </div>
                   <Switch
@@ -337,8 +341,7 @@ function WidgetEditor({
                   }
                 />
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Enter one exact origin per line. Paths, query strings, credentials,
-                  and wildcards are rejected.
+                  <Trans>{"Enter one exact origin per line. Paths, query strings, credentials, and wildcards are rejected."}</Trans>
                 </p>
               </Field>
             </section>
@@ -376,9 +379,9 @@ function WidgetEditor({
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="flex items-center justify-between border bg-card px-3 py-2">
                   <div>
-                    <Label className="text-sm font-medium">Show avatar</Label>
+                    <Label className="text-sm font-medium"><Trans>{"Show avatar"}</Trans></Label>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Display an image or gradient orb in the widget header.
+                      <Trans>{"Display an image or gradient orb in the widget header."}</Trans>
                     </p>
                   </div>
                   <Switch
@@ -390,9 +393,9 @@ function WidgetEditor({
                 </div>
                 <div className="flex items-center justify-between border bg-card px-3 py-2">
                   <div>
-                    <Label className="text-sm font-medium">Whitelabel widget</Label>
+                    <Label className="text-sm font-medium"><Trans>{"Whitelabel widget"}</Trans></Label>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Hide “Powered by QuickVoice” from the embed.
+                      <Trans>{"Hide “Powered by QuickVoice” from the embed."}</Trans>
                     </p>
                   </div>
                   <Switch
@@ -507,9 +510,9 @@ function WidgetEditor({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="compact">Compact</SelectItem>
-                      <SelectItem value="comfortable">Comfortable</SelectItem>
-                      <SelectItem value="large">Large</SelectItem>
+                      <SelectItem value="compact"><Trans>{"Compact"}</Trans></SelectItem>
+                      <SelectItem value="comfortable"><Trans>{"Comfortable"}</Trans></SelectItem>
+                      <SelectItem value="large"><Trans>{"Large"}</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
@@ -526,18 +529,18 @@ function WidgetEditor({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="bottom-right">Bottom right</SelectItem>
-                      <SelectItem value="bottom-left">Bottom left</SelectItem>
-                      <SelectItem value="top-right">Top right</SelectItem>
-                      <SelectItem value="top-left">Top left</SelectItem>
+                      <SelectItem value="bottom-right"><Trans>{"Bottom right"}</Trans></SelectItem>
+                      <SelectItem value="bottom-left"><Trans>{"Bottom left"}</Trans></SelectItem>
+                      <SelectItem value="top-right"><Trans>{"Top right"}</Trans></SelectItem>
+                      <SelectItem value="top-left"><Trans>{"Top left"}</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
                 <div className="flex items-center justify-between border bg-card px-3 py-2">
                   <div>
-                    <Label className="text-sm font-medium">Open by default</Label>
+                    <Label className="text-sm font-medium"><Trans>{"Open by default"}</Trans></Label>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Show the panel expanded when the page loads.
+                      <Trans>{"Show the panel expanded when the page loads."}</Trans>
                     </p>
                   </div>
                   <Switch
@@ -654,9 +657,9 @@ function WidgetEditor({
               />
               <div className="flex items-center justify-between border bg-card px-3 py-2">
                 <div>
-                  <Label className="text-sm font-medium">Consent required</Label>
+                  <Label className="text-sm font-medium"><Trans>{"Consent required"}</Trans></Label>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Show consent copy before connecting.
+                    <Trans>{"Show consent copy before connecting."}</Trans>
                   </p>
                 </div>
                 <Switch
@@ -687,10 +690,10 @@ function WidgetEditor({
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-foreground">
-                    Embed snippet
+                    <Trans>{"Embed snippet"}</Trans>
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Paste this before the closing body tag.
+                    <Trans>{"Paste this before the closing body tag."}</Trans>
                   </p>
                 </div>
                 <Button
@@ -700,19 +703,18 @@ function WidgetEditor({
                   onClick={copySnippet}
                 >
                   {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-                  Copy
+                  <Trans>{"Copy"}</Trans>
                 </Button>
               </div>
               <pre className="mt-3 overflow-x-auto border bg-card p-3 text-xs text-muted-foreground">
                 <code>
                   {widget
                     ? widget.embed.snippet
-                    : "Create the widget to generate an embed snippet."}
+                    : t("Create the widget to generate an embed snippet.")}
                 </code>
               </pre>
               <p className="mt-3 text-xs text-muted-foreground">
-                Optional HTML attributes can override visual text and colors per embed;
-                server-side whitelabeling and allowlists stay controlled here.
+                <Trans>{"Optional HTML attributes can override visual text and colors per embed; server-side whitelabeling and allowlists stay controlled here."}</Trans>
               </p>
             </div>
           </div>
@@ -729,18 +731,20 @@ function SectionTitle({
   title: string;
   description: string;
 }) {
+  const t = useT();
   return (
     <div>
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+      <h3 className="text-sm font-semibold text-foreground">{t(title)}</h3>
+      <p className="mt-1 text-xs text-muted-foreground">{t(description)}</p>
     </div>
   );
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
+  const t = useT();
   return (
     <div>
-      <Label className="mb-2 block text-sm font-medium">{label}</Label>
+      <Label className="mb-2 block text-sm font-medium">{t(label)}</Label>
       {children}
     </div>
   );
@@ -821,7 +825,7 @@ function WidgetPreview({ form }: { form: WidgetForm }) {
   return (
     <div className="border bg-background p-4">
       <div className="mb-3 flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <Globe2 className="size-4" /> Widget preview
+        <Globe2 className="size-4" /> <Trans>{"Widget preview"}</Trans>
       </div>
       <div className="flex min-h-72 items-end justify-end bg-muted/40 p-4">
         <div className="w-full max-w-[300px] space-y-3">

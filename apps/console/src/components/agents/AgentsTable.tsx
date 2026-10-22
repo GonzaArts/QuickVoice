@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -191,25 +192,25 @@ export function AgentsTable({ agents, isLoading }: Props) {
                 <p className="font-semibold text-foreground">
                   {agent.phoneNumbersCount}
                 </p>
-                <p className="text-muted-foreground">Numbers</p>
+                <p className="text-muted-foreground"><Trans>{"Numbers"}</Trans></p>
               </div>
               <div className="border-r px-2 py-2">
                 <p className="font-semibold text-foreground">
                   {agent.callLogsCount}
                 </p>
-                <p className="text-muted-foreground">Calls</p>
+                <p className="text-muted-foreground"><Trans>{"Calls"}</Trans></p>
               </div>
               <div className="border-r px-2 py-2">
                 <p className="font-semibold text-foreground">
                   {agent.knowledgeSourcesCount}
                 </p>
-                <p className="text-muted-foreground">Docs</p>
+                <p className="text-muted-foreground"><Trans>{"Docs"}</Trans></p>
               </div>
               <div className="px-2 py-2">
                 <p className="font-semibold text-foreground">
                   {agent.toolsCount}
                 </p>
-                <p className="text-muted-foreground">Tools</p>
+                <p className="text-muted-foreground"><Trans>{"Tools"}</Trans></p>
               </div>
             </div>
           </div>
@@ -220,22 +221,22 @@ export function AgentsTable({ agents, isLoading }: Props) {
         <Table className="min-w-[860px]">
           <TableHeader>
             <TableRow className="bg-muted/20 hover:bg-muted/20">
-              <TableHead className="pl-4 whitespace-nowrap">Agent</TableHead>
-              <TableHead className="w-24">Status</TableHead>
-              <TableHead className="w-32">Configured</TableHead>
+              <TableHead className="pl-4 whitespace-nowrap"><Trans>{"Agent"}</Trans></TableHead>
+              <TableHead className="w-24"><Trans>{"Status"}</Trans></TableHead>
+              <TableHead className="w-32"><Trans>{"Configured"}</Trans></TableHead>
               <TableHead className="w-24 text-right whitespace-nowrap">
-                Numbers
+                <Trans>{"Numbers"}</Trans>
               </TableHead>
               <TableHead className="w-24 text-right whitespace-nowrap">
-                Calls
+                <Trans>{"Calls"}</Trans>
               </TableHead>
               <TableHead className="w-24 text-right whitespace-nowrap">
-                Docs
+                <Trans>{"Docs"}</Trans>
               </TableHead>
               <TableHead className="w-24 text-right whitespace-nowrap">
-                Tools
+                <Trans>{"Tools"}</Trans>
               </TableHead>
-              <TableHead className="w-14 pr-4 text-right">Actions</TableHead>
+              <TableHead className="w-14 pr-4 text-right"><Trans>{"Actions"}</Trans></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -308,18 +309,18 @@ export function AgentsTable({ agents, isLoading }: Props) {
                           href={`/agents/${agent.agentId}`}
                           className="flex items-center gap-2"
                         >
-                          <Pencil className="size-4" /> Edit
+                          <Pencil className="size-4" /> <Trans>{"Edit"}</Trans>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setPreviewTarget(agent)}>
-                        <FlaskConical className="size-4" /> Test
+                        <FlaskConical className="size-4" /> <Trans>{"Test"}</Trans>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => setDeleteTarget(agent)}
                         className="text-destructive focus:text-destructive"
                       >
-                        <Trash2 className="size-4" /> Delete
+                        <Trash2 className="size-4" /> <Trans>{"Delete"}</Trans>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -388,7 +389,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this agent?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"Delete this agent?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
               This deletes {deleteTarget?.name ?? "this agent"} and detaches it
               from phone numbers, tools, and knowledge sources. This cannot be
@@ -396,7 +397,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               disabled={deleteAgent.isPending}
@@ -404,7 +405,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
             >
               {deleteAgent.isPending ? (
                 <>
-                  <Loader2 className="animate-spin" /> Deleting...
+                  <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
                 </>
               ) : (
                 "Delete"

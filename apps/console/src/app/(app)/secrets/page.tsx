@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { KeyRound, Plus } from "lucide-react";
 
@@ -14,7 +15,7 @@ export default function SecretsPage() {
   const addButton = (
     <Button onClick={() => setCreateOpen(true)}>
       <Plus className="size-4" />
-      Add secret
+      <Trans>{"Add secret"}</Trans>
     </Button>
   );
 

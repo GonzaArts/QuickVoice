@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { Loader2 } from "lucide-react";
 import {
   Select,
@@ -67,7 +68,7 @@ export function AssignAgentSelect({
         </div>
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
+        <SelectItem value={UNASSIGNED}><Trans>{"Unassigned"}</Trans></SelectItem>
         {(agents ?? []).map((a) => (
           <SelectItem key={a.agentId} value={a.agentId}>
             {a.name}

@@ -1,11 +1,14 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
+import { LanguageSwitcher } from "@/src/components/shell/LanguageSwitcher";
+import { useT } from "@/src/i18n/provider";
 
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -42,6 +45,7 @@ const passwordSchema = z
  });
 
 export default function ProfilePage() {
+ const t = useT();
  const { data: session } = authClient.useSession();
  const [saving, setSaving] = useState(false);
  const [changingPw, setChangingPw] = useState(false);
@@ -98,10 +102,15 @@ export default function ProfilePage() {
  return (
  <div className="space-y-6">
  <section className="border bg-card p-6">
+  <h2 className="text-base font-semibold">{t("Appearance and language")}</h2>
+  <p className="mb-4 mt-1 text-sm text-muted-foreground">{t("Choose the language used by the QuickVoice console.")}</p>
+  <LanguageSwitcher />
+ </section>
+ <section className="border bg-card p-6">
  <div className="mb-5 space-y-1">
- <h2 className="text-base font-semibold">Account</h2>
+ <h2 className="text-base font-semibold"><Trans>{"Account"}</Trans></h2>
  <p className="text-sm text-muted-foreground">
- Your display name and email address.
+ <Trans>{"Your display name and email address."}</Trans>
  </p>
  </div>
  <Form {...profileForm}>
@@ -114,7 +123,7 @@ export default function ProfilePage() {
  name="name"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Name</FormLabel>
+ <FormLabel><Trans>{"Name"}</Trans></FormLabel>
  <FormControl>
  <Input {...field} />
  </FormControl>
@@ -123,11 +132,10 @@ export default function ProfilePage() {
  )}
  />
  <div className="space-y-2">
- <FormLabel>Email</FormLabel>
+ <FormLabel><Trans>{"Email"}</Trans></FormLabel>
  <Input value={session?.user?.email ?? ""} disabled />
  <FormDescription>
- Email changes require verification and are managed from the
- sign-in screen.
+ <Trans>{"Email changes require verification and are managed from the sign-in screen."}</Trans>
  </FormDescription>
  </div>
  <div className="flex justify-end">
@@ -137,11 +145,11 @@ export default function ProfilePage() {
  >
  {saving ? (
  <>
- <Loader2 className="animate-spin" /> Saving…
+ <Loader2 className="animate-spin" /> <Trans>{"Saving…"}</Trans>
  </>
  ) : (
  <>
- <Save /> Save changes
+ <Save /> <Trans>{"Save changes"}</Trans>
  </>
  )}
  </Button>
@@ -152,9 +160,9 @@ export default function ProfilePage() {
 
  <section className="border bg-card p-6">
  <div className="mb-5 space-y-1">
- <h2 className="text-base font-semibold">Change password</h2>
+ <h2 className="text-base font-semibold"><Trans>{"Change password"}</Trans></h2>
  <p className="text-sm text-muted-foreground">
- Use at least 8 characters with a mix of letters and numbers.
+ <Trans>{"Use at least 8 characters with a mix of letters and numbers."}</Trans>
  </p>
  </div>
  <Form {...passwordForm}>
@@ -167,7 +175,7 @@ export default function ProfilePage() {
  name="currentPassword"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Current password</FormLabel>
+ <FormLabel><Trans>{"Current password"}</Trans></FormLabel>
  <FormControl>
  <InputGroup>
  <InputGroupInput
@@ -191,7 +199,7 @@ export default function ProfilePage() {
  name="newPassword"
  render={({ field }) => (
  <FormItem>
- <FormLabel>New password</FormLabel>
+ <FormLabel><Trans>{"New password"}</Trans></FormLabel>
  <FormControl>
  <InputGroup>
  <InputGroupInput
@@ -215,7 +223,7 @@ export default function ProfilePage() {
  name="confirm"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Confirm new password</FormLabel>
+ <FormLabel><Trans>{"Confirm new password"}</Trans></FormLabel>
  <FormControl>
  <Input type={showNew ? "text" : "password"} {...field} />
  </FormControl>
@@ -227,7 +235,7 @@ export default function ProfilePage() {
  <Button type="submit" disabled={changingPw}>
  {changingPw ? (
  <>
- <Loader2 className="animate-spin" /> Updating…
+ <Loader2 className="animate-spin" /> <Trans>{"Updating…"}</Trans>
  </>
  ) : (
  "Change password"

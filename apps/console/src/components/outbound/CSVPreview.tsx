@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { FileSpreadsheet, AlertCircle, CheckCircle2, Loader2, Eye, Table } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/src/components/ui/button";
@@ -213,7 +214,7 @@ export function CSVPreview({
           onClick={handleParseFile}
         >
           <Eye className="size-4" />
-          Preview
+          <Trans>{"Preview"}</Trans>
         </Button>
       </div>
     );

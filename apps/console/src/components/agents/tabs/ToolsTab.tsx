@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useState } from "react";
 import { Wrench, Plus, Unlink, Loader2, PlugZap } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
@@ -21,6 +23,7 @@ const METHOD_COLORS: Record<string, string> = {
 };
 
 export function ToolsTab({ agentId }: { agentId: string }) {
+  const t = useT();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [mcpPickerOpen, setMcpPickerOpen] = useState(false);
   const { data: tools = [], isLoading } = useAgentTools(agentId);
@@ -32,11 +35,11 @@ export function ToolsTab({ agentId }: { agentId: string }) {
     <div className="flex gap-2">
       <Button size="sm" variant="outline" onClick={() => setMcpPickerOpen(true)}>
         <PlugZap className="size-4" />
-        Add MCP
+        <Trans>{"Add MCP"}</Trans>
       </Button>
       <Button size="sm" onClick={() => setPickerOpen(true)}>
         <Plus className="size-4" />
-        Add HTTP
+        <Trans>{"Add HTTP"}</Trans>
       </Button>
     </div>
   );
@@ -45,8 +48,8 @@ export function ToolsTab({ agentId }: { agentId: string }) {
     <div className="border bg-card">
       <div className="flex items-center justify-between border-b px-5 py-3">
         <div>
-          <p className="text-sm font-semibold">Attached tools</p>
-          <p className="text-xs text-muted-foreground">HTTP tools this agent can call mid-conversation</p>
+          <p className="text-sm font-semibold"><Trans>{"Attached tools"}</Trans></p>
+          <p className="text-xs text-muted-foreground"><Trans>{"HTTP tools this agent can call mid-conversation"}</Trans></p>
         </div>
         {addButton}
       </div>
@@ -93,10 +96,10 @@ export function ToolsTab({ agentId }: { agentId: string }) {
               </div>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 {tool.force_pre_tool_speech && (
-                  <span className="hidden sm:inline">Pre-speech</span>
+                  <span className="hidden sm:inline"><Trans>{"Pre-speech"}</Trans></span>
                 )}
                 {tool.response_timeout_secs && (
-                  <span className="hidden sm:inline">{tool.response_timeout_secs}s timeout</span>
+                  <span className="hidden sm:inline">{t("{seconds}s timeout", {seconds: tool.response_timeout_secs})}</span>
                 )}
                 <Button
                   variant="ghost"
@@ -104,7 +107,7 @@ export function ToolsTab({ agentId }: { agentId: string }) {
                   className="size-8 text-muted-foreground hover:text-destructive"
                   onClick={() => detachTool.mutate(tool.toolId)}
                   disabled={detachTool.isPending && detachTool.variables === tool.toolId}
-                  aria-label={`Detach ${tool.name}`}
+                  aria-label={t("Detach {name}", {name: tool.name})}
                 >
                   {detachTool.isPending && detachTool.variables === tool.toolId ? (
                     <Loader2 className="size-3.5 animate-spin" />
@@ -134,12 +137,12 @@ export function ToolsTab({ agentId }: { agentId: string }) {
       <div className="border-t">
         <div className="flex items-center justify-between border-b px-5 py-3">
           <div>
-            <p className="text-sm font-semibold">Attached MCP connections</p>
-            <p className="text-xs text-muted-foreground">Connected MCP servers this agent can call through the server bridge</p>
+            <p className="text-sm font-semibold"><Trans>{"Attached MCP connections"}</Trans></p>
+            <p className="text-xs text-muted-foreground"><Trans>{"Connected MCP servers this agent can call through the server bridge"}</Trans></p>
           </div>
           <Button size="sm" variant="outline" onClick={() => setMcpPickerOpen(true)}>
             <PlugZap className="size-4" />
-            Add MCP
+            <Trans>{"Add MCP"}</Trans>
           </Button>
         </div>
         {mcpLoading ? (
@@ -177,7 +180,7 @@ export function ToolsTab({ agentId }: { agentId: string }) {
                     </Badge>
                   </div>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {(item.mcpConnection.tools?.length ?? 0)} tools · {item.mcpConnection.mcpUrl}
+                    {t("{count} tools", {count: item.mcpConnection.tools?.length ?? 0})} · {item.mcpConnection.mcpUrl}
                   </p>
                   <McpToolBadges tools={item.mcpConnection.tools} />
                 </div>
@@ -187,7 +190,7 @@ export function ToolsTab({ agentId }: { agentId: string }) {
                   className="size-8 text-muted-foreground hover:text-destructive"
                   onClick={() => detachMcp.mutate(item.mcpConnectionId)}
                   disabled={detachMcp.isPending && detachMcp.variables === item.mcpConnectionId}
-                  aria-label={`Detach ${item.mcpConnection.displayName}`}
+                  aria-label={t("Detach {name}", {name: item.mcpConnection.displayName})}
                 >
                   {detachMcp.isPending && detachMcp.variables === item.mcpConnectionId ? (
                     <Loader2 className="size-3.5 animate-spin" />

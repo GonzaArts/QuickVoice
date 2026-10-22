@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -48,6 +50,7 @@ export function WebhookSecretFieldEditor({
   disabled?: boolean;
   keyPlaceholder?: string;
 }) {
+  const t = useT();
   function updateRow(id: string, patch: Partial<SecretFieldRow>) {
     onChange(rows.map((row) => (row.id === id ? { ...row, ...patch } : row)));
   }
@@ -64,8 +67,8 @@ export function WebhookSecretFieldEditor({
     <div className="border border-dashed bg-muted/20 p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
-          <Label>{label}</Label>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <Label><Trans>{label}</Trans></Label>
+          <p className="text-sm text-muted-foreground"><Trans>{description}</Trans></p>
         </div>
         <Button
           type="button"
@@ -75,7 +78,7 @@ export function WebhookSecretFieldEditor({
           disabled={disabled}
         >
           <Plus className="size-4" />
-          Add
+          <Trans>{"Add"}</Trans>
         </Button>
       </div>
 
@@ -87,8 +90,8 @@ export function WebhookSecretFieldEditor({
               className="grid gap-2 lg:grid-cols-[minmax(0,180px)_140px_minmax(0,1fr)_36px]"
             >
               <Input
-                aria-label={`${label} key`}
-                placeholder={keyPlaceholder}
+                aria-label={t("{label} key", {label: t(label)})}
+                placeholder={t(keyPlaceholder)}
                 value={row.key}
                 disabled={disabled}
                 onChange={(event) => updateRow(row.id, { key: event.target.value })}
@@ -100,12 +103,12 @@ export function WebhookSecretFieldEditor({
                   updateRow(row.id, { type: normalizeFieldType(value), value: "", redacted: false })
                 }
               >
-                <SelectTrigger aria-label={`${label} field type for ${row.key || "new field"}`}>
+                <SelectTrigger aria-label={t("{label} field type for {key}", {label: t(label), key: row.key || t("new field")})}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Value">Value</SelectItem>
-                  <SelectItem value="Secret">Secret</SelectItem>
+                  <SelectItem value="Value"><Trans>{"Value"}</Trans></SelectItem>
+                  <SelectItem value="Secret"><Trans>{"Secret"}</Trans></SelectItem>
                 </SelectContent>
               </Select>
               {row.type === "Secret" ? (
@@ -113,13 +116,13 @@ export function WebhookSecretFieldEditor({
                   value={row.value}
                   onValueChange={(value) => updateRow(row.id, { value, redacted: false })}
                   disabled={disabled}
-                  placeholder={row.redacted ? "Saved secret" : "Select secret"}
-                  ariaLabel={`${label} secret for ${row.key || "new field"}`}
+                  placeholder={t(row.redacted ? "Saved secret" : "Select secret")}
+                  ariaLabel={t("{label} secret for {key}", {label: t(label), key: row.key || t("new field")})}
                 />
               ) : (
                 <Input
-                  aria-label={`${label} value`}
-                  placeholder="Value"
+                  aria-label={t("{label} value", {label: t(label)})}
+                  placeholder={t("Value")}
                   value={row.value}
                   disabled={disabled}
                   onChange={(event) =>
@@ -131,7 +134,7 @@ export function WebhookSecretFieldEditor({
                 type="button"
                 variant="ghost"
                 size="icon"
-                aria-label={`Remove ${label} row`}
+                aria-label={t("Remove {label} row", {label: t(label)})}
                 onClick={() => removeRow(row.id)}
                 disabled={disabled}
               >
@@ -142,7 +145,7 @@ export function WebhookSecretFieldEditor({
         </div>
       ) : (
         <p className="mt-4 text-sm text-muted-foreground">
-          No {label.toLowerCase()} configured.
+          {t("No {label} configured.", {label: t(label).toLowerCase()})}
         </p>
       )}
     </div>

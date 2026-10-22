@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -112,7 +113,7 @@ export default function Orgs() {
  name="name"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Organization name</FormLabel>
+ <FormLabel><Trans>{"Organization name"}</Trans></FormLabel>
  <FormControl>
  <Input placeholder="e.g. Acme Inc" className="h-10" {...field} />
  </FormControl>

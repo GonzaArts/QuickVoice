@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { Button } from "@/src/components/ui/button";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 
@@ -16,7 +17,7 @@ export default function AppError({
  <div className="mx-auto mb-5 flex size-12 items-center justify-center bg-destructive/10 text-destructive">
  <AlertTriangle className="size-6" />
  </div>
- <h2 className="text-lg font-semibold">Something went wrong</h2>
+ <h2 className="text-lg font-semibold"><Trans>{"Something went wrong"}</Trans></h2>
  <p className="mt-2 text-sm text-muted-foreground">
  {error.message || "An unexpected error occurred."}
  </p>

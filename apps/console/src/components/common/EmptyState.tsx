@@ -1,3 +1,4 @@
+import { Trans } from "@/src/i18n/Trans";
 import {
   AlertTriangle,
   CircleAlert,
@@ -150,11 +151,11 @@ export function StateView({
         />
       </div>
       <h3 className="text-base font-semibold text-foreground">
-        {title ?? state.title}
+        <Trans>{title ?? state.title}</Trans>
       </h3>
       {resolvedDescription ? (
         <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-          {resolvedDescription}
+          <Trans>{resolvedDescription}</Trans>
         </p>
       ) : null}
       {primaryAction || secondaryAction ? (

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -71,7 +72,7 @@ export function Transcript({ callId }: { callId: string }) {
           >
             {q.isFetchingNextPage ? (
               <>
-                <Loader2 className="animate-spin" /> Loading…
+                <Loader2 className="animate-spin" /> <Trans>{"Loading…"}</Trans>
               </>
             ) : (
               "Load more"

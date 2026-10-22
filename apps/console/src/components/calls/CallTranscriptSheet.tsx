@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import {
   CalendarClock,
   CheckCircle2,
@@ -147,7 +148,7 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
             <section className="flex min-h-0 flex-col">
               <div className="flex items-center justify-between border-b px-4 py-3 sm:px-6">
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground">Transcript</h3>
+                  <h3 className="text-sm font-semibold text-foreground"><Trans>{"Transcript"}</Trans></h3>
                   <p className="text-xs text-muted-foreground">Conversation messages in chronological order.</p>
                 </div>
               </div>

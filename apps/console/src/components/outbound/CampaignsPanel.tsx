@@ -1,5 +1,8 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useLocale, useT } from "@/src/i18n/provider";
+import type { Locale } from "@/src/i18n/config";
 import { useEffect, useMemo, useState } from "react";
 import {
   CalendarClock,
@@ -85,20 +88,31 @@ type CampaignStatus = BatchCampaign["status"];
 type CampaignErrorState = string | null;
 
 
-function fmtDate(value: string | null) {
-  if (!value) return "Instant";
-  return new Date(value).toLocaleString("en-US", {
+function fmtDate(value: string | null, locale: Locale, t: (key: string) => string) {
+  if (!value) return t("Instant");
+  return new Date(value).toLocaleString(locale === "es" ? "es-ES" : "en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    hour12: true,
+    hour12: locale === "en",
   });
 }
 
-function statusLabel(status: string) {
-  return status.replaceAll("_", " ").toLowerCase();
+function statusLabel(status: string, t: (key: string) => string) {
+  const labels: Record<string, string> = {
+    SCHEDULED: "Scheduled",
+    ACTIVE: "Active",
+    COMPLETED: "Completed",
+    CANCELLED: "Cancelled",
+    PROCESSED: "Processed",
+    FAILED: "Failed",
+    PENDING: "Pending",
+    QUEUED: "Queued",
+  };
+  const label = labels[status.toUpperCase()];
+  return label ? t(label) : status.replaceAll("_", " ").toLowerCase();
 }
 
 function statusVariant(status: CampaignStatus) {
@@ -223,6 +237,7 @@ function CampaignIntelligencePanel({
   campaignId: string;
   shownCampaign: BatchCampaign;
 }) {
+  const t = useT();
   const [assignmentInput, setAssignmentInput] = useState<string>(defaultExperimentPayload());
   const [assignmentResult, setAssignmentResult] = useState<CampaignExperimentAssignmentResponse | null>(null);
   const [assignmentLoading, setAssignmentLoading] = useState(false);
@@ -263,13 +278,13 @@ function CampaignIntelligencePanel({
     try {
       const payload = safeJsonParse<CampaignExperimentAssignmentRequest>(
         assignmentInput,
-        "Experiment payload",
+        t("Experiment payload"),
       );
       const response = await outboundApi.computeCampaignAssignments(shownCampaign.campaignId, payload);
       setAssignmentResult(response);
-      toast.success("Assignment preview generated");
+      toast.success(t("Assignment preview generated"));
     } catch (error) {
-      setAssignmentError(error instanceof Error ? error.message : "Could not compute assignment preview");
+      setAssignmentError(error instanceof Error ? error.message : t("Could not compute assignment preview"));
     } finally {
       setAssignmentLoading(false);
     }
@@ -283,13 +298,13 @@ function CampaignIntelligencePanel({
     try {
       const payload = safeJsonParse<CampaignConversionEventInput>(
         conversionInput,
-        "Conversion payload",
+        t("Conversion payload"),
       );
       const response = await outboundApi.validateCampaignConversion(shownCampaign.campaignId, payload);
       setConversionValidationResult(response);
-      toast.success("Conversion validated");
+      toast.success(t("Conversion validated"));
     } catch (error) {
-      setConversionError(error instanceof Error ? error.message : "Could not validate conversion");
+      setConversionError(error instanceof Error ? error.message : t("Could not validate conversion"));
     } finally {
       setConversionValidationLoading(false);
     }
@@ -303,13 +318,13 @@ function CampaignIntelligencePanel({
     try {
       const payload = safeJsonParse<CampaignConversionEventInput>(
         conversionInput,
-        "Conversion payload",
+        t("Conversion payload"),
       );
       const response = await outboundApi.ingestCampaignConversion(shownCampaign.campaignId, payload);
       setConversionIngestResult(response);
-      toast.success("Conversion event ingested");
+      toast.success(t("Conversion event ingested"));
     } catch (error) {
-      setConversionError(error instanceof Error ? error.message : "Could not ingest conversion");
+      setConversionError(error instanceof Error ? error.message : t("Could not ingest conversion"));
     } finally {
       setConversionIngestLoading(false);
     }
@@ -329,9 +344,9 @@ function CampaignIntelligencePanel({
         },
       );
       setReportResult(response);
-      toast.success("Report preview generated");
+      toast.success(t("Report preview generated"));
     } catch (error) {
-      setReportError(error instanceof Error ? error.message : "Could not build report");
+      setReportError(error instanceof Error ? error.message : t("Could not build report"));
     } finally {
       setReportLoading(false);
     }
@@ -340,9 +355,9 @@ function CampaignIntelligencePanel({
   return (
     <div className="grid gap-4">
       <details className="border">
-        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold">Experiment assignment preview</summary>
+        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold"><Trans>{"Experiment assignment preview"}</Trans></summary>
         <div className="border-t p-3">
-          <Label htmlFor={`assignment-${campaignId}`}>Experiment payload</Label>
+          <Label htmlFor={`assignment-${campaignId}`}><Trans>{"Experiment payload"}</Trans></Label>
           <Textarea
             id={`assignment-${campaignId}`}
             rows={10}
@@ -357,7 +372,7 @@ function CampaignIntelligencePanel({
             disabled={assignmentLoading}
           >
             {assignmentLoading ? <Loader2 className="animate-spin" /> : null}
-            Compute assignments
+            <Trans>{"Compute assignments"}</Trans>
           </Button>
           {assignmentError ? <p className="mt-2 text-sm text-destructive">{assignmentError}</p> : null}
           {assignmentResult ? (
@@ -369,9 +384,9 @@ function CampaignIntelligencePanel({
       </details>
 
       <details className="border">
-        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold">Conversion validation / ingestion</summary>
+        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold"><Trans>{"Conversion validation / ingestion"}</Trans></summary>
         <div className="border-t p-3">
-          <Label htmlFor={`conversion-${campaignId}`}>Conversion event JSON</Label>
+          <Label htmlFor={`conversion-${campaignId}`}><Trans>{"Conversion event JSON"}</Trans></Label>
           <Textarea
             id={`conversion-${campaignId}`}
             rows={10}
@@ -387,7 +402,7 @@ function CampaignIntelligencePanel({
               disabled={conversionValidationLoading}
             >
               {conversionValidationLoading ? <Loader2 className="animate-spin" /> : null}
-              Validate conversion
+              <Trans>{"Validate conversion"}</Trans>
             </Button>
             <Button
               type="button"
@@ -397,13 +412,13 @@ function CampaignIntelligencePanel({
               disabled={conversionIngestLoading}
             >
               {conversionIngestLoading ? <Loader2 className="animate-spin" /> : null}
-              Ingest conversion
+              <Trans>{"Ingest conversion"}</Trans>
             </Button>
           </div>
           {conversionError ? <p className="mt-2 text-sm text-destructive">{conversionError}</p> : null}
           {conversionValidationResult ? (
             <div className="mt-2">
-              <p className="text-sm font-medium">Validation result</p>
+              <p className="text-sm font-medium"><Trans>{"Validation result"}</Trans></p>
               <pre className="mt-2 max-h-48 overflow-auto rounded border bg-muted/30 p-2 text-xs">
                 {JSON.stringify(conversionValidationResult, null, 2)}
               </pre>
@@ -411,7 +426,7 @@ function CampaignIntelligencePanel({
           ) : null}
           {conversionIngestResult ? (
             <div className="mt-2">
-              <p className="text-sm font-medium">Ingest result</p>
+              <p className="text-sm font-medium"><Trans>{"Ingest result"}</Trans></p>
               <pre className="mt-2 max-h-48 overflow-auto rounded border bg-muted/30 p-2 text-xs">
                 {JSON.stringify(conversionIngestResult, null, 2)}
               </pre>
@@ -421,7 +436,7 @@ function CampaignIntelligencePanel({
       </details>
 
       <details className="border">
-        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold">Campaign report preview</summary>
+        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold"><Trans>{"Campaign report preview"}</Trans></summary>
         <div className="border-t p-3">
           <div className="mb-2 flex flex-wrap items-center gap-4 text-sm">
             <label className="flex items-center gap-2">
@@ -430,7 +445,7 @@ function CampaignIntelligencePanel({
                 checked={reportRandomized}
                 onChange={(event) => setReportRandomized(event.target.checked)}
               />
-              <span>Randomized metrics</span>
+              <span><Trans>{"Randomized metrics"}</Trans></span>
             </label>
             <label className="flex items-center gap-2">
               <input
@@ -438,7 +453,7 @@ function CampaignIntelligencePanel({
                 checked={reportPersist}
                 onChange={(event) => setReportPersist(event.target.checked)}
               />
-              <span>Persist snapshot</span>
+              <span><Trans>{"Persist snapshot"}</Trans></span>
             </label>
           </div>
           <Button
@@ -448,7 +463,7 @@ function CampaignIntelligencePanel({
             disabled={reportLoading}
           >
             {reportLoading ? <Loader2 className="animate-spin" /> : null}
-            Build report preview
+            <Trans>{"Build report preview"}</Trans>
           </Button>
           {reportError ? <p className="mt-2 text-sm text-destructive">{reportError}</p> : null}
           {reportResult ? (
@@ -469,6 +484,7 @@ function CampaignDetailDialog({
   campaign: BatchCampaign | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { locale, t } = useLocale();
   const { data: detail, isLoading } = useBatchCampaign(campaign?.campaignId);
   const shown = detail ?? campaign;
   const calls = shown?.outboundCalls ?? [];
@@ -477,9 +493,9 @@ function CampaignDetailDialog({
     <Dialog open={!!campaign} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
-          <DialogTitle>{shown?.name ?? "Campaign"}</DialogTitle>
+          <DialogTitle>{shown?.name ?? t("Campaign")}</DialogTitle>
           <DialogDescription>
-            Campaign schedule, recipient counts, and imported outbound calls.
+            <Trans>{"Campaign schedule, recipient counts, and imported outbound calls."}</Trans>
           </DialogDescription>
         </DialogHeader>
 
@@ -493,28 +509,28 @@ function CampaignDetailDialog({
           <div className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-4">
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Status"}</Trans></p>
                 <Badge
                   className="mt-2 capitalize"
                   variant={statusVariant(shown.status)}
                 >
-                  {statusLabel(shown.status)}
+                  {statusLabel(shown.status, t)}
                 </Badge>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Total"}</Trans></p>
                 <p className="mt-1 text-xl font-semibold tabular-nums">
                   {shown.totalRecipients}
                 </p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Valid</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Valid"}</Trans></p>
                 <p className="mt-1 text-xl font-semibold tabular-nums">
                   {shown.validRecipients}
                 </p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Invalid</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Invalid"}</Trans></p>
                 <p className="mt-1 text-xl font-semibold tabular-nums">
                   {shown.invalidRecipients}
                 </p>
@@ -523,39 +539,39 @@ function CampaignDetailDialog({
 
             <div className="grid gap-3 text-sm sm:grid-cols-2">
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">From number</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"From number"}</Trans></p>
                 <p className="mt-1 font-medium">{shown.fromNumber}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Scheduled</p>
-                <p className="mt-1 font-medium">{fmtDate(shown.scheduledAt)}</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Scheduled"}</Trans></p>
+                <p className="mt-1 font-medium">{fmtDate(shown.scheduledAt, locale, t)}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Source file</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Source file"}</Trans></p>
                 <p className="mt-1 truncate font-medium">
                   {shown.sourceFileName ?? "-"}
                 </p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Ring timeout</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Ring timeout"}</Trans></p>
                 <p className="mt-1 font-medium">
-                  {shown.ringingTimeoutSeconds} seconds
+                  {t("{seconds} seconds", { seconds: shown.ringingTimeoutSeconds })}
                 </p>
               </div>
             </div>
 
             <div className="border">
               <div className="flex items-center justify-between border-b px-3 py-2">
-                <p className="text-sm font-semibold">Imported calls</p>
+                <p className="text-sm font-semibold"><Trans>{"Imported calls"}</Trans></p>
                 <Badge variant="outline">{calls.length}</Badge>
               </div>
               <div className="max-h-72 overflow-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Phone number</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Updated</TableHead>
+                      <TableHead><Trans>{"Phone number"}</Trans></TableHead>
+                      <TableHead><Trans>{"Status"}</Trans></TableHead>
+                      <TableHead><Trans>{"Updated"}</Trans></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -569,11 +585,11 @@ function CampaignDetailDialog({
                             </TableCell>
                             <TableCell>
                               <Badge variant="outline" className="capitalize">
-                                {statusLabel(call.status)}
+                                {statusLabel(call.status, t)}
                               </Badge>
                             </TableCell>
                             <TableCell className="text-muted-foreground">
-                              {fmtDate(call.updatedAt)}
+                              {fmtDate(call.updatedAt, locale, t)}
                             </TableCell>
                           </TableRow>
                         ))
@@ -583,7 +599,7 @@ function CampaignDetailDialog({
                           colSpan={3}
                           className="h-24 text-center text-muted-foreground"
                         >
-                          No calls imported yet.
+                          <Trans>{"No calls imported yet."}</Trans>
                         </TableCell>
                       </TableRow>
                     )}
@@ -601,6 +617,7 @@ function CampaignDetailDialog({
 }
 
 export function CampaignsPanel() {
+  const { locale, t } = useLocale();
   const {
     data: campaigns = [],
     isLoading,
@@ -688,7 +705,7 @@ export function CampaignsPanel() {
             disabled={isFetching}
           >
             <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-            Retry
+            <Trans>{"Retry"}</Trans>
           </Button>
         }
       />
@@ -703,7 +720,7 @@ export function CampaignsPanel() {
           <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search campaigns, agents, numbers, or files"
+            placeholder={t("Search campaigns, agents, numbers, or files")}
             className="pl-9"
           />
         </div>
@@ -717,7 +734,7 @@ export function CampaignsPanel() {
           <SelectContent>
             {STATUS_OPTIONS.map((item) => (
               <SelectItem key={item} value={item} className="capitalize">
-                {item === "all" ? "All statuses" : statusLabel(item)}
+                {item === "all" ? t("All statuses") : statusLabel(item, t)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -729,12 +746,12 @@ export function CampaignsPanel() {
               filteredCampaigns,
               (id) => agentNames.get(id ?? "") ?? "-",
             );
-            toast.success("Campaign export downloaded");
+            toast.success(t("Campaign export downloaded"));
           }}
           disabled={!filteredCampaigns.length}
         >
           <Download className="size-4" />
-          Export CSV
+          <Trans>{"Export CSV"}</Trans>
         </Button>
       </div>
 
@@ -749,12 +766,12 @@ export function CampaignsPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Campaign</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Recipients</TableHead>
-                <TableHead>Schedule</TableHead>
-                <TableHead>From</TableHead>
-                <TableHead className="w-12 text-right">Actions</TableHead>
+                <TableHead><Trans>{"Campaign"}</Trans></TableHead>
+                <TableHead><Trans>{"Status"}</Trans></TableHead>
+                <TableHead><Trans>{"Recipients"}</Trans></TableHead>
+                <TableHead><Trans>{"Schedule"}</Trans></TableHead>
+                <TableHead><Trans>{"From"}</Trans></TableHead>
+                <TableHead className="w-12 text-right"><Trans>{"Actions"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -765,7 +782,7 @@ export function CampaignsPanel() {
                       <p className="font-medium">{campaign.name}</p>
                       <p className="truncate text-xs text-muted-foreground">
                         {agentNames.get(campaign.agentId ?? "") ?? "-"} ·{" "}
-                        {campaign.sourceFileName ?? "No source file"}
+                        {campaign.sourceFileName ?? t("No source file")}
                       </p>
                     </div>
                   </TableCell>
@@ -774,7 +791,7 @@ export function CampaignsPanel() {
                       className="capitalize"
                       variant={statusVariant(campaign.status)}
                     >
-                      {statusLabel(campaign.status)}
+                      {statusLabel(campaign.status, t)}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -783,7 +800,7 @@ export function CampaignsPanel() {
                         <span className="tabular-nums">
                           {campaign.validRecipients}/{campaign.totalRecipients}
                         </span>
-                        <span>{campaign.invalidRecipients} invalid</span>
+                        <span>{t("{count} invalid", { count: campaign.invalidRecipients })}</span>
                       </div>
                       <Progress value={completionPercent(campaign)} />
                     </div>
@@ -791,7 +808,7 @@ export function CampaignsPanel() {
                   <TableCell>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <CalendarClock className="size-4" />
-                      {fmtDate(campaign.scheduledAt)}
+                      {fmtDate(campaign.scheduledAt, locale, t)}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -806,18 +823,18 @@ export function CampaignsPanel() {
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          aria-label={`Actions for ${campaign.name}`}
+                          aria-label={t("Actions for {name}", { name: campaign.name })}
                         >
                           <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Campaign actions</DropdownMenuLabel>
+                        <DropdownMenuLabel><Trans>{"Campaign actions"}</Trans></DropdownMenuLabel>
                         <DropdownMenuItem
                           onClick={() => setSelectedCampaign(campaign)}
                         >
                           <FileSpreadsheet className="size-4" />
-                          View details
+                          <Trans>{"View details"}</Trans>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => exportCampaignResults(campaign)}
@@ -828,7 +845,7 @@ export function CampaignsPanel() {
                           ) : (
                             <Download className="size-4" />
                           )}
-                          Export results CSV
+                          <Trans>{"Export results CSV"}</Trans>
                         </DropdownMenuItem>
                         {canCancelCampaign(campaign.status) ? (
                           <>
@@ -838,7 +855,7 @@ export function CampaignsPanel() {
                               onClick={() => setCancelTarget(campaign)}
                             >
                               <SquareX className="size-4" />
-                              Cancel campaign
+                              <Trans>{"Cancel campaign"}</Trans>
                             </DropdownMenuItem>
                           </>
                         ) : null}
@@ -867,15 +884,14 @@ export function CampaignsPanel() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel campaign?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"Cancel campaign?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
-              This prevents {cancelTarget?.name} from dispatching queued calls.
-              Calls already in progress cannot be stopped from this action.
+              {t("This prevents {name} from dispatching queued calls. Calls already in progress cannot be stopped from this action.", { name: cancelTarget?.name ?? "" })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={cancelCampaign.isPending}>
-              Keep campaign
+              <Trans>{"Keep campaign"}</Trans>
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -888,7 +904,7 @@ export function CampaignsPanel() {
               {cancelCampaign.isPending ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : null}
-              Cancel campaign
+              <Trans>{"Cancel campaign"}</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

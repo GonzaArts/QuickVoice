@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -81,7 +82,7 @@ export function AddSecretDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New secret</DialogTitle>
+          <DialogTitle><Trans>{"New secret"}</Trans></DialogTitle>
           <DialogDescription>
             Store an integration token or API key without exposing the value in
             the console.
@@ -90,7 +91,7 @@ export function AddSecretDialog({
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="secret-name">Name</Label>
+            <Label htmlFor="secret-name"><Trans>{"Name"}</Trans></Label>
             <Input
               id="secret-name"
               placeholder="stripe.api_key"
@@ -108,7 +109,7 @@ export function AddSecretDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="secret-value">Value</Label>
+            <Label htmlFor="secret-value"><Trans>{"Value"}</Trans></Label>
             <div className="flex gap-2">
               <Input
                 id="secret-value"
@@ -144,7 +145,7 @@ export function AddSecretDialog({
               onClick={() => handleOpenChange(false)}
               disabled={createSecret.isPending}
             >
-              Cancel
+              <Trans>{"Cancel"}</Trans>
             </Button>
             <Button type="submit" disabled={createSecret.isPending}>
               {createSecret.isPending ? (

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { FormEvent, useMemo, useState } from "react";
 import { CheckCircle2, Loader2, PhoneOutgoing, RefreshCw } from "lucide-react";
 
@@ -183,7 +184,7 @@ export function QuickCallForm() {
         description="Configure an active agent and assign a phone number before starting an outbound call."
         action={
           <Button variant="outline" onClick={refresh}>
-            <RefreshCw /> Refresh
+            <RefreshCw /> <Trans>{"Refresh"}</Trans>
           </Button>
         }
       />
@@ -194,7 +195,7 @@ export function QuickCallForm() {
     <div className="grid gap-4 pb-20 xl:grid-cols-[minmax(0,1fr)_340px] xl:pb-0">
       <form onSubmit={onSubmit} className="border bg-card">
         <div className="flex flex-col gap-2 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-base font-semibold text-foreground">Quick call</h2>
+          <h2 className="text-base font-semibold text-foreground"><Trans>{"Quick call"}</Trans></h2>
           {selectedNumber ? (
             <Badge variant="outline">{formatProvider(selectedNumber.provider)}</Badge>
           ) : null}
@@ -203,7 +204,7 @@ export function QuickCallForm() {
         <div className="grid gap-5 p-5">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="agent">Agent</Label>
+              <Label htmlFor="agent"><Trans>{"Agent"}</Trans></Label>
               <Select value={agentId} onValueChange={selectAgent}>
                 <SelectTrigger id="agent" className="w-full">
                   <SelectValue placeholder="Select agent" />
@@ -249,7 +250,7 @@ export function QuickCallForm() {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="username">Name</Label>
+              <Label htmlFor="username"><Trans>{"Name"}</Trans></Label>
               <Input
                 id="username"
                 placeholder="Contact name"
@@ -260,7 +261,7 @@ export function QuickCallForm() {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="firstMessage">First message</Label>
+            <Label htmlFor="firstMessage"><Trans>{"First message"}</Trans></Label>
             <Textarea
               id="firstMessage"
               rows={3}
@@ -313,7 +314,7 @@ export function QuickCallForm() {
 
           <div className="flex flex-col gap-2 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
             <Button type="button" variant="outline" onClick={refresh}>
-              <RefreshCw /> Refresh
+              <RefreshCw /> <Trans>{"Refresh"}</Trans>
             </Button>
             <Button type="submit" disabled={!canSubmit}>
               {quickCall.isPending ? <Loader2 className="animate-spin" /> : <PhoneOutgoing />}

@@ -303,7 +303,7 @@ test("mobile and accessibility fixes are present", () => {
   );
   assert.match(
     read("src/components/agents/tabs/ToolsTab.tsx"),
-    /aria-label=\{`Detach/,
+    /aria-label=\{t\("Detach \{name\}", \{name: tool\.name\}\)\}/,
   );
 });
 
@@ -372,7 +372,7 @@ test("sidebar exposes a direct theme toggle and transcript bubbles keep readable
   assert.match(sidebar, /useTheme/);
   assert.match(sidebar, /function ThemeToggle/);
   assert.match(sidebar, /setTheme\(nextTheme\)/);
-  assert.match(sidebar, /aria-label=\{`Switch to \$\{nextTheme\} mode`\}/);
+  assert.match(sidebar, /aria-label=\{t\(`Switch to \$\{nextTheme\} mode`\)\}/);
   assert.match(sidebar, /<ThemeToggle \/>/);
 
   assert.doesNotMatch(transcript, /bg-\[#0f2142\] text-foreground/);

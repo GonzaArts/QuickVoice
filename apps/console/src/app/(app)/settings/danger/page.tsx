@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, Loader2, LogOut, Trash2 } from "lucide-react";
@@ -77,7 +78,7 @@ export default function DangerZonePage() {
  </div>
  <div>
  <h2 className="text-base font-semibold text-destructive">
- Danger zone
+ <Trans>{"Danger zone"}</Trans>
  </h2>
  <p className="text-sm text-muted-foreground">
  These actions cannot be undone. Proceed carefully.
@@ -109,7 +110,7 @@ export default function DangerZonePage() {
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
- <AlertDialogCancel>Cancel</AlertDialogCancel>
+ <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
  <AlertDialogAction onClick={onLeave} disabled={leaving}>
  {leaving ? (
  <>
@@ -145,12 +146,12 @@ export default function DangerZonePage() {
  Delete this organization?
  </AlertDialogTitle>
  <AlertDialogDescription>
- Type <span className="font-mono font-semibold">DELETE</span>{" "}
+ <Trans>{"Type"}</Trans> <span className="font-mono font-semibold">DELETE</span>{" "}
  to confirm. This cannot be undone.
  </AlertDialogDescription>
  </AlertDialogHeader>
  <div className="space-y-1.5">
- <Label htmlFor="delete-confirm">Confirm</Label>
+ <Label htmlFor="delete-confirm"><Trans>{"Confirm"}</Trans></Label>
  <Input
  id="delete-confirm"
  value={confirmName}
@@ -159,7 +160,7 @@ export default function DangerZonePage() {
  />
  </div>
  <AlertDialogFooter>
- <AlertDialogCancel>Cancel</AlertDialogCancel>
+ <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
  <AlertDialogAction
  onClick={onDelete}
  disabled={confirmName !== "DELETE" || deleting}
@@ -167,7 +168,7 @@ export default function DangerZonePage() {
  >
  {deleting ? (
  <>
- <Loader2 className="animate-spin" /> Deleting…
+ <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
  </>
  ) : (
  "Delete organization"

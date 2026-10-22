@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
@@ -170,10 +171,9 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
           <section className="border bg-card p-6">
             <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-1">
-                <h2 className="text-base font-semibold">Runtime features</h2>
+                <h2 className="text-base font-semibold"><Trans>{"Runtime features"}</Trans></h2>
                 <p className="max-w-2xl text-sm text-muted-foreground">
-                  Configure behaviors that change how the agent listens,
-                  searches, and moves through phone systems.
+                  <Trans>{"Configure behaviors that change how the agent listens, searches, and moves through phone systems."}</Trans>
                 </p>
               </div>
               <div className="flex items-center gap-2 border bg-background px-3 py-2 text-xs font-medium text-muted-foreground">
@@ -225,10 +225,9 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
 
           <section className="border bg-card p-6">
             <div className="mb-5 space-y-1">
-              <h2 className="text-base font-semibold">Data retention</h2>
+              <h2 className="text-base font-semibold"><Trans>{"Data retention"}</Trans></h2>
               <p className="text-sm text-muted-foreground">
-                Control what future calls persist and how long transcripts
-                remain.
+                <Trans>{"Control what future calls persist and how long transcripts remain."}</Trans>
               </p>
             </div>
             <div className="space-y-3">
@@ -238,10 +237,9 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between gap-4 border p-4">
                     <div className="space-y-0.5">
-                      <FormLabel>Zero-PII retention</FormLabel>
+                      <FormLabel><Trans>{"Zero-PII retention"}</Trans></FormLabel>
                       <FormDescription>
-                        Do not persist transcripts or recordings for future
-                        calls.
+                        <Trans>{"Do not persist transcripts or recordings for future calls."}</Trans>
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -267,10 +265,9 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between gap-4 border p-4">
                     <div className="space-y-0.5">
-                      <FormLabel>Store call audio</FormLabel>
+                      <FormLabel><Trans>{"Store call audio"}</Trans></FormLabel>
                       <FormDescription>
-                        Save recordings for future calls in configured object
-                        storage.
+                        <Trans>{"Save recordings for future calls in configured object storage."}</Trans>
                       </FormDescription>
                       <FormMessage />
                     </div>
@@ -291,9 +288,9 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
                   <FormItem className="border p-4">
                     <div className="grid gap-3 sm:grid-cols-[1fr_9rem] sm:items-center">
                       <div className="space-y-0.5">
-                        <FormLabel>Transcript retention</FormLabel>
+                        <FormLabel><Trans>{"Transcript retention"}</Trans></FormLabel>
                         <FormDescription>
-                          Delete persisted transcripts after this many days.
+                          <Trans>{"Delete persisted transcripts after this many days."}</Trans>
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -324,11 +321,11 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
             >
               {save.isPending ? (
                 <>
-                  <Loader2 className="animate-spin" /> Saving...
+                  <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
                 </>
               ) : (
                 <>
-                  <Save /> Save
+                  <Save /> <Trans>{"Save"}</Trans>
                 </>
               )}
             </Button>
@@ -340,11 +337,10 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <h2 className="text-base font-semibold text-destructive">
-              Danger zone
+              <Trans>{"Danger zone"}</Trans>
             </h2>
             <p className="text-sm text-muted-foreground">
-              Pause the agent to stop new calls temporarily, or delete it
-              permanently.
+              <Trans>{"Pause the agent to stop new calls temporarily, or delete it permanently."}</Trans>
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -353,31 +349,30 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
               onClick={pauseAgent}
               disabled={update.isPending || deleteAgent.isPending}
             >
-              Pause agent
+              <Trans>{"Pause agent"}</Trans>
             </Button>
             <Button
               variant="outline"
               onClick={resumeAgent}
               disabled={update.isPending || deleteAgent.isPending}
             >
-              Resume agent
+              <Trans>{"Resume agent"}</Trans>
             </Button>
             <AlertDialog open={confirming} onOpenChange={setConfirming}>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" disabled={deleteAgent.isPending}>
-                  <Trash2 /> Delete
+                  <Trash2 /> <Trans>{"Delete"}</Trans>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Delete this agent?</AlertDialogTitle>
+                  <AlertDialogTitle><Trans>{"Delete this agent?"}</Trans></AlertDialogTitle>
                   <AlertDialogDescription>
-                    This deletes the agent and detaches it from phone numbers,
-                    tools, and knowledge sources. This cannot be undone.
+                    <Trans>{"This deletes the agent and detaches it from phone numbers, tools, and knowledge sources. This cannot be undone."}</Trans>
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
                   <AlertDialogAction
                     onClick={confirmDelete}
                     disabled={deleteAgent.isPending}
@@ -385,7 +380,7 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
                   >
                     {deleteAgent.isPending ? (
                       <>
-                        <Loader2 className="animate-spin" /> Deleting...
+                        <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
                       </>
                     ) : (
                       "Delete"

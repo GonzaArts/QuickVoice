@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { Trash2, Loader2 } from "lucide-react";
 
@@ -45,11 +46,11 @@ export function DeleteKbButton({ kbId, name }: { kbId: string; name: string }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
           <AlertDialogAction onClick={onDelete} disabled={del.isPending}>
             {del.isPending ? (
               <>
-                <Loader2 className="animate-spin" /> Deleting…
+                <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
               </>
             ) : (
               "Delete"

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { PageHeader } from "@/src/components/common/PageHeader";
 import { BatchCallForm } from "@/src/components/outbound/BatchCallForm";
 import { CampaignsPanel } from "@/src/components/outbound/CampaignsPanel";
@@ -16,9 +17,9 @@ export default function OutboundPage() {
       />
       <Tabs defaultValue="quick" className="w-full">
         <TabsList>
-          <TabsTrigger value="quick">Quick call</TabsTrigger>
-          <TabsTrigger value="batch">Batch campaigns</TabsTrigger>
-          <TabsTrigger value="calls">Outbound calls</TabsTrigger>
+          <TabsTrigger value="quick"><Trans>{"Quick call"}</Trans></TabsTrigger>
+          <TabsTrigger value="batch"><Trans>{"Batch campaigns"}</Trans></TabsTrigger>
+          <TabsTrigger value="calls"><Trans>{"Outbound calls"}</Trans></TabsTrigger>
         </TabsList>
         <TabsContent value="quick" className="mt-4">
           <QuickCallForm />

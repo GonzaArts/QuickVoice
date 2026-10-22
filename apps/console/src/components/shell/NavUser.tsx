@@ -13,6 +13,7 @@ import {
  Sun,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useT } from "@/src/i18n/provider";
 import { toast } from "sonner";
 
 import {
@@ -58,6 +59,7 @@ function initials(name: string) {
 }
 
 export function NavUser({ user }: { user: NavUserProps }) {
+ const t = useT();
  const { isMobile } = useSidebar();
  const router = useRouter();
  const queryClient = useQueryClient();
@@ -68,7 +70,7 @@ export function NavUser({ user }: { user: NavUserProps }) {
  fetchOptions: {
  onSuccess: () => {
  clearIdentityCache(queryClient);
- toast.success("Signed out");
+ toast.success(t("Signed out"));
  router.push("/login");
  },
  },
@@ -129,17 +131,17 @@ export function NavUser({ user }: { user: NavUserProps }) {
  <DropdownMenuGroup>
  <DropdownMenuItem onClick={() => router.push("/settings/profile")}>
  <BadgeCheck />
- Account
+ {t("Account")}
  </DropdownMenuItem>
  <DropdownMenuItem onClick={() => router.push("/settings/billing")}>
  <CreditCard />
- Billing
+ {t("Billing")}
  </DropdownMenuItem>
  <DropdownMenuItem
  onClick={() => router.push("/settings/api-keys")}
  >
  <KeyRound />
- API keys
+ {t("API keys")}
  </DropdownMenuItem>
  </DropdownMenuGroup>
  <DropdownMenuSeparator />
@@ -152,27 +154,27 @@ export function NavUser({ user }: { user: NavUserProps }) {
  ) : (
  <Monitor />
  )}
- Theme
+ {t("Theme")}
  </DropdownMenuSubTrigger>
  <DropdownMenuSubContent>
  <DropdownMenuItem onClick={() => setTheme("light")}>
  <Sun />
- Light
+ {t("Light")}
  </DropdownMenuItem>
  <DropdownMenuItem onClick={() => setTheme("dark")}>
  <Moon />
- Dark
+ {t("Dark")}
  </DropdownMenuItem>
  <DropdownMenuItem onClick={() => setTheme("system")}>
  <Monitor />
- System
+ {t("System")}
  </DropdownMenuItem>
  </DropdownMenuSubContent>
  </DropdownMenuSub>
  <DropdownMenuSeparator />
  <DropdownMenuItem onClick={signOut}>
  <LogOut />
- Sign out
+ {t("Sign out")}
  </DropdownMenuItem>
  </DropdownMenuContent>
  </DropdownMenu>

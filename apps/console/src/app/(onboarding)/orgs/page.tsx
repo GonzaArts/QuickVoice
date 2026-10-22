@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -147,7 +148,7 @@ export default function Orgs() {
                                     <Loader2 className="size-4 animate-spin" />
                                 ) : (
                                     <>
-                                        Open <ArrowRight className="ml-1 size-3" />
+                                        <Trans>{"Open"}</Trans> <ArrowRight className="ml-1 size-3" />
                                     </>
                                 )}
                             </div>

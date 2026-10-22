@@ -1,8 +1,11 @@
+"use client";
+import { useT } from "@/src/i18n/provider";
 import * as React from "react"
 
 import { cn } from "@/src/lib/utils"
 
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+ const t = useT();
  return (
  <textarea
  data-slot="textarea"
@@ -11,6 +14,8 @@ function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
  className
  )}
  {...props}
+ placeholder={props.placeholder ? t(props.placeholder) : undefined}
+ aria-label={typeof props["aria-label"] === "string" ? t(props["aria-label"]) : props["aria-label"]}
  />
  )
 }

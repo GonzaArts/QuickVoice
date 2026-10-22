@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -252,7 +253,7 @@ export default function RolesPage() {
  )}
  />
  <div>
- <FormLabel>Permissions</FormLabel>
+ <FormLabel><Trans>{"Permissions"}</Trans></FormLabel>
  <div className="mt-2">
  <PermissionMatrix value={permissions} onChange={setPermissions} />
  </div>
@@ -264,7 +265,7 @@ export default function RolesPage() {
  onClick={() => setCreateOpen(false)}
  disabled={saving}
  >
- Cancel
+ <Trans>{"Cancel"}</Trans>
  </Button>
  <Button type="submit" disabled={saving}>
  {saving ? (
@@ -299,7 +300,7 @@ export default function RolesPage() {
  <p className="text-xs text-muted-foreground">Built-in</p>
  </div>
  </div>
- <Badge variant="secondary">System</Badge>
+ <Badge variant="secondary"><Trans>{"System"}</Trans></Badge>
  </div>
  ))}
  </div>
@@ -317,7 +318,7 @@ export default function RolesPage() {
  description={loadError.message}
  action={
  <Button variant="outline" onClick={refreshRoles}>
- <RefreshCw /> Retry
+ <RefreshCw /> <Trans>{"Retry"}</Trans>
  </Button>
  }
  className="border-0"
@@ -392,7 +393,7 @@ export default function RolesPage() {
  )}
  />
  <div>
- <FormLabel>Permissions</FormLabel>
+ <FormLabel><Trans>{"Permissions"}</Trans></FormLabel>
  <div className="mt-2">
  <PermissionMatrix value={editPermissions} onChange={setEditPermissions} />
  </div>
@@ -404,12 +405,12 @@ export default function RolesPage() {
  onClick={() => setEditRole(null)}
  disabled={saving}
  >
- Cancel
+ <Trans>{"Cancel"}</Trans>
  </Button>
  <Button type="submit" disabled={saving}>
  {saving ? (
  <>
- <Loader2 className="animate-spin" /> Saving...
+ <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
  </>
  ) : (
  <>
@@ -438,7 +439,7 @@ export default function RolesPage() {
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
- <AlertDialogCancel>Cancel</AlertDialogCancel>
+ <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
  <AlertDialogAction
  onClick={onDelete}
  disabled={saving}
@@ -446,7 +447,7 @@ export default function RolesPage() {
  >
  {saving ? (
  <>
- <Loader2 className="animate-spin" /> Deleting...
+ <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
  </>
  ) : (
  "Delete"

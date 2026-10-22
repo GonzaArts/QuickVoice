@@ -1,5 +1,8 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, MoreHorizontal, PhoneCall, PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
@@ -53,12 +56,12 @@ function statusClass(status: CallStatus) {
   }
 }
 
-function formatAbsoluteTimestamp(iso: string | null) {
+function formatAbsoluteTimestamp(iso: string | null, locale = "en-US") {
   if (!iso) return "No start timestamp";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "Invalid timestamp";
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -144,10 +147,11 @@ function resolveAgentLabel({
 }
 
 function CallTimestamp({ call }: { call: CallLog }) {
+  const {locale} = useLocale();
   return call.startTime ? (
-    <time dateTime={call.startTime}>{formatAbsoluteTimestamp(call.startTime)}</time>
+    <time dateTime={call.startTime}>{formatAbsoluteTimestamp(call.startTime, localeCode(locale))}</time>
   ) : (
-    <span>No start timestamp</span>
+    <span><Trans>{"No start timestamp"}</Trans></span>
   );
 }
 
@@ -158,6 +162,7 @@ export function RecentCallsTable({
   summary?: DashboardSummary;
   loading?: boolean;
 }) {
+  const {t} = useLocale();
   const {
     data: agents,
     isLoading: agentsLoading,
@@ -171,20 +176,20 @@ export function RecentCallsTable({
       <div className="flex items-center justify-between border-b bg-muted/20 px-5 py-4">
         <div>
           <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-            Recent activity
+            <Trans>{"Recent activity"}</Trans>
           </p>
           <h3 className="mt-1 text-base font-semibold text-foreground">
-            Recent call logs
+            <Trans>{"Recent call logs"}</Trans>
           </h3>
           <p className="text-xs text-muted-foreground">
-            Latest call log activity across all agents.
+            <Trans>{"Latest call log activity across all agents."}</Trans>
           </p>
         </div>
         <Link
           href="/calls"
           className={`inline-flex items-center gap-1 text-xs font-medium text-blue-400 hover:underline ${linkFocusClass}`}
         >
-          View call logs <ArrowRight className="size-3" />
+          <Trans>{"View call logs"}</Trans> <ArrowRight className="size-3" />
         </Link>
       </div>
       {hasAgentLookupGap ? (
@@ -256,7 +261,7 @@ export function RecentCallsTable({
                         variant={statusVariant(call.status)}
                         className={`w-fit shrink-0 capitalize ${statusClass(call.status)}`}
                       >
-                        {formatStatus(call.status)}
+                        {t(formatStatus(call.status))}
                       </Badge>
                     </div>
                     <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
@@ -267,19 +272,19 @@ export function RecentCallsTable({
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Agent</dt>
+                        <dt className="text-muted-foreground"><Trans>{"Agent"}</Trans></dt>
                         <dd className="truncate font-medium text-foreground">
                           {agentLabel}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Duration</dt>
+                        <dt className="text-muted-foreground"><Trans>{"Duration"}</Trans></dt>
                         <dd className="font-medium text-foreground">
                           {formatDuration(call.durationSeconds)}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Direction</dt>
+                        <dt className="text-muted-foreground"><Trans>{"Direction"}</Trans></dt>
                         <dd className="font-medium capitalize text-foreground">
                           {call.direction ?? "unknown"}
                         </dd>
@@ -300,25 +305,25 @@ export function RecentCallsTable({
               <TableHeader>
                 <TableRow className="border-b bg-background/70 hover:bg-background/70">
                   <TableHead className="h-11 pl-5 text-xs font-semibold text-foreground">
-                    Start Time
+                    <Trans>{"Start Time"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Number
+                    <Trans>{"Number"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Agent
+                    <Trans>{"Agent"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Duration
+                    <Trans>{"Duration"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Direction
+                    <Trans>{"Direction"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Status
+                    <Trans>{"Status"}</Trans>
                   </TableHead>
                   <TableHead className="pr-5 text-right text-xs font-semibold text-foreground">
-                    Actions
+                    <Trans>{"Actions"}</Trans>
                   </TableHead>
                 </TableRow>
               </TableHeader>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { Loader2, Trash2, TriangleAlert } from "lucide-react";
 
@@ -95,7 +96,7 @@ export function ReleaseNumberDialog({
 
         <div className="space-y-2">
           <Label htmlFor={confirmationId}>
-            Type <span className="font-mono">{phoneNumber}</span> to confirm
+            <Trans>{"Type"}</Trans> <span className="font-mono">{phoneNumber}</span> to confirm
           </Label>
           <Input
             id={confirmationId}

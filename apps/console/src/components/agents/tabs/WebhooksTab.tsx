@@ -1,5 +1,8 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { localeCode } from "@/src/i18n/config";
+import { useLocale } from "@/src/i18n/provider";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
@@ -125,6 +128,7 @@ function recordsEqual(a: Record<string, string>, b: Record<string, string>) {
 }
 
 export function WebhooksTab({ agentId }: { agentId: string }) {
+  const { locale, t } = useLocale();
   const { data: config, isLoading } = useAgentConfig(agentId);
   const save = useSaveAgentConfig(agentId);
   const deliveryEvents = useQuery({
@@ -367,10 +371,9 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
         <section className="border bg-card p-6">
           <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-1">
-              <h2 className="text-base font-semibold">Initiation webhook</h2>
+              <h2 className="text-base font-semibold"><Trans>{"Initiation webhook"}</Trans></h2>
               <p className="text-sm text-muted-foreground">
-                Called at the start of a real call to fetch dynamic variables
-                and caller context.
+                <Trans>{"Called at the start of a real call to fetch dynamic variables and caller context."}</Trans>
               </p>
             </div>
             <FormField
@@ -378,7 +381,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               name="initiation_enabled"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-3">
-                  <FormLabel className="text-xs">Enable initiation webhook</FormLabel>
+                  <FormLabel className="text-xs"><Trans>{"Enable initiation webhook"}</Trans></FormLabel>
                   <FormControl>
                     <Switch
                       checked={field.value}
@@ -395,7 +398,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               name="initiation_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL</FormLabel>
+                  <FormLabel><Trans>{"URL"}</Trans></FormLabel>
                   <FormControl>
                     <Input
                       type="url"
@@ -413,7 +416,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               name="initiation_method"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Method</FormLabel>
+                  <FormLabel><Trans>{"Method"}</Trans></FormLabel>
                   <Select
                     value={field.value}
                     onValueChange={field.onChange}
@@ -426,11 +429,11 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="POST">POST</SelectItem>
-                      <SelectItem value="GET">GET (static response only)</SelectItem>
+                      <SelectItem value="GET"><Trans>{"GET (static response only)"}</Trans></SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    POST includes call context. GET sends no caller details and is suitable only for static responses.
+                    <Trans>{"POST includes call context. GET sends no caller details and is suitable only for static responses."}</Trans>
                   </FormDescription>
                 </FormItem>
               )}
@@ -463,15 +466,13 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <Braces className="size-4 text-muted-foreground" />
-                  <p className="text-sm font-medium">Response variables</p>
+                  <p className="text-sm font-medium"><Trans>{"Response variables"}</Trans></p>
                   <Badge variant="outline">
-                    {detectedVariableNames.length} variable
-                    {detectedVariableNames.length === 1 ? "" : "s"}
+                    {t(detectedVariableNames.length === 1 ? "{count} variable" : "{count} variables", {count: detectedVariableNames.length})}
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Map JSON paths from the webhook response into dynamic
-                  variables used during the call.
+                  <Trans>{"Map JSON paths from the webhook response into dynamic variables used during the call."}</Trans>
                 </p>
               </div>
             </div>
@@ -487,7 +488,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
                       {variableToken(row.key)}
                     </div>
                     <Input
-                      aria-label={`${variableToken(row.key)} JSON path`}
+                      aria-label={t("JSON path for {name}", {name: variableToken(row.key)})}
                       placeholder="customer.name"
                       value={row.value}
                       disabled={!initiationOn}
@@ -500,8 +501,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               </div>
             ) : (
               <p className="mt-4 text-sm text-muted-foreground">
-                Add dynamic variables in the behavior prompt, then map each one
-                to a JSON path from the webhook response.
+                <Trans>{"Add dynamic variables in the behavior prompt, then map each one to a JSON path from the webhook response."}</Trans>
               </p>
             )}
           </div>
@@ -510,10 +510,9 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
         <section className="border bg-card p-6">
           <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-1">
-              <h2 className="text-base font-semibold">Post-call webhook</h2>
+              <h2 className="text-base font-semibold"><Trans>{"Post-call webhook"}</Trans></h2>
               <p className="text-sm text-muted-foreground">
-                Called after the call completes, with transcripts and optional
-                audio recording URL.
+                <Trans>{"Called after the call completes, with transcripts and optional audio recording URL."}</Trans>
               </p>
             </div>
             <FormField
@@ -521,7 +520,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               name="post_enabled"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-3">
-                  <FormLabel className="text-xs">Enable post-call webhook</FormLabel>
+                  <FormLabel className="text-xs"><Trans>{"Enable post-call webhook"}</Trans></FormLabel>
                   <FormControl>
                     <Switch
                       checked={field.value}
@@ -538,7 +537,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               name="post_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL</FormLabel>
+                  <FormLabel><Trans>{"URL"}</Trans></FormLabel>
                   <FormControl>
                     <Input
                       type="url"
@@ -566,9 +565,9 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between border p-4">
                     <div className="space-y-0.5">
-                      <FormLabel>Include transcript</FormLabel>
+                      <FormLabel><Trans>{"Include transcript"}</Trans></FormLabel>
                       <FormDescription>
-                        Full transcript in payload.
+                        <Trans>{"Full transcript in payload."}</Trans>
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -587,9 +586,9 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between border p-4">
                     <div className="space-y-0.5">
-                      <FormLabel>Include audio URL</FormLabel>
+                      <FormLabel><Trans>{"Include audio URL"}</Trans></FormLabel>
                       <FormDescription>
-                        Signed URL to the recording.
+                        <Trans>{"Signed URL to the recording."}</Trans>
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -606,35 +605,34 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
           </div>
         </section>
 
-        <section className="border bg-card p-6" aria-label="Webhook delivery status">
+        <section className="border bg-card p-6" aria-label={t("Webhook delivery status")}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="space-y-1">
-              <h2 className="text-base font-semibold">Delivery status</h2>
+              <h2 className="text-base font-semibold"><Trans>{"Delivery status"}</Trans></h2>
               <p className="text-sm text-muted-foreground">
-                Recent real-call attempts. Preview calls do not invoke initiation webhooks;
-                initiation failures let the call continue without response variables.
+                <Trans>{"Recent real-call attempts. Preview calls do not invoke initiation webhooks; initiation failures let the call continue without response variables."}</Trans>
               </p>
             </div>
             <Button type="button" size="sm" variant="outline" onClick={() => deliveryEvents.refetch()}>
-              <RefreshCw className="size-4" /> Refresh
+              <RefreshCw className="size-4" /> <Trans>{"Refresh"}</Trans>
             </Button>
           </div>
           <div className="mt-4 space-y-2" aria-live="polite">
             {deliveryEvents.isError ? (
-              <p className="text-sm text-destructive">Could not load delivery status. Try Refresh.</p>
+              <p className="text-sm text-destructive"><Trans>{"Could not load delivery status. Try Refresh."}</Trans></p>
             ) : deliveryEvents.isLoading ? (
-              <p className="text-sm text-muted-foreground">Loading delivery status...</p>
+              <p className="text-sm text-muted-foreground"><Trans>{"Loading delivery status..."}</Trans></p>
             ) : deliveryEvents.data?.length ? (
               deliveryEvents.data.map((event, index) => (
                 <div key={`${event.createdAt}-${index}`} className="flex flex-wrap items-center justify-between gap-2 border px-3 py-2 text-sm">
-                  <span>{event.phase === "post_call" ? "Post-call" : "Initiation"} · {event.status}{event.errorCode ? ` (${event.errorCode.replaceAll("_", " ")})` : ""}</span>
+                  <span>{t(event.phase === "post_call" ? "Post-call" : "Initiation")} · {t(event.status)}{event.errorCode ? ` (${event.errorCode.replaceAll("_", " ")})` : ""}</span>
                   <time className="text-muted-foreground" dateTime={event.createdAt}>
-                    {new Date(event.createdAt).toLocaleString()}
+                    {new Date(event.createdAt).toLocaleString(localeCode(locale))}
                   </time>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-muted-foreground">No delivery attempts recorded yet.</p>
+              <p className="text-sm text-muted-foreground"><Trans>{"No delivery attempts recorded yet."}</Trans></p>
             )}
           </div>
         </section>
@@ -646,11 +644,11 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
           >
             {save.isPending ? (
               <>
-                <Loader2 className="animate-spin" /> Saving...
+                <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
               </>
             ) : (
               <>
-                <Save /> Save webhooks
+                <Save /> <Trans>{"Save webhooks"}</Trans>
               </>
             )}
           </Button>

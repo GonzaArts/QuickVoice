@@ -11,6 +11,7 @@ import {
  Building2,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
+import { useT } from "@/src/i18n/provider";
 
 const NAV = [
  { href: "/settings/profile", label: "Profile", icon: User },
@@ -27,13 +28,14 @@ export default function SettingsLayout({
  children: React.ReactNode;
 }) {
  const pathname = usePathname();
+ const t = useT();
 
  return (
  <div className="flex flex-col gap-6">
  <div className="space-y-1 border-b pb-5">
- <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+ <h1 className="text-2xl font-semibold tracking-tight">{t("Settings")}</h1>
  <p className="text-sm text-muted-foreground">
- Manage your account, organization, billing, and access control.
+ {t("Manage your account, organization, billing, and access control.")}
  </p>
  </div>
  <div className="grid grid-cols-1 gap-8 md:grid-cols-[220px_1fr]">
@@ -52,7 +54,7 @@ export default function SettingsLayout({
  )}
  >
  <item.icon className="size-4" />
- <span>{item.label}</span>
+ <span>{t(item.label)}</span>
  </Link>
  );
  })}

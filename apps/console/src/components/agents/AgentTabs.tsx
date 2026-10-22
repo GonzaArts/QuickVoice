@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useT } from "@/src/i18n/provider";
 import {
   AudioLines,
   BookOpen,
@@ -47,6 +48,7 @@ function normalizeTab(value: string | null): TabId {
 }
 
 export function AgentTabs({ agentId }: { agentId: string }) {
+  const t = useT();
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -69,7 +71,7 @@ export function AgentTabs({ agentId }: { agentId: string }) {
               className="h-12 flex-none border-x-0 border-b-2 border-t-0 border-transparent bg-transparent px-4 text-xs font-semibold data-[state=active]:border-primary data-[state=active]:bg-muted/30 data-[state=active]:text-foreground data-[state=active]:shadow-none data-active:border-primary data-active:bg-muted/30 data-active:text-foreground data-active:shadow-none"
             >
               <tab.icon className="size-4" />
-              <span>{tab.label}</span>
+              <span>{t(tab.label)}</span>
             </TabsTrigger>
           ))}
         </TabsList>

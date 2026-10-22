@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import {
   Clipboard,
@@ -100,7 +101,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
         action={
           <Button variant="outline" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-            Retry
+            <Trans>{"Retry"}</Trans>
           </Button>
         }
       />
@@ -113,7 +114,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
         icon={KeyRound}
         title="No secrets yet"
         description="Save reusable credentials for tools and webhooks without exposing values in the console."
-        action={<Button onClick={onCreate}>Add secret</Button>}
+        action={<Button onClick={onCreate}><Trans>{"Add secret"}</Trans></Button>}
       />
     );
   }
@@ -124,10 +125,10 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead><Trans>{"Name"}</Trans></TableHead>
               <TableHead>Reference</TableHead>
-              <TableHead>Updated</TableHead>
-              <TableHead className="w-12 text-right">Actions</TableHead>
+              <TableHead><Trans>{"Updated"}</Trans></TableHead>
+              <TableHead className="w-12 text-right"><Trans>{"Actions"}</Trans></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -204,7 +205,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteSecret.isPending}>
-              Cancel
+              <Trans>{"Cancel"}</Trans>
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"

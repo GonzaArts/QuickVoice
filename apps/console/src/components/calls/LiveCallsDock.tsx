@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import {
   useEffect,
   useMemo,
@@ -398,7 +399,7 @@ function LiveTranscriptDrawer({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={endCall.isPending} className="rounded-none">
-              Cancel
+              <Trans>{"Cancel"}</Trans>
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={(event) => {

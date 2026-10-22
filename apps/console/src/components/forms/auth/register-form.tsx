@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -26,6 +28,7 @@ import OAuthButtons from "../../oauth-buttons";
 
 export function RegisterForm({ invitationId = "" }: { invitationId?: string } = {}) {
   const router = useRouter();
+  const t = useT();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -46,13 +49,13 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
         callbackURL: `${CONSOLE_URL ?? window.location.origin}${invitationId ? invitationPath(invitationId) : "/login"}`,
       });
       if (error) {
-        toast.error(error.message || error.statusText || "Something went wrong");
+        toast.error(error.message || error.statusText || t("Something went wrong"));
         return;
       }
-      toast.message("Check your email for next steps");
+      toast.message(t("Check your email for next steps"));
       router.push(invitationPath(invitationId, "/verify"));
     } catch {
-      toast.error("Unable to reach the server. Please try again.");
+      toast.error(t("Unable to reach the server. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -61,9 +64,9 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
   return (
     <Form {...form}>
       <div className="flex  flex-col items-center gap-2 text-center py-2 ">
-        <h1 className="text-2xl font-bold ">Create an account</h1>
+        <h1 className="text-2xl font-bold "><Trans>{"Create an account"}</Trans></h1>
         <p className="text-muted-foreground text-sm text-balance">
-          {invitationId ? "Use the email address that received the invitation. Verify your email to continue." : "Enter your details to create an account"}
+          {invitationId ? t("Use the email address that received the invitation. Verify your email to continue.") : t("Enter your details to create an account")}
         </p>
       </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 ">
@@ -72,7 +75,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel><Trans>{"Full Name"}</Trans></FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -94,7 +97,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel><Trans>{"Email"}</Trans></FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -107,7 +110,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
                 />
               </FormControl>
               <FormDescription className="text-xs text-muted-foreground">
-                New accounts need email verification before signing in.
+                <Trans>{"New accounts need email verification before signing in."}</Trans>
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -119,7 +122,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel>Password</FormLabel>
+                <FormLabel><Trans>{"Password"}</Trans></FormLabel>
               </div>
               <FormControl>
                 <Input
@@ -140,7 +143,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
             const password = form.watch("password");
             return (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel><Trans>{"Confirm Password"}</Trans></FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -150,7 +153,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
                   />
                 </FormControl>
                 <FormMessage>
-                  {password !== field.value && "Passwords do not match"}
+                  {password !== field.value && <Trans>{"Passwords do not match"}</Trans>}
                 </FormMessage>
               </FormItem>
             );
@@ -161,23 +164,23 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
           {loading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Creating...
+              <Trans>{"Creating..."}</Trans>
             </>
           ) : (
-            <span>Create Account</span>
+            <span><Trans>{"Create Account"}</Trans></span>
           )}
         </Button>
 
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
-            Or
+            <Trans>{"Or"}</Trans>
           </span>
         </div>
         <OAuthButtons invitationId={invitationId} />
         <div className="text-center text-sm">
-          Already have an account?{" "}
+          <Trans>{"Already have an account?"}</Trans>{" "}
           <Link href={invitationPath(invitationId, "/login")} className="underline underline-offset-4">
-            Login
+            <Trans>{"Login"}</Trans>
           </Link>
         </div>
       </form>

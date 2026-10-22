@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { Bot, RefreshCw } from "lucide-react";
 import { PageHeader } from "@/src/components/common/PageHeader";
 import { EmptyState } from "@/src/components/common/EmptyState";
@@ -27,7 +28,7 @@ export default function AgentsPage() {
                     action={
                         <Button variant="outline" onClick={() => refetch()} disabled={isFetching}>
                             <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-                            Retry
+                            <Trans>{"Retry"}</Trans>
                         </Button>
                     }
                 />

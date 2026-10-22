@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -166,7 +167,7 @@ export default function ApiKeysPage() {
       <section className="border bg-card p-6">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div className="space-y-1">
-            <h2 className="text-base font-semibold">API keys</h2>
+            <h2 className="text-base font-semibold"><Trans>{"API keys"}</Trans></h2>
             <p className="text-sm text-muted-foreground">
               Use these organization-scoped keys to authenticate the QuickVoice
               API and QuickVoice MCP server with the{" "}
@@ -204,7 +205,7 @@ export default function ApiKeysPage() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel><Trans>{"Name"}</Trans></FormLabel>
                         <FormControl>
                           <Input placeholder="Production API" {...field} />
                         </FormControl>
@@ -219,12 +220,12 @@ export default function ApiKeysPage() {
                       onClick={() => setCreateOpen(false)}
                       disabled={creating}
                     >
-                      Cancel
+                      <Trans>{"Cancel"}</Trans>
                     </Button>
                     <Button type="submit" disabled={creating}>
                       {creating ? (
                         <>
-                          <Loader2 className="animate-spin" /> Creating…
+                          <Loader2 className="animate-spin" /> <Trans>{"Creating…"}</Trans>
                         </>
                       ) : (
                         "Create key"
@@ -254,11 +255,11 @@ export default function ApiKeysPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Key</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead><Trans>{"Name"}</Trans></TableHead>
+                <TableHead><Trans>{"Key"}</Trans></TableHead>
+                <TableHead><Trans>{"Status"}</Trans></TableHead>
                 <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right"><Trans>{"Actions"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -300,7 +301,7 @@ export default function ApiKeysPage() {
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
                           <AlertDialogAction onClick={() => onRevoke(k.id)}>
                             Revoke
                           </AlertDialogAction>
@@ -331,7 +332,7 @@ export default function ApiKeysPage() {
             <Button variant="outline" onClick={copyNewKey}>
               {copied ? (
                 <>
-                  <Check /> Copied
+                  <Check /> <Trans>{"Copied"}</Trans>
                 </>
               ) : (
                 <>

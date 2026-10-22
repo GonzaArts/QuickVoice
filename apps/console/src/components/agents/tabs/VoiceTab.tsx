@@ -1,5 +1,8 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { localeCode } from "@/src/i18n/config";
+import { useLocale } from "@/src/i18n/provider";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -65,10 +68,10 @@ function humanizeModelId(value: string) {
         .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function formatEstimatedMicros(value: number | string) {
+function formatEstimatedMicros(value: number | string, locale: "es" | "en") {
     const micros = Number(value);
     if (!Number.isFinite(micros)) return null;
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(localeCode(locale), {
         style: "currency",
         currency: "USD",
         minimumFractionDigits: 2,
@@ -148,6 +151,7 @@ function ensureSelectedVoiceOption(options: Voice[], value: string | undefined) 
 }
 
 export function VoiceTab({ agentId }: { agentId: string }) {
+    const { locale, t } = useLocale();
     const { data: config, isLoading, refetch: refetchConfig } = useAgentConfig(agentId);
     const { data: voiceCatalog, isLoading: isCatalogLoading, refetch: refetchCatalog } = useVoiceCatalog();
     const save = useSaveAgentConfig(agentId);
@@ -244,7 +248,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
         config?.estimatedPricePerMinuteMicros === null ||
         config?.estimatedPricePerMinuteMicros === undefined
             ? null
-            : formatEstimatedMicros(config.estimatedPricePerMinuteMicros);
+            : formatEstimatedMicros(config.estimatedPricePerMinuteMicros, locale);
     const estimateMatchesSelection = Boolean(
         config &&
         config.sttModel === selectedSttModel &&
@@ -256,23 +260,23 @@ export function VoiceTab({ agentId }: { agentId: string }) {
     async function onSubmit(values: FormValues) {
       if (!config || !voiceOptions) return;
       if (!languages.some((language) => language.code === values.agent_language)) {
-        form.setError("agent_language", { message: "Choose an available language." });
+        form.setError("agent_language", { message: t("Choose an available language.") });
         return;
       }
       if (!availableSttModels.some((model) => model.id === values.sttModel)) {
-        form.setError("sttModel", { message: "Choose an STT model for this language." });
+        form.setError("sttModel", { message: t("Choose an STT model for this language.") });
         return;
       }
       if (!llmModels.some((model) => model.id === values.llmModel)) {
-        form.setError("llmModel", { message: "Choose an available LLM model." });
+        form.setError("llmModel", { message: t("Choose an available LLM model.") });
         return;
       }
       if (!availableTtsModels.some((model) => model.id === values.ttsModel)) {
-        form.setError("ttsModel", { message: "Choose a TTS model for this language." });
+        form.setError("ttsModel", { message: t("Choose a TTS model for this language.") });
         return;
       }
       if (!availableVoices.some((voice) => voice.id === values.voiceId)) {
-        form.setError("voiceId", { message: "Choose a voice for this model and language." });
+        form.setError("voiceId", { message: t("Choose a voice for this model and language.") });
         return;
       }
       try {
@@ -284,18 +288,18 @@ export function VoiceTab({ agentId }: { agentId: string }) {
     }
 
     if (isLoading || isCatalogLoading) {
-        return <div className="h-96 animate-pulse border bg-card" aria-label="Loading voice settings" />;
+        return <div className="h-96 animate-pulse border bg-card" aria-label={t("Loading voice settings")} />;
     }
 
     if (!config || !voiceOptions) {
         return (
             <div role="alert" className="flex flex-wrap items-center gap-3 border bg-card p-6 text-sm">
-                <span>Could not load voice settings or the available voices.</span>
+                <span><Trans>{"Could not load voice settings or the available voices."}</Trans></span>
                 <Button type="button" variant="outline" onClick={() => {
                     void refetchConfig();
                     void refetchCatalog();
                 }}>
-                    Try again
+                    <Trans>{"Try again"}</Trans>
                 </Button>
             </div>
         );
@@ -306,18 +310,18 @@ export function VoiceTab({ agentId }: { agentId: string }) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {sarvamConfigured ? (
                     <p role="alert" className="border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
-                        This agent has a saved Sarvam model, which is unavailable. Choose supported STT, TTS, and voice options, then save before using this agent.
+                        <Trans>{"This agent has a saved Sarvam model, which is unavailable. Choose supported STT, TTS, and voice options, then save before using this agent."}</Trans>
                     </p>
                 ) : null}
                 <section className="border bg-card p-6">
                     <div className="mb-5 space-y-1">
-                        <h2 className="text-base font-semibold">Locale</h2>
+                        <h2 className="text-base font-semibold"><Trans>{"Locale"}</Trans></h2>
                         <p className="text-sm text-muted-foreground">
-                            Choose the caller language before selecting speech models.
+                            <Trans>{"Choose the caller language before selecting speech models."}</Trans>
                         </p>
                         {selectedLanguage !== "en" && selectedLanguage !== "en-IN" ? (
                             <p className="text-sm text-muted-foreground">
-                                Standard greetings are spoken in {selectedLanguageLabel}. If you wrote a custom greeting, update it in Behavior to match.
+                                {t("Standard greetings are spoken in {language}. If you wrote a custom greeting, update it in Behavior to match.", {language: selectedLanguageLabel})}
                             </p>
                         ) : null}
                     </div>
@@ -327,7 +331,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="agent_language"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>Language</FormLabel>
+                                    <FormLabel><Trans>{"Language"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={(language) => {
                                         field.onChange(language);
                                         const stt = getSttModelsForLanguage(language, voiceOptions);
@@ -365,7 +369,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="timezone"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>Timezone</FormLabel>
+                                    <FormLabel><Trans>{"Timezone"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
@@ -389,9 +393,9 @@ export function VoiceTab({ agentId }: { agentId: string }) {
 
                 <section className="border bg-card p-6">
                     <div className="mb-5 space-y-1">
-                        <h2 className="text-base font-semibold">Conversation models</h2>
+                        <h2 className="text-base font-semibold"><Trans>{"Conversation models"}</Trans></h2>
                         <p className="text-sm text-muted-foreground">
-                            Pick transcription and reasoning models for the selected language.
+                            <Trans>{"Pick transcription and reasoning models for the selected language."}</Trans>
                         </p>
                     </div>
                     <div className="grid min-w-0 gap-5 sm:grid-cols-2">
@@ -400,7 +404,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="sttModel"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>STT</FormLabel>
+                                    <FormLabel><Trans>{"STT"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
@@ -424,7 +428,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="llmModel"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>LLM</FormLabel>
+                                    <FormLabel><Trans>{"LLM"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
@@ -448,15 +452,15 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                         <div className="mt-5 border bg-muted/20 p-4">
                             {estimateMatchesSelection ? (
                                 <p className="text-sm font-medium">
-                                    Estimated AI + platform spend: {estimatedModelPrice} / connected minute
+                                    {t("Estimated AI + platform spend: {amount} / connected minute", {amount: estimatedModelPrice})}
                                 </p>
                             ) : (
                                 <p className="text-sm font-medium">
-                                    Save these model choices to refresh the cost estimate.
+                                    <Trans>{"Save these model choices to refresh the cost estimate."}</Trans>
                                 </p>
                             )}
                             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                                This estimate includes configured STT, TTS, and LLM usage plus the $0.01-per-connected-minute QuickVoice platform fee. Telephony is charged separately at the provider rate plus markup; actual spend varies with measured usage.
+                                <Trans>{"This estimate includes configured STT, TTS, and LLM usage plus the $0.01-per-connected-minute QuickVoice platform fee. Telephony is charged separately at the provider rate plus markup; actual spend varies with measured usage."}</Trans>
                             </p>
                         </div>
                     ) : null}
@@ -464,9 +468,9 @@ export function VoiceTab({ agentId }: { agentId: string }) {
 
                 <section className="border bg-card p-6">
                     <div className="mb-5 space-y-1">
-                        <h2 className="text-base font-semibold">Speech output</h2>
+                        <h2 className="text-base font-semibold"><Trans>{"Speech output"}</Trans></h2>
                         <p className="text-sm text-muted-foreground">
-                            Select a text-to-speech model and a compatible voice.
+                            <Trans>{"Select a text-to-speech model and a compatible voice."}</Trans>
                         </p>
                     </div>
                     <div className="grid min-w-0 gap-5 sm:grid-cols-2">
@@ -475,7 +479,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="ttsModel"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>TTS</FormLabel>
+                                    <FormLabel><Trans>{"TTS"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={(ttsModel) => {
                                         field.onChange(ttsModel);
                                         const voices = getVoicesForTtsModel(ttsModel, selectedLanguage, voiceOptions);
@@ -505,11 +509,11 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="voiceId"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>Voice</FormLabel>
+                                    <FormLabel><Trans>{"Voice"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
-                                                <SelectValue placeholder="Select a voice" />
+                                                <SelectValue placeholder={t("Select a voice")} />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -547,11 +551,11 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                     >
                         {save.isPending ? (
                             <>
-                                <Loader2 className="animate-spin" /> Saving...
+                                <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
                             </>
                         ) : (
                             <>
-                                <Save /> Save changes
+                                <Save /> <Trans>{"Save changes"}</Trans>
                             </>
                         )}
                     </Button>

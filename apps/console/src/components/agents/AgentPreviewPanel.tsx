@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createLocalAudioTrack,
@@ -395,7 +396,7 @@ export function AgentPreviewPanel({
                 <span className="flex size-8 shrink-0 items-center justify-center border bg-muted text-muted-foreground">
                   <Radio className="size-4" />
                 </span>
-                <span className="truncate">Agent preview</span>
+                <span className="truncate"><Trans>{"Agent preview"}</Trans></span>
               </SheetTitle>
               <SheetDescription className="mt-1 truncate">
                 {agentName}
@@ -424,7 +425,7 @@ export function AgentPreviewPanel({
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Realtime voice
+                      <Trans>{"Realtime voice"}</Trans>
                     </p>
                     <p className="mt-1 text-lg font-semibold text-foreground">
                       {isLive
@@ -496,7 +497,7 @@ export function AgentPreviewPanel({
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Conversation
+                    <Trans>{"Conversation"}</Trans>
                   </p>
                   <p className="mt-1 truncate text-base font-semibold text-foreground">
                     {isLive ? "Call started" : "Preparing preview"}
@@ -535,8 +536,7 @@ export function AgentPreviewPanel({
               <div className="space-y-3">
                 {events.length === 0 ? (
                   <div className="border bg-muted/20 p-4 text-sm text-muted-foreground">
-                    Start a preview to open your microphone and talk with this
-                    agent in real time.
+                    <Trans>{"Start a preview to open your microphone and talk with this agent in real time."}</Trans>
                   </div>
                 ) : (
                   events.map((event) => (
@@ -579,8 +579,7 @@ export function AgentPreviewPanel({
                 ) : null}
                 {conversationMessages.length === 1 && !interimTranscript ? (
                   <div className="mx-auto max-w-xs text-center text-xs text-muted-foreground">
-                    Speak naturally. Your words appear here when browser
-                    captions or LiveKit transcription are available.
+                    <Trans>{"Speak naturally. Your words appear here when browser captions or LiveKit transcription are available."}</Trans>
                   </div>
                 ) : null}
               </div>
@@ -602,7 +601,7 @@ export function AgentPreviewPanel({
                   void endPreview();
                 }}
               >
-                <PhoneOff /> End
+                <PhoneOff /> <Trans>{"End"}</Trans>
               </Button>
             </div>
           ) : (
@@ -615,15 +614,15 @@ export function AgentPreviewPanel({
             >
               {isBusy ? (
                 <>
-                  <Loader2 className="animate-spin" /> Starting
+                  <Loader2 className="animate-spin" /> <Trans>{"Starting"}</Trans>
                 </>
               ) : state === "ended" || state === "error" ? (
                 <>
-                  <RotateCcw /> Start new preview
+                  <RotateCcw /> <Trans>{"Start new preview"}</Trans>
                 </>
               ) : (
                 <>
-                  <Mic /> Start preview
+                  <Mic /> <Trans>{"Start preview"}</Trans>
                 </>
               )}
             </Button>

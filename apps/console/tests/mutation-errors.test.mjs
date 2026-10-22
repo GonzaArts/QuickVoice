@@ -191,6 +191,7 @@ for (const [file, name, overrides] of cases) {
       form: { reset: effect, getValues: () => values },
       router: { push: effect },
       toast: { success: effect },
+      t: (key) => key,
       window: { confirm: () => true },
       searchParams: { provider: "TWILIO" },
       buyingNumber: null,

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -572,9 +573,9 @@ function OrganizationBillingPage({
   if (summary.isError) {
     return (
       <section className="border border-destructive/30 bg-destructive/5 p-6">
-        <h2 className="font-semibold">Could not load wallet billing</h2>
+        <h2 className="font-semibold"><Trans>{"Could not load wallet billing"}</Trans></h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Check your connection and try again.
+          <Trans>{"Check your connection and try again."}</Trans>
         </p>
         <Button
           className="mt-4"
@@ -585,7 +586,7 @@ function OrganizationBillingPage({
           <RefreshCw
             className={summary.isFetching ? "animate-spin" : undefined}
           />
-          Retry
+          <Trans>{"Retry"}</Trans>
         </Button>
       </section>
     );
@@ -597,7 +598,7 @@ function OrganizationBillingPage({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-base font-semibold">Prepaid wallet</h2>
+              <h2 className="text-base font-semibold"><Trans>{"Prepaid wallet"}</Trans></h2>
               <Badge variant={isUnmetered ? "secondary" : "outline"}>
                 {isUnmetered
                   ? "Self-hosted · unmetered"
@@ -605,14 +606,12 @@ function OrganizationBillingPage({
               </Badge>
             </div>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Calls draw from promotional credit first, then paid balance. Phone
-              numbers and renewals always require paid balance.
+              <Trans>{"Calls draw from promotional credit first, then paid balance. Phone numbers and renewals always require paid balance."}</Trans>
             </p>
           </div>
           {!isUnmetered ? (
             <p className="text-xs text-muted-foreground">
-              Charges settle from actual usage; calls end before available
-              credit runs out.
+              <Trans>{"Charges settle from actual usage; calls end before available credit runs out."}</Trans>
             </p>
           ) : null}
         </div>
@@ -626,8 +625,7 @@ function OrganizationBillingPage({
               Outstanding balance: {formatMicros(debtMicros, currency)}
             </p>
             <p className="mt-1 text-muted-foreground">
-              Provider charges exceeded the final call reserve. Add paid credit
-              to clear the balance before starting more calls.
+              <Trans>{"Provider charges exceeded the final call reserve. Add paid credit to clear the balance before starting more calls."}</Trans>
             </p>
           </div>
         </div>
@@ -643,8 +641,7 @@ function OrganizationBillingPage({
               Billing is {humanize(summary.data.status).toLowerCase()}
             </p>
             <p className="mt-1 text-muted-foreground">
-              Recharge the wallet to restore calling and protect rented phone
-              numbers from release.
+              <Trans>{"Recharge the wallet to restore calling and protect rented phone numbers from release."}</Trans>
             </p>
           </div>
         </div>
@@ -685,9 +682,9 @@ function OrganizationBillingPage({
         <div className="grid gap-6 xl:grid-cols-2">
           <section className="border bg-card p-6">
             <div className="space-y-1">
-              <h2 className="text-base font-semibold">Add credit</h2>
+              <h2 className="text-base font-semibold"><Trans>{"Add credit"}</Trans></h2>
               <p className="text-sm text-muted-foreground">
-                Top up between $5 and $500 in $5 increments.
+                <Trans>{"Top up between $5 and $500 in $5 increments."}</Trans>
               </p>
             </div>
 
@@ -705,7 +702,7 @@ function OrganizationBillingPage({
               ))}
             </div>
             <div className="mt-4 space-y-2">
-              <Label htmlFor="top-up-amount">Custom amount (USD)</Label>
+              <Label htmlFor="top-up-amount"><Trans>{"Custom amount (USD)"}</Trans></Label>
               <Input
                 id="top-up-amount"
                 type="number"
@@ -730,15 +727,14 @@ function OrganizationBillingPage({
                   className="text-xs text-destructive"
                   role="alert"
                 >
-                  Enter a whole $5 increment from $5 to $500.
+                  <Trans>{"Enter a whole $5 increment from $5 to $500."}</Trans>
                 </p>
               ) : (
                 <p
                   id="top-up-amount-help"
                   className="text-xs text-muted-foreground"
                 >
-                  QuickVoice absorbs card-processing fees. Applicable tax is
-                  extra.
+                  <Trans>{"QuickVoice absorbs card-processing fees. Applicable tax is extra."}</Trans>
                 </p>
               )}
             </div>
@@ -800,7 +796,7 @@ function OrganizationBillingPage({
                         }
                       >
                         <RefreshCw />
-                        Check payment again
+                        <Trans>{"Check payment again"}</Trans>
                       </Button>
                     ) : null}
                   </div>
@@ -809,8 +805,7 @@ function OrganizationBillingPage({
             ) : null}
             {!isStripeClientConfigured ? (
               <p className="mt-3 text-xs text-destructive">
-                Payments are unavailable because the Stripe publishable key is
-                missing.
+                <Trans>{"Payments are unavailable because the Stripe publishable key is missing."}</Trans>
               </p>
             ) : null}
           </section>
@@ -818,9 +813,9 @@ function OrganizationBillingPage({
           <section className="border bg-card p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <h2 className="text-base font-semibold">Payment method</h2>
+                <h2 className="text-base font-semibold"><Trans>{"Payment method"}</Trans></h2>
                 <p className="text-sm text-muted-foreground">
-                  Used only for top-ups and auto-recharge you authorize.
+                  <Trans>{"Used only for top-ups and auto-recharge you authorize."}</Trans>
                 </p>
               </div>
               <ShieldCheck className="size-5 text-primary" />
@@ -898,7 +893,7 @@ function OrganizationBillingPage({
                         }
                       >
                         <RefreshCw />
-                        Check payment method again
+                        <Trans>{"Check payment method again"}</Trans>
                       </Button>
                     ) : null}
                   </div>
@@ -909,9 +904,9 @@ function OrganizationBillingPage({
             <div className="mt-5 space-y-4 border-t pt-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <Label htmlFor="auto-recharge">Automatic recharge</Label>
+                  <Label htmlFor="auto-recharge"><Trans>{"Automatic recharge"}</Trans></Label>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    Add credit when paid balance falls below your threshold.
+                    <Trans>{"Add credit when paid balance falls below your threshold."}</Trans>
                   </p>
                 </div>
                 <Switch
@@ -929,7 +924,7 @@ function OrganizationBillingPage({
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="recharge-threshold">Threshold (USD)</Label>
+                  <Label htmlFor="recharge-threshold"><Trans>{"Threshold (USD)"}</Trans></Label>
                   <Input
                     id="recharge-threshold"
                     type="number"
@@ -958,7 +953,7 @@ function OrganizationBillingPage({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="recharge-amount">Recharge amount (USD)</Label>
+                  <Label htmlFor="recharge-amount"><Trans>{"Recharge amount (USD)"}</Trans></Label>
                   <Input
                     id="recharge-amount"
                     type="number"
@@ -987,7 +982,7 @@ function OrganizationBillingPage({
               </div>
               {autoEnabled && !hasPaymentMethod ? (
                 <p className="text-xs text-amber-600 dark:text-amber-400">
-                  Save a payment method before enabling automatic recharge.
+                  <Trans>{"Save a payment method before enabling automatic recharge."}</Trans>
                 </p>
               ) : null}
               {!autoValuesValid ? (
@@ -996,8 +991,7 @@ function OrganizationBillingPage({
                   className="text-xs text-destructive"
                   role="alert"
                 >
-                  Use $5 increments between $5 and $500, with the recharge
-                  amount greater than the threshold.
+                  <Trans>{"Use $5 increments between $5 and $500, with the recharge amount greater than the threshold."}</Trans>
                 </p>
               ) : null}
               <Button
@@ -1020,12 +1014,10 @@ function OrganizationBillingPage({
       ) : !isUnmetered ? (
         <section className="border bg-muted/20 p-5">
           <h2 className="text-sm font-semibold">
-            Billing controls are read-only
+            <Trans>{"Billing controls are read-only"}</Trans>
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Organization owners and admins can add payment methods, top up the
-            wallet, and configure automatic recharge. You can still view
-            balances and transaction history.
+            <Trans>{"Organization owners and admins can add payment methods, top up the wallet, and configure automatic recharge. You can still view balances and transaction history."}</Trans>
           </p>
         </section>
       ) : null}
@@ -1033,10 +1025,9 @@ function OrganizationBillingPage({
       <section className="overflow-hidden border bg-card">
         <div className="flex flex-col gap-3 border-b p-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h2 className="text-base font-semibold">Transaction history</h2>
+            <h2 className="text-base font-semibold"><Trans>{"Transaction history"}</Trans></h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Wallet credits, call charges, number rental, refunds, and
-              adjustments.
+              <Trans>{"Wallet credits, call charges, number rental, refunds, and adjustments."}</Trans>
             </p>
           </div>
           <Button
@@ -1048,7 +1039,7 @@ function OrganizationBillingPage({
             <RefreshCw
               className={transactions.isFetching ? "animate-spin" : undefined}
             />
-            Refresh
+            <Trans>{"Refresh"}</Trans>
           </Button>
         </div>
 
@@ -1060,24 +1051,24 @@ function OrganizationBillingPage({
           </div>
         ) : transactions.isError ? (
           <div className="p-5 text-sm text-destructive">
-            Transaction history could not be loaded.
+            <Trans>{"Transaction history could not be loaded."}</Trans>
           </div>
         ) : sortedTransactions.length === 0 ? (
           <div className="p-8 text-center">
             <WalletCards className="mx-auto size-6 text-muted-foreground" />
-            <p className="mt-3 text-sm font-medium">No wallet activity yet</p>
+            <p className="mt-3 text-sm font-medium"><Trans>{"No wallet activity yet"}</Trans></p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Top-ups and usage charges will appear here.
+              <Trans>{"Top-ups and usage charges will appear here."}</Trans>
             </p>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="pl-5">Activity</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="pr-5 text-right">Amount</TableHead>
+                <TableHead className="pl-5"><Trans>{"Activity"}</Trans></TableHead>
+                <TableHead><Trans>{"Status"}</Trans></TableHead>
+                <TableHead><Trans>{"Date"}</Trans></TableHead>
+                <TableHead className="pr-5 text-right"><Trans>{"Amount"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

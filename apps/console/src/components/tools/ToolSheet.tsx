@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useEffect } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -159,17 +161,17 @@ function LinkedAgentsSection({
       <Separator />
       <div className="pt-1">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Linked Agents
+          <Trans>{"Linked Agents"}</Trans>
         </p>
         <p className="mt-0.5 text-xs text-muted-foreground/70">
-          Agents that can invoke this tool mid-conversation.
+          <Trans>{"Agents that can invoke this tool mid-conversation."}</Trans>
         </p>
       </div>
       {isLoading ? (
-        <p className="text-xs text-muted-foreground">Loading agents…</p>
+        <p className="text-xs text-muted-foreground"><Trans>{"Loading agents…"}</Trans></p>
       ) : !allAgents.length ? (
         <p className="text-xs text-muted-foreground">
-          No agents in this organization yet.
+          <Trans>{"No agents in this organization yet."}</Trans>
         </p>
       ) : (
         <div className="space-y-1.5">
@@ -199,11 +201,11 @@ function LinkedAgentsSection({
                     <Loader2 className="size-3 animate-spin" />
                   ) : linked ? (
                     <>
-                      <Check className="size-3" /> Linked
+                      <Check className="size-3" /> <Trans>{"Linked"}</Trans>
                     </>
                   ) : (
                     <>
-                      <Plus className="size-3" /> Link
+                      <Plus className="size-3" /> <Trans>{"Link"}</Trans>
                     </>
                   )}
                 </Button>
@@ -235,6 +237,7 @@ interface ToolSheetProps {
 }
 
 export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
+  const t = useT();
   const createTool = useCreateTool();
   const updateTool = useUpdateTool(tool?.toolId ?? "");
 
@@ -301,14 +304,14 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
       if (mode === "create") {
         await createTool.mutateAsync(payload, {
           onSuccess: () => {
-            toast.success("Tool created");
+            toast.success(t("Tool created"));
             onOpenChange(false);
           },
         });
       } else {
         await updateTool.mutateAsync(payload, {
           onSuccess: () => {
-            toast.success("Tool saved");
+            toast.success(t("Tool saved"));
             onOpenChange(false);
           },
         });
@@ -323,7 +326,7 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
       <SheetContent className="flex w-full flex-col gap-0 overflow-y-auto sm:max-w-lg">
         <SheetHeader className="border-b px-6 py-4">
           <SheetTitle>
-            {mode === "create" ? "New tool" : "Edit tool"}
+            {t(mode === "create" ? "New tool" : "Edit tool")}
           </SheetTitle>
         </SheetHeader>
 
@@ -335,32 +338,32 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
             {/* Basic */}
             <section className="space-y-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Basic
+                <Trans>{"Basic"}</Trans>
               </p>
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name"><Trans>{"Name"}</Trans></Label>
                 <Input
                   id="name"
-                  placeholder="Lookup customer"
+                  placeholder={t("Lookup customer")}
                   {...register("name")}
                 />
                 {errors.name && (
                   <p className="text-xs text-destructive">
-                    {errors.name.message}
+                    {t(errors.name.message ?? "Name is required")}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description"><Trans>{"Description"}</Trans></Label>
                 <Textarea
                   id="description"
-                  placeholder="Fetches customer data by ID"
+                  placeholder={t("Fetches customer data by ID")}
                   rows={2}
                   {...register("description")}
                 />
                 {errors.description && (
                   <p className="text-xs text-destructive">
-                    {errors.description.message}
+                    {t(errors.description.message ?? "Description is required")}
                   </p>
                 )}
               </div>
@@ -371,10 +374,10 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
             {/* API Config */}
             <section className="space-y-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                API Config
+                <Trans>{"API Config"}</Trans>
               </p>
               <div className="space-y-2">
-                <Label htmlFor="api_url">URL</Label>
+                <Label htmlFor="api_url"><Trans>{"URL"}</Trans></Label>
                 <Input
                   id="api_url"
                   placeholder="https://api.example.com/lookup"
@@ -382,12 +385,12 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
                 />
                 {errors.api_url && (
                   <p className="text-xs text-destructive">
-                    {errors.api_url.message}
+                    {t(errors.api_url.message ?? "Must be a valid URL")}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Method</Label>
+                <Label><Trans>{"Method"}</Trans></Label>
                 <Controller
                   name="api_method"
                   control={control}
@@ -414,7 +417,7 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
             {/* Headers */}
             <section className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Headers
+                <Trans>{"Headers"}</Trans>
               </p>
               <Controller
                 name="api_headers"
@@ -488,11 +491,10 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
             <section className="space-y-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Dynamic Variables
+                  <Trans>{"Dynamic Variables"}</Trans>
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Variables the agent runtime injects into the API call at
-                  runtime.
+                  <Trans>{"Variables the agent runtime injects into the API call at runtime."}</Trans>
                 </p>
               </div>
               <Controller
@@ -502,8 +504,8 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
                   <KVEditor
                     value={field.value as KVPair[]}
                     onChange={field.onChange}
-                    keyPlaceholder="Variable name"
-                    valuePlaceholder="Default value"
+                    keyPlaceholder={t("Variable name")}
+                    valuePlaceholder={t("Default value")}
                     disabled={isPending}
                   />
                 )}
@@ -515,13 +517,13 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
             {/* Behavior */}
             <section className="space-y-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Behavior
+                <Trans>{"Behavior"}</Trans>
               </p>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Pre-tool speech</p>
+                  <p className="text-sm font-medium"><Trans>{"Pre-tool speech"}</Trans></p>
                   <p className="text-xs text-muted-foreground">
-                    Agent speaks before calling this tool
+                    <Trans>{"Agent speaks before calling this tool"}</Trans>
                   </p>
                 </div>
                 <Controller
@@ -538,9 +540,9 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Disable interruptions</p>
+                  <p className="text-sm font-medium"><Trans>{"Disable interruptions"}</Trans></p>
                   <p className="text-xs text-muted-foreground">
-                    Prevent caller from interrupting while tool runs
+                    <Trans>{"Prevent caller from interrupting while tool runs"}</Trans>
                   </p>
                 </div>
                 <Controller
@@ -556,13 +558,13 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="timeout">Response timeout (seconds)</Label>
+                <Label htmlFor="timeout"><Trans>{"Response timeout (seconds)"}</Trans></Label>
                 <Input
                   id="timeout"
                   type="number"
                   min={1}
                   max={15}
-                  placeholder="Optional — e.g. 10"
+                  placeholder={t("Optional — e.g. 10")}
                   className="h-9 w-36"
                   {...register("response_timeout_secs")}
                 />
@@ -577,11 +579,11 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
               onClick={() => onOpenChange(false)}
               disabled={isPending}
             >
-              Cancel
+              <Trans>{"Cancel"}</Trans>
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="size-4 animate-spin" />}
-              {mode === "create" ? "Create tool" : "Save changes"}
+              {t(mode === "create" ? "Create tool" : "Save changes")}
             </Button>
           </SheetFooter>
         </form>

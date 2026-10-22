@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -148,12 +149,12 @@ function NumberBillingSummary({ number }: { number: PhoneNumber }) {
                 </p>
             ) : status === "RELEASED" ? (
                 <p className="font-medium text-destructive">
-                    This number has been released and cannot receive calls.
+                    <Trans>{"This number has been released and cannot receive calls."}</Trans>
                 </p>
             ) : (
                 <>
                     <p className="font-medium text-destructive">
-                        Calling is suspended. Add paid credit to keep this number.
+                        <Trans>{"Calling is suspended. Add paid credit to keep this number."}</Trans>
                     </p>
                     <p className="text-muted-foreground">
                         {number.scheduledReleaseAt
@@ -294,7 +295,7 @@ export default function NumbersPage() {
                     description="Refresh the list or try again after checking your connection."
                     action={
                         <Button variant="outline" onClick={() => refetch()}>
-                            <RefreshCw /> Retry
+                            <RefreshCw /> <Trans>{"Retry"}</Trans>
                         </Button>
                     }
                 />
@@ -314,7 +315,7 @@ export default function NumbersPage() {
                         {/* Total */}
                         <div className="rounded-lg border bg-card p-4 transition-all hover:border-blue-500/30 hover:shadow-sm">
                             <div className="flex items-center justify-between gap-3">
-                                <p className="text-sm font-medium text-muted-foreground">Total numbers</p>
+                                <p className="text-sm font-medium text-muted-foreground"><Trans>{"Total numbers"}</Trans></p>
                                 <Phone className="size-4 text-blue-500" />
                             </div>
                             <p className="mt-3 text-2xl font-semibold text-foreground">{numbers.length}</p>
@@ -323,7 +324,7 @@ export default function NumbersPage() {
                         {/* Assigned */}
                         <div className="rounded-lg border bg-card p-4 transition-all hover:border-blue-500/30 hover:shadow-sm">
                             <div className="flex items-center justify-between gap-3">
-                                <p className="text-sm font-medium text-muted-foreground">Assigned</p>
+                                <p className="text-sm font-medium text-muted-foreground"><Trans>{"Assigned"}</Trans></p>
                                 <Route className="size-4 text-blue-500" />
                             </div>
                             <p className="mt-3 text-2xl font-semibold text-foreground">{assignedCount}</p>
@@ -341,7 +342,7 @@ export default function NumbersPage() {
                                     "text-sm font-medium",
                                     unassignedCount > 0 ? "text-amber-400" : "text-muted-foreground"
                                 )}>
-                                    Needs routing
+                                    <Trans>{"Needs routing"}</Trans>
                                 </p>
                                 <AlertCircle className={cn(
                                     "size-4",
@@ -369,7 +370,7 @@ export default function NumbersPage() {
                                         ? "text-destructive"
                                         : "text-muted-foreground",
                                 )}>
-                                    At risk
+                                    <Trans>{"At risk"}</Trans>
                                 </p>
                                 <CalendarClock className={cn(
                                     "size-4",
@@ -399,7 +400,7 @@ export default function NumbersPage() {
                                 href="/settings/billing"
                                 className="shrink-0 font-medium text-destructive underline underline-offset-4"
                             >
-                                Recharge wallet
+                                <Trans>{"Recharge wallet"}</Trans>
                             </Link>
                         </div>
                     ) : null}
@@ -431,21 +432,21 @@ export default function NumbersPage() {
                                         <Filter className="size-4" />
                                     </div>
                                     <div>
-                                        <h2 className="text-base font-semibold text-foreground">Find numbers</h2>
+                                        <h2 className="text-base font-semibold text-foreground"><Trans>{"Find numbers"}</Trans></h2>
                                         <p className="text-sm text-muted-foreground">
-                                            Search by number, friendly name, provider, or SID and narrow by routing state.
+                                            <Trans>{"Search by number, friendly name, provider, or SID and narrow by routing state."}</Trans>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div className="text-sm text-muted-foreground">
-                                Showing <span className="font-semibold text-foreground">{filteredNumbers.length}</span> of {numbers.length}
+                                <Trans>{"Showing"}</Trans> <span className="font-semibold text-foreground">{filteredNumbers.length}</span> of {numbers.length}
                             </div>
                         </div>
 
                         <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(260px,1fr)_180px_190px_auto] lg:items-center">
                             <label className="relative block">
-                                <span className="sr-only">Search phone numbers</span>
+                                <span className="sr-only"><Trans>{"Search phone numbers"}</Trans></span>
                                 <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                     value={searchTerm}
@@ -459,7 +460,7 @@ export default function NumbersPage() {
                                     <SelectValue placeholder="Provider" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All providers</SelectItem>
+                                    <SelectItem value="all"><Trans>{"All providers"}</Trans></SelectItem>
                                     <SelectItem value="TWILIO">Twilio</SelectItem>
                                     <SelectItem value="TELNYX">Telnyx</SelectItem>
                                 </SelectContent>
@@ -469,9 +470,9 @@ export default function NumbersPage() {
                                     <SelectValue placeholder="Routing" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All routing states</SelectItem>
-                                    <SelectItem value="assigned">Assigned only</SelectItem>
-                                    <SelectItem value="unassigned">Needs routing</SelectItem>
+                                    <SelectItem value="all"><Trans>{"All routing states"}</Trans></SelectItem>
+                                    <SelectItem value="assigned"><Trans>{"Assigned only"}</Trans></SelectItem>
+                                    <SelectItem value="unassigned"><Trans>{"Needs routing"}</Trans></SelectItem>
                                 </SelectContent>
                             </Select>
                             <Button
@@ -481,7 +482,7 @@ export default function NumbersPage() {
                                 disabled={!hasActiveFilters}
                                 className="w-full lg:w-auto"
                             >
-                                Clear filters
+                                <Trans>{"Clear filters"}</Trans>
                             </Button>
                         </div>
                     </section>
@@ -490,7 +491,7 @@ export default function NumbersPage() {
                     <section className="overflow-hidden border bg-card">
                         <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                                <h2 className="text-base font-semibold text-foreground">Routing table</h2>
+                                <h2 className="text-base font-semibold text-foreground"><Trans>{"Routing table"}</Trans></h2>
                                 <p className="text-sm text-muted-foreground">
                                     {canManageNumbers
                                         ? "Assign each inbound number to the agent that should answer it."
@@ -505,7 +506,7 @@ export default function NumbersPage() {
                                 className="w-full sm:w-auto"
                             >
                                 <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-                                Refresh
+                                <Trans>{"Refresh"}</Trans>
                             </Button>
                         </div>
 
@@ -517,7 +518,7 @@ export default function NumbersPage() {
                                 className="m-4 bg-background/40"
                                 action={
                                     <Button variant="outline" onClick={clearFilters} disabled={!hasActiveFilters}>
-                                        Clear filters
+                                        <Trans>{"Clear filters"}</Trans>
                                     </Button>
                                 }
                             />
@@ -557,7 +558,7 @@ export default function NumbersPage() {
                                     </div>
                                     <NumberBillingSummary number={number} />
                                     <div>
-                                        <p className="mb-2 text-xs font-medium text-muted-foreground">Routing</p>
+                                        <p className="mb-2 text-xs font-medium text-muted-foreground"><Trans>{"Routing"}</Trans></p>
                                         <AssignAgentSelect
                                             phId={number.phId}
                                             agentId={number.agentId}
@@ -566,15 +567,15 @@ export default function NumbersPage() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
                                         <div>
-                                            <p>Created</p>
+                                            <p><Trans>{"Created"}</Trans></p>
                                             <p className="mt-1 text-foreground">{formatDate(number.createdAt)}</p>
                                         </div>
                                         <div>
-                                            <p>Modified</p>
+                                            <p><Trans>{"Modified"}</Trans></p>
                                             <p className="mt-1 text-foreground">{formatDate(number.updatedAt)}</p>
                                         </div>
                                         <div className="col-span-2">
-                                            <p>SID</p>
+                                            <p><Trans>{"SID"}</Trans></p>
                                             <p className="mt-1 truncate font-mono text-foreground">{number.sid}</p>
                                         </div>
                                     </div>
@@ -594,14 +595,14 @@ export default function NumbersPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted/20 hover:bg-muted/20">
-                                        <TableHead>Number</TableHead>
-                                        <TableHead>Provider</TableHead>
-                                        <TableHead>Billing</TableHead>
-                                        <TableHead>Routing</TableHead>
-                                        <TableHead>Timeline</TableHead>
-                                        <TableHead>SID</TableHead>
+                                        <TableHead><Trans>{"Number"}</Trans></TableHead>
+                                        <TableHead><Trans>{"Provider"}</Trans></TableHead>
+                                        <TableHead><Trans>{"Billing"}</Trans></TableHead>
+                                        <TableHead><Trans>{"Routing"}</Trans></TableHead>
+                                        <TableHead><Trans>{"Timeline"}</Trans></TableHead>
+                                        <TableHead><Trans>{"SID"}</Trans></TableHead>
                                         {canManageNumbers ? (
-                                            <TableHead className="text-right">Actions</TableHead>
+                                            <TableHead className="text-right"><Trans>{"Actions"}</Trans></TableHead>
                                         ) : null}
                                     </TableRow>
                                 </TableHeader>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -132,7 +133,7 @@ function DashboardPartialDataNotice({ sections }: { sections: string[] }) {
         </div>
       </div>
       <Button asChild variant="outline" size="sm" className="shrink-0 bg-card">
-        <Link href="/calls">Review call logs</Link>
+        <Link href="/calls"><Trans>{"Review call logs"}</Trans></Link>
       </Button>
     </div>
   );
@@ -182,17 +183,17 @@ export default function DashboardPage() {
       isRetrying={isFetching}
       disabled={dashboardErrorState?.kind === "offline" && !isOnline}
     >
-      Retry
+      <Trans>{"Retry"}</Trans>
     </RetryButton>
   );
   const dashboardErrorAction =
     dashboardErrorState?.reason === "forbidden" ? (
       <Button asChild variant="outline">
-        <Link href="/settings/roles">Review role settings</Link>
+        <Link href="/settings/roles"><Trans>{"Review role settings"}</Trans></Link>
       </Button>
     ) : dashboardErrorState?.reason === "unauthorized" ? (
       <Button asChild variant="outline">
-        <Link href="/login">Sign in</Link>
+        <Link href="/login"><Trans>{"Sign in"}</Trans></Link>
       </Button>
     ) : (
       dashboardRetryAction

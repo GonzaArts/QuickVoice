@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -90,8 +91,8 @@ export function KVEditor({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Value">Value</SelectItem>
-                <SelectItem value="Secret">Secret</SelectItem>
+                <SelectItem value="Value"><Trans>{"Value"}</Trans></SelectItem>
+                <SelectItem value="Secret"><Trans>{"Secret"}</Trans></SelectItem>
               </SelectContent>
             </Select>
           )}

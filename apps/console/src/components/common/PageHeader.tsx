@@ -1,3 +1,4 @@
+import { Trans } from "@/src/i18n/Trans";
 import type { ReactNode } from "react";
 import { cn } from "@/src/lib/utils";
 
@@ -21,10 +22,10 @@ export function PageHeader({
     >
       <div className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          {title}
+          {typeof title === "string" ? <Trans>{title}</Trans> : title}
         </h1>
         {description ? (
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-sm text-muted-foreground">{typeof description === "string" ? <Trans>{description}</Trans> : description}</p>
         ) : null}
       </div>
       {actions ? (

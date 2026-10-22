@@ -28,6 +28,7 @@ import {
   SidebarMenuItem,
 } from "@/src/components/ui/sidebar";
 import { NavMain, type NavItem } from "@/src/components/shell/NavMain";
+import { useT } from "@/src/i18n/provider";
 import { OrgSwitcher } from "@/src/components/shell/OrgSwitcher";
 import { NavUser, type NavUserProps } from "@/src/components/shell/NavUser";
 
@@ -59,6 +60,7 @@ const settingsNav: NavItem[] = [
 ];
 
 function ThemeToggle() {
+  const t = useT();
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
   const nextTheme = isDark ? "light" : "dark";
@@ -69,13 +71,13 @@ function ThemeToggle() {
       <SidebarMenuItem>
         <SidebarMenuButton
           type="button"
-          tooltip={`Switch to ${nextTheme} mode`}
-          aria-label={`Switch to ${nextTheme} mode`}
+          tooltip={t(`Switch to ${nextTheme} mode`)}
+          aria-label={t(`Switch to ${nextTheme} mode`)}
           onClick={() => setTheme(nextTheme)}
           className="h-11 !bg-transparent px-3 text-[15px] font-medium text-muted-foreground shadow-none transition-colors hover:!bg-sidebar-accent/60 hover:text-sidebar-foreground [&_svg]:size-[18px] [&_svg]:text-muted-foreground hover:[&_svg]:text-sidebar-foreground"
         >
           <Icon />
-          <span>Switch to {nextTheme} mode</span>
+          <span>{t(`Switch to ${nextTheme} mode`)}</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>
@@ -90,15 +92,22 @@ export function AppSidebar({
   activeOrgId: string;
   user: NavUserProps;
 } & React.ComponentProps<typeof Sidebar>) {
+  const t = useT();
+  const localizedPrimaryNav = primaryNav.map((item) => ({ ...item, title: t(item.title) }));
+  const localizedSettingsNav = settingsNav.map((item) => ({
+    ...item,
+    title: t(item.title),
+    items: item.items?.map((child) => ({ ...child, title: t(child.title) })),
+  }));
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="border-b border-sidebar-border/60 p-3.5">
         <OrgSwitcher activeOrgId={activeOrgId} />
       </SidebarHeader>
       <SidebarContent className="gap-1 py-2.5">
-        <NavMain label="Platform" items={primaryNav} />
+        <NavMain label={t("Platform")} items={localizedPrimaryNav} />
         <SidebarSeparator className="mx-5 bg-sidebar-border/50" />
-        <NavMain label="Workspace" items={settingsNav} />
+        <NavMain label={t("Workspace")} items={localizedSettingsNav} />
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border/60 p-3.5">
         <ThemeToggle />

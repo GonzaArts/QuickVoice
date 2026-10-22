@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
@@ -140,7 +142,7 @@ function MarketplaceAction({
     return (
       <Badge className="gap-1 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-300">
         <CheckCircle2 className="size-3" />
-        Connected
+        <Trans>{"Connected"}</Trans>
       </Badge>
     );
   }
@@ -181,6 +183,7 @@ function MarketplaceAction({
 }
 
 export function McpMarketplace() {
+  const t = useT();
   const connectMcp = useConnectMcp();
   const openMcpSetup = useOpenMcpSetup();
   const [customUrl, setCustomUrl] = useState("");
@@ -431,7 +434,7 @@ export function McpMarketplace() {
             }}
           >
             <option value="popular">Popular</option>
-            <option value="name">Name</option>
+            <option value="name">{t("Name")}</option>
           </select>
         </div>
       </div>
@@ -522,7 +525,7 @@ export function McpMarketplace() {
               onClick={() => setPage((value) => Math.max(1, value - 1))}
             >
               <ChevronLeft className="size-4" />
-              Previous
+              <Trans>{"Previous"}</Trans>
             </Button>
             <Button
               type="button"
@@ -531,7 +534,7 @@ export function McpMarketplace() {
               disabled={isLoading || pagination.page >= pagination.totalPages}
               onClick={() => setPage((value) => value + 1)}
             >
-              Next
+              <Trans>{"Next"}</Trans>
               <ChevronRight className="size-4" />
             </Button>
           </div>

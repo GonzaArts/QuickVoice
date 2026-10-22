@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -110,7 +111,7 @@ export default function CallDetailPage() {
  <AlertDialog open={confirming} onOpenChange={setConfirming}>
  <AlertDialogTrigger asChild>
  <Button variant="outline">
- <Trash2 /> Delete
+ <Trash2 /> <Trans>{"Delete"}</Trans>
  </Button>
  </AlertDialogTrigger>
  <AlertDialogContent>
@@ -122,14 +123,14 @@ export default function CallDetailPage() {
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
- <AlertDialogCancel>Cancel</AlertDialogCancel>
+ <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
  <AlertDialogAction
  onClick={onDelete}
  disabled={del.isPending}
  >
  {del.isPending ? (
  <>
- <Loader2 className="animate-spin" /> Deleting…
+ <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
  </>
  ) : (
  "Delete"
@@ -146,7 +147,7 @@ export default function CallDetailPage() {
  <div className="space-y-6">
  <AudioPlayer src={call.audioRecordingPath} callId={call.callId} />
  <div className="border bg-card p-5">
- <h2 className="mb-4 text-sm font-semibold">Transcript</h2>
+ <h2 className="mb-4 text-sm font-semibold"><Trans>{"Transcript"}</Trans></h2>
  <Transcript callId={call.callId} />
  </div>
  </div>

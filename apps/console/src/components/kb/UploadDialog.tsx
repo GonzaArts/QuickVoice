@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useRef, useState } from "react";
 import { Loader2, Plus, UploadCloud, Link } from "lucide-react";
 import { toast } from "sonner";
@@ -164,14 +165,14 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
                 <Input placeholder="Q4 pricing FAQ" value={urlName} onChange={(e) => setUrlName(e.target.value)} disabled={busy} />
               </div>
               <div className="space-y-1.5">
-                <Label>URL</Label>
+                <Label><Trans>{"URL"}</Trans></Label>
                 <Input type="url" placeholder="https://…" value={url} onChange={(e) => setUrl(e.target.value)} disabled={busy} />
               </div>
             </>
           ) : (
             <>
               <div className="space-y-1.5">
-                <Label>File</Label>
+                <Label><Trans>{"File"}</Trans></Label>
                 <div
                   className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed p-6 text-center transition-colors hover:border-primary/50 hover:bg-muted/30"
                   onClick={() => fileRef.current?.click()}
@@ -203,7 +204,7 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
 
           {/* agent selector */}
           <div className="space-y-1.5">
-            <Label>Agent <span className="text-destructive">*</span></Label>
+            <Label><Trans>{"Agent"}</Trans> <span className="text-destructive">*</span></Label>
             {(agents ?? []).length === 0 ? (
               <p className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
                 No agents found. Create an agent first before adding knowledge sources.
@@ -225,7 +226,7 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={busy}>
-            Cancel
+            <Trans>{"Cancel"}</Trans>
           </Button>
           <Button onClick={handleSubmit} disabled={busy}>
             {busy ? <><Loader2 className="animate-spin" /> Processing…</> : "Add document"}

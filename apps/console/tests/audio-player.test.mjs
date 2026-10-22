@@ -16,7 +16,8 @@ const moduleValue = { exports: {} };
 vm.runInNewContext(compiled, {
   exports: moduleValue.exports,
   module: moduleValue,
-  require: (id) => id.endsWith("/ui/button")
+  require: (id) => id === "@/src/i18n/Trans" ? { Trans: ({children}) => React.createElement(React.Fragment, null, children) }
+    : id.endsWith("/ui/button")
     ? { Button: ({ asChild, children, ...props }) => asChild ? children : React.createElement("button", props, children) }
     : id.endsWith("/api/resources/calls") ? { callsApi: {} } : require(id),
 });

@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
+import { Trans } from "@/src/i18n/Trans";
 
 import { Button } from "@/src/components/ui/button";
 
@@ -8,7 +9,7 @@ type RetryButtonProps = ComponentProps<typeof Button> & {
 };
 
 export function RetryButton({
-  children = "Retry",
+  children = <Trans>{"Retry"}</Trans>,
   disabled = false,
   isRetrying = false,
   type = "button",
@@ -28,7 +29,7 @@ export function RetryButton({
       ) : (
         <RefreshCw aria-hidden="true" />
       )}
-      {isRetrying ? "Retrying" : children}
+      {isRetrying ? <Trans>{"Retrying"}</Trans> : children}
     </Button>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { useId, type ReactNode } from "react";
 import { AlertTriangle, ArrowRight, BarChart3 } from "lucide-react";
@@ -251,7 +252,7 @@ export function PerformanceGraphs({
             <thead>
               <tr>
                 <th scope="col">Time bucket</th>
-                <th scope="col">Success rate</th>
+                <th scope="col"><Trans>{"Success rate"}</Trans></th>
               </tr>
             </thead>
             <tbody>
@@ -438,7 +439,7 @@ export function PerformanceGraphs({
             <thead>
               <tr>
                 <th scope="col">Time bucket</th>
-                <th scope="col">Calls</th>
+                <th scope="col"><Trans>{"Calls"}</Trans></th>
                 <th scope="col">Minutes per call</th>
               </tr>
             </thead>

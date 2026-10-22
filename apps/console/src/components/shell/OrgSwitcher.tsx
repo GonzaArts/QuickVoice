@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { Building2, ChevronsUpDown, Plus, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useT } from "@/src/i18n/provider";
 
 import {
  DropdownMenu,
@@ -25,6 +26,7 @@ import { authClient } from "@/src/lib/auth-client";
 import { clearIdentityCache } from "@/src/lib/query-cache";
 
 export function OrgSwitcher({ activeOrgId }: { activeOrgId: string }) {
+ const t = useT();
  const { isMobile } = useSidebar();
  const router = useRouter();
  const queryClient = useQueryClient();
@@ -38,7 +40,7 @@ export function OrgSwitcher({ activeOrgId }: { activeOrgId: string }) {
  organizationId: orgId,
  });
  if (error) {
- toast.error(error.message || "Could not switch organization");
+ toast.error(error.message || t("Could not switch organization"));
  return;
  }
  clearIdentityCache(queryClient);
@@ -93,12 +95,12 @@ export function OrgSwitcher({ activeOrgId }: { activeOrgId: string }) {
  sideOffset={4}
  >
  <DropdownMenuLabel className="text-xs text-muted-foreground">
- Organizations
+ {t("Organizations")}
  </DropdownMenuLabel>
  {isPending ? (
  <div className="flex items-center gap-2 px-2 py-3 text-sm text-muted-foreground">
  <Loader2 className="size-3.5 animate-spin" />
- Loading…
+ {t("Loading…")}
  </div>
  ) : (
  (organizations ?? []).map((org) => {
@@ -129,7 +131,7 @@ export function OrgSwitcher({ activeOrgId }: { activeOrgId: string }) {
  <Plus className="size-4" />
  </div>
  <div className="font-medium text-muted-foreground">
- New organization
+ {t("New organization")}
  </div>
  </DropdownMenuItem>
  <DropdownMenuItem
@@ -140,7 +142,7 @@ export function OrgSwitcher({ activeOrgId }: { activeOrgId: string }) {
  <Building2 className="size-3.5" />
  </div>
  <div className="font-medium text-muted-foreground">
- Manage organizations
+ {t("Manage organizations")}
  </div>
  </DropdownMenuItem>
  </DropdownMenuContent>

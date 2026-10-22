@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useParams, useSearchParams } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
 import { useCallback, useEffect, useState } from "react";
@@ -100,7 +101,7 @@ export default function OrgId() {
  <div className="flex items-center gap-2">
  <Button variant="outline" size="sm">
  <Settings className="h-4 w-4 mr-2" />
- Settings
+ <Trans>{"Settings"}</Trans>
  </Button>
  </div>
  </div>

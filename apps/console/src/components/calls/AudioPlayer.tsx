@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useRef, useState } from "react";
 import { Download, Music, Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react";
 
@@ -94,7 +95,7 @@ export function AudioPlayer({ src, callId }: { src: string | null; callId: strin
                     <Music className="size-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-foreground">Recording</p>
+                    <p className="text-sm font-semibold text-foreground"><Trans>{"Recording"}</Trans></p>
                     <p className="mt-1 text-xs text-muted-foreground">Listen to the captured call audio or download it for review.</p>
                 </div>
             </div>

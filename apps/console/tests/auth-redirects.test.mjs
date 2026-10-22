@@ -17,6 +17,7 @@ const linksSource = compile("../src/lib/links.ts");
 const registerSource = compile(
   "../src/components/forms/auth/register-form.tsx",
 );
+const identityT = (key, vars) => key.replace(/\{(\w+)\}/g, (match, name) => String(vars?.[name] ?? match));
 
 test("signup rejects duplicate emails and new-account verification returns to the console", async () => {
   for (const [configuredOrigin, browserOrigin, expectedCallback, invitationId = "", responseKind = "new"] of [
@@ -47,6 +48,7 @@ test("signup rejects duplicate emails and new-account verification returns to th
     const noop = () => {};
     const mocks = {
       react: { useState: () => [false, noop] },
+      "@/src/i18n/provider": { useT: () => identityT },
       "react/jsx-runtime": { jsx: noop, jsxs: noop },
       "next/navigation": {
         useRouter: () => ({
@@ -235,6 +237,7 @@ test("password recovery preserves invitation IDs through canonical reset links, 
     const jsx = (type, props) => { elements.push({ type, props }); return { type, props }; };
     const mocks = {
       react: { useState: () => [false, noop], useEffect: noop },
+      "@/src/i18n/provider": { useT: () => identityT },
       "react/jsx-runtime": { jsx, jsxs: jsx },
       "next/navigation": {
         useRouter: () => ({ push: (path) => { nextPage = path; } }),

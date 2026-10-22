@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -115,15 +116,14 @@ export function NewAgentDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus /> New agent
+          <Plus /> <Trans>{"New agent"}</Trans>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create agent</DialogTitle>
+          <DialogTitle><Trans>{"Create agent"}</Trans></DialogTitle>
           <DialogDescription>
-            Give your agent a name. You can configure voice, prompts, and
-            webhooks next.
+            <Trans>{"Give your agent a name. You can configure voice, prompts, and webhooks next."}</Trans>
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -134,7 +134,7 @@ export function NewAgentDialog() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel><Trans>{"Name"}</Trans></FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g. Sales Qualifier"
@@ -146,7 +146,7 @@ export function NewAgentDialog() {
                   </FormItem>
                 )}
               />
-              <Label>Choose a template</Label>
+              <Label><Trans>{"Choose a template"}</Trans></Label>
               <div className="grid gap-3 sm:grid-cols-2">
                 {templates.map((template) => {
                   const Icon = template.icon;
@@ -201,7 +201,7 @@ export function NewAgentDialog() {
                   <div className="space-y-0.5">
                     <Label>{field.value ? "Active" : "Paused"}</Label>
                     <p className="text-xs text-muted-foreground">
-                      Toggle whether this agent can handle calls immediately.
+                      <Trans>{"Toggle whether this agent can handle calls immediately."}</Trans>
                     </p>
                   </div>
                   <FormControl>
@@ -220,12 +220,12 @@ export function NewAgentDialog() {
                 onClick={() => setOpen(false)}
                 disabled={createAgent.isPending}
               >
-                Cancel
+                <Trans>{"Cancel"}</Trans>
               </Button>
               <Button type="submit" disabled={createAgent.isPending}>
                 {createAgent.isPending ? (
                   <>
-                    <Loader2 className="animate-spin" /> Creating…
+                    <Loader2 className="animate-spin" /> <Trans>{"Creating…"}</Trans>
                   </>
                 ) : (
                   "Create agent"

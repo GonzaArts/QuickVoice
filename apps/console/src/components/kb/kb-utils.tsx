@@ -1,3 +1,4 @@
+import { Trans } from "@/src/i18n/Trans";
 import { AlertCircle, FileSpreadsheet, FileText, Globe } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type {
@@ -52,7 +53,7 @@ export function StatusChip({ status }: { status: KbStatus }) {
   if (status === "ACTIVE") {
     return (
       <span className="inline-flex items-center rounded-sm border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-400">
-        Active
+        <Trans>{"Active"}</Trans>
       </span>
     );
   }
@@ -60,14 +61,14 @@ export function StatusChip({ status }: { status: KbStatus }) {
     return (
       <span className="inline-flex items-center gap-1.5 rounded-sm border border-red-500/30 bg-red-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-400">
         <AlertCircle className="size-3" aria-hidden="true" />
-        Failed
+        <Trans>{"Failed"}</Trans>
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1.5 rounded-sm border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-400">
       <span className="size-1.5 animate-pulse rounded-full bg-amber-400" />
-      Processing
+      <Trans>{"Processing"}</Trans>
     </span>
   );
 }
