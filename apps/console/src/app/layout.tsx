@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { I18nProvider } from "@/src/i18n/provider";
+import { LOCALE_COOKIE, localeCode, normalizeLocale } from "@/src/i18n/config";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/src/lib/utils";
@@ -25,14 +28,16 @@ export const metadata: Metadata = {
     "QuickVoice is a platform for creating and managing voice agents.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialLocale = normalizeLocale(cookieStore.get(LOCALE_COOKIE)?.value);
   return (
     <html
-      lang="en"
+      lang={localeCode(initialLocale)}
       suppressHydrationWarning
       className={cn(
         "h-full antialiased",
@@ -43,12 +48,14 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
+        <I18nProvider initialLocale={initialLocale}>
+          <ThemeProvider>
           <QueryProvider>
             <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           </QueryProvider>
           <Toaster richColors closeButton />
-        </ThemeProvider>
+          </ThemeProvider>
+        </I18nProvider>
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+import { LanguageSwitcher } from "@/src/components/shell/LanguageSwitcher";
 import { RegisterForm } from "@/src/components/forms/auth/register-form";
 import Link from "next/link";
 import LoginBg from "@/src/components/login-bg";
@@ -26,6 +27,7 @@ export default async function RegisterPage({
             
             <Logo1 />
           </Link>
+          <div className="ml-auto"><LanguageSwitcher compact /></div>
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs z-10">

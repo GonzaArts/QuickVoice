@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
+import { useT } from "@/src/i18n/provider";
 
 import {
   Breadcrumb,
@@ -38,6 +39,7 @@ function labelForSegment(seg: string) {
 }
 
 export function Breadcrumbs() {
+  const t = useT();
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
@@ -46,7 +48,7 @@ export function Breadcrumbs() {
   const crumbs = segments.map((seg, i) => {
     const href = "/" + segments.slice(0, i + 1).join("/");
     const isLast = i === segments.length - 1;
-    const label = labelForSegment(seg);
+    const label = t(labelForSegment(seg));
     return { href, label, isLast };
   });
 
