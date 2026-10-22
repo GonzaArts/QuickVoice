@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -101,7 +102,7 @@ function Invitation() {
             <p className="text-muted-foreground">Sign in or create an account with the email address that received this invitation to review and join the workspace.</p>
             <div className="grid gap-3">
               <Button asChild className="min-h-11"><Link href={invitationPath(invitationId, "/login")}>Sign in to continue</Link></Button>
-              <Button asChild variant="outline" className="min-h-11"><Link href={invitationPath(invitationId, "/register")}>Create an account</Link></Button>
+              <Button asChild variant="outline" className="min-h-11"><Link href={invitationPath(invitationId, "/register")}><Trans>{"Create an account"}</Trans></Link></Button>
             </div>
           </>
         ) : joinedOrganizationId ? (
@@ -140,7 +141,7 @@ function Invitation() {
           <>
             <p className="break-words text-muted-foreground"><span className="font-medium text-foreground">{invitation.data.inviterEmail}</span> invited you to join their team.</p>
             <dl className="space-y-4 border bg-muted/20 p-4">
-              <div><dt className="text-muted-foreground">Workspace</dt><dd className="mt-1 break-words text-base font-semibold">{invitation.data.organizationName}</dd></div>
+              <div><dt className="text-muted-foreground"><Trans>{"Workspace"}</Trans></dt><dd className="mt-1 break-words text-base font-semibold">{invitation.data.organizationName}</dd></div>
               <div><dt className="text-muted-foreground">Your role</dt><dd className="mt-1 break-words capitalize">{invitation.data.role}</dd></div>
               <div><dt className="text-muted-foreground">Joining as</dt><dd className="mt-1 break-words">{session.user.email}</dd></div>
             </dl>

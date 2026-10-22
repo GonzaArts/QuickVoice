@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -61,7 +62,7 @@ function ForgotPasswordForm() {
  <div className="flex size-12 items-center justify-center bg-primary/10 text-primary">
  <Mail className="size-6" />
  </div>
- <h1 className="text-2xl font-semibold tracking-tight">Forgot password?</h1>
+ <h1 className="text-2xl font-semibold tracking-tight"><Trans>{"Forgot password?"}</Trans></h1>
  <p className="text-sm text-muted-foreground">
  Enter your email and we will send a reset link if the account exists.
  </p>
@@ -78,7 +79,7 @@ function ForgotPasswordForm() {
  name="email"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Email</FormLabel>
+ <FormLabel><Trans>{"Email"}</Trans></FormLabel>
  <FormControl>
  <Input
  {...field}

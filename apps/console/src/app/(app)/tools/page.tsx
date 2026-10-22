@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { Webhook, Plus } from "lucide-react";
 import { PageHeader } from "@/src/components/common/PageHeader";
@@ -34,7 +35,7 @@ export default function ToolsPage() {
   const addButton = (
     <Button onClick={() => setCreateOpen(true)}>
       <Plus className="size-4" />
-      Add Tool
+      <Trans>{"Add Tool"}</Trans>
     </Button>
   );
 
@@ -48,9 +49,9 @@ export default function ToolsPage() {
 
       <Tabs defaultValue="marketplace" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="http">HTTP tools</TabsTrigger>
-          <TabsTrigger value="marketplace">MCP marketplace</TabsTrigger>
-          <TabsTrigger value="connections">Connected MCPs</TabsTrigger>
+          <TabsTrigger value="http"><Trans>{"HTTP tools"}</Trans></TabsTrigger>
+          <TabsTrigger value="marketplace"><Trans>{"MCP marketplace"}</Trans></TabsTrigger>
+          <TabsTrigger value="connections"><Trans>{"Connected MCPs"}</Trans></TabsTrigger>
         </TabsList>
 
         <TabsContent value="http" className="mt-0">

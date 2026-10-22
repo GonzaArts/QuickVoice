@@ -1,3 +1,4 @@
+import { Trans } from "@/src/i18n/Trans";
 import { Mail } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { invitationPath } from "@/src/lib/links";
@@ -30,10 +31,10 @@ export default async function VerifyAccount({
             </p>
             <div className="grid gap-3">
               <Button asChild className="min-h-11">
-                <Link href={invitationPath(invitationId, "/login")}>Sign in</Link>
+                <Link href={invitationPath(invitationId, "/login")}><Trans>{"Sign in"}</Trans></Link>
               </Button>
               <Button asChild variant="outline" className="min-h-11">
-                <Link href={invitationPath(invitationId, "/forgot-password")}>Reset password</Link>
+                <Link href={invitationPath(invitationId, "/forgot-password")}><Trans>{"Reset password"}</Trans></Link>
               </Button>
             </div>
           </div>

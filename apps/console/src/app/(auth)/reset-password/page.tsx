@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -68,7 +69,7 @@ function ResetPasswordForm() {
  <div className="flex size-12 items-center justify-center bg-primary/10 text-primary">
  <KeyRound className="size-6" />
  </div>
- <h1 className="text-2xl font-semibold tracking-tight">Reset password</h1>
+ <h1 className="text-2xl font-semibold tracking-tight"><Trans>{"Reset password"}</Trans></h1>
  <p className="text-sm text-muted-foreground">
  Choose a new password for your QuickVoice account.
  </p>
@@ -94,7 +95,7 @@ function ResetPasswordForm() {
  name="newPassword"
  render={({ field }) => (
  <FormItem>
- <FormLabel>New password</FormLabel>
+ <FormLabel><Trans>{"New password"}</Trans></FormLabel>
  <FormControl>
  <Input
  {...field}
@@ -111,7 +112,7 @@ function ResetPasswordForm() {
  <Button type="submit" className="w-full" disabled={loading}>
  {loading ? (
  <>
- <Loader2 className="animate-spin" /> Saving...
+ <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
  </>
  ) : (
  "Reset password"
