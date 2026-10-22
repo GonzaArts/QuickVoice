@@ -74,7 +74,7 @@ test("i18n helper executes with Spanish default, English override and safe fallb
   assert.equal(translate("es", "__unknown_message__"), "__unknown_message__");
   assert.equal(translate("es", "Language"), "Idioma");
   assert.equal(localeCode("es"), "es-ES");
-  assert.match(formatNumber("es", 1234.5), /1[.\u00a0]234,5/);
+  assert.equal(formatNumber("es", 12345.5), "12.345,5");
   assert.ok(typeof formatDate("es", new Date("2026-10-22T10:00:00Z")) === "string");
 });
 
