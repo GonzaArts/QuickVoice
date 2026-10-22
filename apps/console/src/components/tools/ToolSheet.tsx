@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -338,7 +339,7 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
                 Basic
               </p>
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name"><Trans>{"Name"}</Trans></Label>
                 <Input
                   id="name"
                   placeholder="Lookup customer"
@@ -351,7 +352,7 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description"><Trans>{"Description"}</Trans></Label>
                 <Textarea
                   id="description"
                   placeholder="Fetches customer data by ID"
@@ -374,7 +375,7 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
                 API Config
               </p>
               <div className="space-y-2">
-                <Label htmlFor="api_url">URL</Label>
+                <Label htmlFor="api_url"><Trans>{"URL"}</Trans></Label>
                 <Input
                   id="api_url"
                   placeholder="https://api.example.com/lookup"
@@ -515,7 +516,7 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
             {/* Behavior */}
             <section className="space-y-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Behavior
+                <Trans>{"Behavior"}</Trans>
               </p>
               <div className="flex items-center justify-between">
                 <div>
@@ -577,7 +578,7 @@ export function ToolSheet({ mode, tool, open, onOpenChange }: ToolSheetProps) {
               onClick={() => onOpenChange(false)}
               disabled={isPending}
             >
-              Cancel
+              <Trans>{"Cancel"}</Trans>
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="size-4 animate-spin" />}
