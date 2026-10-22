@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, MoreHorizontal, PhoneCall, PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
@@ -54,12 +56,12 @@ function statusClass(status: CallStatus) {
   }
 }
 
-function formatAbsoluteTimestamp(iso: string | null) {
+function formatAbsoluteTimestamp(iso: string | null, locale = "en-US") {
   if (!iso) return "No start timestamp";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "Invalid timestamp";
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -145,8 +147,9 @@ function resolveAgentLabel({
 }
 
 function CallTimestamp({ call }: { call: CallLog }) {
+  const {locale} = useLocale();
   return call.startTime ? (
-    <time dateTime={call.startTime}>{formatAbsoluteTimestamp(call.startTime)}</time>
+    <time dateTime={call.startTime}>{formatAbsoluteTimestamp(call.startTime, localeCode(locale))}</time>
   ) : (
     <span>No start timestamp</span>
   );

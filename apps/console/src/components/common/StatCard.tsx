@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { Trans } from "@/src/i18n/Trans";
 import { cn } from "@/src/lib/utils";
 import { Skeleton } from "@/src/components/ui/skeleton";
 
@@ -51,10 +52,10 @@ export function StatCard({
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="min-h-[2.5rem] space-y-1">
             <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-              {label}
+              <Trans>{label}</Trans>
             </p>
             {eyebrow ? (
-              <p className="text-xs text-muted-foreground">{eyebrow}</p>
+              <p className="text-xs text-muted-foreground">{typeof eyebrow === "string" ? <Trans>{eyebrow}</Trans> : eyebrow}</p>
             ) : null}
           </div>
           {loading ? (

@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale, useT } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import { useState, useEffect } from "react";
 import {
   Loader2,
@@ -63,15 +65,15 @@ import { downloadRowsAsCsv } from "@/src/lib/export-csv";
 
 // ── formatters ────────────────────────────────────────────────────────────────
 
-function fmtStartTime(iso: string | null) {
+function fmtStartTime(iso: string | null, locale = "en-US") {
   if (!iso) return "—";
-  return new Date(iso).toLocaleString("en-US", {
+  return new Date(iso).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    hour12: true,
+    hour12: locale === "en-US",
   });
 }
 
@@ -85,23 +87,26 @@ function fmtDuration(s: number | null) {
 // ── sub-components ────────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: CallStatus }) {
+  const t = useT();
+  const statusLabel: Record<CallStatus, string> = { COMPLETED: "Completed", FAILED: "Failed", NOT_ANSWERED: "Not answered", IN_PROGRESS: "In progress", SCHEDULED: "Scheduled", PROCESSED: "Processed" };
+  const label = t(statusLabel[status] ?? status);
   if (status === "COMPLETED") {
     return (
       <span className="inline-flex items-center rounded-sm border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-400">
-        COMPLETED
+        {label}
       </span>
     );
   }
   if (status === "FAILED" || status === "NOT_ANSWERED") {
     return (
       <Badge variant="destructive" className="text-[10px] uppercase">
-        {status.replace("_", " ")}
+        {label}
       </Badge>
     );
   }
   return (
     <Badge variant="secondary" className="text-[10px] uppercase">
-      {status.replace("_", " ")}
+      {label}
     </Badge>
   );
 }
@@ -150,6 +155,7 @@ export function CallsTable({
 }: {
   filters: Omit<CallListParams, "cursor" | "limit">;
 }) {
+  const {locale} = useLocale();
   const router      = useRouter();
   const pathname    = usePathname();
   const searchParams = useSearchParams();
@@ -337,7 +343,7 @@ export function CallsTable({
               <div className="flex items-start gap-3">
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{c.callerId ?? "Unknown number"}</p>
-                  <p className="text-xs text-muted-foreground">{fmtStartTime(c.startTime)}</p>
+                  <p className="text-xs text-muted-foreground">{fmtStartTime(c.startTime, localeCode(locale))}</p>
                 </div>
                 <StatusBadge status={c.status} />
               </div>
@@ -396,7 +402,7 @@ export function CallsTable({
                   className="border-b transition-colors hover:bg-muted/10"
                 >
                   {visibleCols.has("startTime") && (
-                    <TableCell className="pl-4 text-sm text-muted-foreground">{fmtStartTime(c.startTime)}</TableCell>
+                    <TableCell className="pl-4 text-sm text-muted-foreground">{fmtStartTime(c.startTime, localeCode(locale))}</TableCell>
                   )}
                   {visibleCols.has("number") && (
                     <TableCell className="font-medium">{c.callerId ?? "—"}</TableCell>

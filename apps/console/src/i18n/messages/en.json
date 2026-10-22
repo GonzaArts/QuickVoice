@@ -561,5 +561,22 @@
   "Missed": "Missed",
   "Voice preview unavailable": "Voice preview unavailable",
   "Voice selection": "Voice selection",
-  "Current language": "Current language"
+  "Current language": "Current language",
+  "All inbound and outbound activity": "All inbound and outbound activity",
+  "Connected conversation time": "Connected conversation time",
+  "Per completed interaction": "Per completed interaction",
+  "Completed calls out of total": "Completed calls out of total",
+  "Review failed calls": "Review failed calls",
+  "View missed calls": "View missed calls",
+  "previous 24 hours": "previous 24 hours",
+  "previous 7 days": "previous 7 days",
+  "previous 30 days": "previous 30 days",
+  "previous custom range": "previous custom range",
+  "selected comparison period": "selected comparison period",
+  "vs": "vs",
+  "Unknown": "Unknown",
+  "Unknown caller": "Unknown caller",
+  "Unknown callee": "Unknown callee",
+  "No start timestamp": "No start timestamp",
+  "Invalid timestamp": "Invalid timestamp"
 }

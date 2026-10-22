@@ -561,5 +561,22 @@
   "Missed": "Perdidas",
   "Voice preview unavailable": "No se puede probar la voz",
   "Voice selection": "Selección de voz",
-  "Current language": "Idioma actual"
+  "Current language": "Idioma actual",
+  "All inbound and outbound activity": "Actividad entrante y saliente",
+  "Connected conversation time": "Tiempo de conversación conectado",
+  "Per completed interaction": "Por interacción completada",
+  "Completed calls out of total": "Llamadas completadas respecto al total",
+  "Review failed calls": "Revisar llamadas fallidas",
+  "View missed calls": "Ver llamadas perdidas",
+  "previous 24 hours": "24 horas anteriores",
+  "previous 7 days": "7 días anteriores",
+  "previous 30 days": "30 días anteriores",
+  "previous custom range": "periodo personalizado anterior",
+  "selected comparison period": "periodo de comparación seleccionado",
+  "vs": "respecto a",
+  "Unknown": "Desconocido",
+  "Unknown caller": "Persona que llama no identificada",
+  "Unknown callee": "Destino no identificado",
+  "No start timestamp": "Sin hora de inicio",
+  "Invalid timestamp": "Fecha u hora no válida"
 }
