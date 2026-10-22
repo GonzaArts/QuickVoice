@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Square, Volume2 } from "lucide-react";
 
@@ -102,7 +103,7 @@ export function VoiceProfilePanel({
   if (!voice) {
     return (
       <div className="border border-dashed bg-muted/20 p-4 text-sm text-muted-foreground">
-        Select a compatible voice to view profile details.
+        <Trans>{"Select a compatible voice to view profile details."}</Trans>
       </div>
     );
   }
@@ -118,19 +119,19 @@ export function VoiceProfilePanel({
           </div>
           <div className="grid gap-3 text-sm sm:grid-cols-4">
             <div>
-              <p className="text-xs text-muted-foreground">Gender</p>
+              <p className="text-xs text-muted-foreground"><Trans>{"Gender"}</Trans></p>
               <p className="mt-1 font-medium">{titleCase(voice.gender)}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Language</p>
+              <p className="text-xs text-muted-foreground"><Trans>{"Language"}</Trans></p>
               <p className="mt-1 font-medium">{languageLabel}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Accent</p>
+              <p className="text-xs text-muted-foreground"><Trans>{"Accent"}</Trans></p>
               <p className="mt-1 font-medium">{voice.accent || "-"}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Languages</p>
+              <p className="text-xs text-muted-foreground"><Trans>{"Languages"}</Trans></p>
               <p className="mt-1 font-medium tabular-nums">
                 {voice.languages.length}
               </p>
@@ -160,7 +161,7 @@ export function VoiceProfilePanel({
           <p role="status" className="text-xs text-muted-foreground">
             {status === "loading" ? "Generating your voice sample…" : status === "playing" ? `Playing ${voice.name} in ${languageLabel}.` : "Listen using your current model and voice selections."}
           </p>
-          {sampleText ? <p lang={language} dir="auto" className="break-words border bg-background p-3 text-sm leading-relaxed">{sampleText}</p> : <p className="text-xs text-muted-foreground">A sample is unavailable for this language.</p>}
+          {sampleText ? <p lang={language} dir="auto" className="break-words border bg-background p-3 text-sm leading-relaxed">{sampleText}</p> : <p className="text-xs text-muted-foreground"><Trans>{"A sample is unavailable for this language."}</Trans></p>}
           {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
         </div>
       </div>

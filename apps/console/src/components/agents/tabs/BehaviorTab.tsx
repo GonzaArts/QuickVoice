@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -197,7 +198,7 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                             name="firstMessage"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>First message</FormLabel>
+                                    <FormLabel><Trans>{"First message"}</Trans></FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="Hi, thanks for calling..."
@@ -216,7 +217,7 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                             name="systemPrompt"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>System prompt</FormLabel>
+                                    <FormLabel><Trans>{"System prompt"}</Trans></FormLabel>
                                     <FormControl>
                                         <Textarea
                                             rows={10}
@@ -237,10 +238,10 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                     <div className="space-y-1">
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <p className="text-sm font-medium">Dynamic variables</p>
+                                            <p className="text-sm font-medium"><Trans>{"Dynamic variables"}</Trans></p>
                                             {missingVariableNames.length === 0 ? (
                                                 <Badge variant="secondary" className="gap-1">
-                                                    <CheckCircle2 /> Ready
+                                                    <CheckCircle2 /> <Trans>{"Ready"}</Trans>
                                                 </Badge>
                                             ) : (
                                                 <Badge variant="outline">
@@ -282,11 +283,11 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                     >
                         {save.isPending ? (
                             <>
-                                <Loader2 className="animate-spin" /> Saving...
+                                <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
                             </>
                         ) : (
                             <>
-                                <Save /> Save changes
+                                <Save /> <Trans>{"Save changes"}</Trans>
                             </>
                         )}
                     </Button>

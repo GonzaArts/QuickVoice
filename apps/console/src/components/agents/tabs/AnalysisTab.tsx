@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import { ClipboardCheck, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -294,7 +295,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               className="grid gap-3 border p-4 lg:grid-cols-[150px_minmax(0,220px)_minmax(0,1fr)_auto]"
             >
               <div className="space-y-2">
-                <Label htmlFor={`analysis-type-${item.id}`}>Type</Label>
+                <Label htmlFor={`analysis-type-${item.id}`}><Trans>{"Type"}</Trans></Label>
                 <Select
                   value={item.type}
                   onValueChange={(type) => updateDataItem(item.id, { type })}
@@ -316,7 +317,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`analysis-name-${item.id}`}>Name</Label>
+                <Label htmlFor={`analysis-name-${item.id}`}><Trans>{"Name"}</Trans></Label>
                 <Input
                   id={`analysis-name-${item.id}`}
                   maxLength={100}
@@ -328,7 +329,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor={`analysis-description-${item.id}`}>
-                  Description
+                  <Trans>{"Description"}</Trans>
                 </Label>
                 <Input
                   id={`analysis-description-${item.id}`}
@@ -399,7 +400,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
 
           <div className="grid gap-3 border border-dashed bg-muted/20 p-4 lg:grid-cols-[150px_minmax(0,220px)_minmax(0,1fr)_auto]">
             <div className="space-y-2">
-              <Label htmlFor="analysis-new-type">Type</Label>
+              <Label htmlFor="analysis-new-type"><Trans>{"Type"}</Trans></Label>
               <Select
                 value={newDataItem.type}
                 onValueChange={(type) =>
@@ -419,7 +420,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="analysis-new-name">Name</Label>
+              <Label htmlFor="analysis-new-name"><Trans>{"Name"}</Trans></Label>
               <Input
                 id="analysis-new-name"
                 maxLength={100}
@@ -434,7 +435,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="analysis-new-description">Description</Label>
+              <Label htmlFor="analysis-new-description"><Trans>{"Description"}</Trans></Label>
               <Input
                 id="analysis-new-description"
                 maxLength={500}
@@ -492,7 +493,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               className="grid gap-3 border p-4 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)_auto]"
             >
               <div className="space-y-2">
-                <Label htmlFor={`analysis-check-name-${item.id}`}>Name</Label>
+                <Label htmlFor={`analysis-check-name-${item.id}`}><Trans>{"Name"}</Trans></Label>
                 <Input
                   id={`analysis-check-name-${item.id}`}
                   maxLength={100}
@@ -534,7 +535,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
 
           <div className="grid gap-3 border border-dashed bg-muted/20 p-4 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)_auto]">
             <div className="space-y-2">
-              <Label htmlFor="analysis-new-check-name">Name</Label>
+              <Label htmlFor="analysis-new-check-name"><Trans>{"Name"}</Trans></Label>
               <Input
                 id="analysis-new-check-name"
                 maxLength={100}

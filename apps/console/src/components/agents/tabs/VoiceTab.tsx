@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -311,9 +312,9 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                 ) : null}
                 <section className="border bg-card p-6">
                     <div className="mb-5 space-y-1">
-                        <h2 className="text-base font-semibold">Locale</h2>
+                        <h2 className="text-base font-semibold"><Trans>{"Locale"}</Trans></h2>
                         <p className="text-sm text-muted-foreground">
-                            Choose the caller language before selecting speech models.
+                            <Trans>{"Choose the caller language before selecting speech models."}</Trans>
                         </p>
                         {selectedLanguage !== "en" && selectedLanguage !== "en-IN" ? (
                             <p className="text-sm text-muted-foreground">
@@ -327,7 +328,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="agent_language"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>Language</FormLabel>
+                                    <FormLabel><Trans>{"Language"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={(language) => {
                                         field.onChange(language);
                                         const stt = getSttModelsForLanguage(language, voiceOptions);
@@ -365,7 +366,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="timezone"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>Timezone</FormLabel>
+                                    <FormLabel><Trans>{"Timezone"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
@@ -389,9 +390,9 @@ export function VoiceTab({ agentId }: { agentId: string }) {
 
                 <section className="border bg-card p-6">
                     <div className="mb-5 space-y-1">
-                        <h2 className="text-base font-semibold">Conversation models</h2>
+                        <h2 className="text-base font-semibold"><Trans>{"Conversation models"}</Trans></h2>
                         <p className="text-sm text-muted-foreground">
-                            Pick transcription and reasoning models for the selected language.
+                            <Trans>{"Pick transcription and reasoning models for the selected language."}</Trans>
                         </p>
                     </div>
                     <div className="grid min-w-0 gap-5 sm:grid-cols-2">
@@ -400,7 +401,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="sttModel"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>STT</FormLabel>
+                                    <FormLabel><Trans>{"STT"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
@@ -424,7 +425,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="llmModel"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>LLM</FormLabel>
+                                    <FormLabel><Trans>{"LLM"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
@@ -464,9 +465,9 @@ export function VoiceTab({ agentId }: { agentId: string }) {
 
                 <section className="border bg-card p-6">
                     <div className="mb-5 space-y-1">
-                        <h2 className="text-base font-semibold">Speech output</h2>
+                        <h2 className="text-base font-semibold"><Trans>{"Speech output"}</Trans></h2>
                         <p className="text-sm text-muted-foreground">
-                            Select a text-to-speech model and a compatible voice.
+                            <Trans>{"Select a text-to-speech model and a compatible voice."}</Trans>
                         </p>
                     </div>
                     <div className="grid min-w-0 gap-5 sm:grid-cols-2">
@@ -475,7 +476,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="ttsModel"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>TTS</FormLabel>
+                                    <FormLabel><Trans>{"TTS"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={(ttsModel) => {
                                         field.onChange(ttsModel);
                                         const voices = getVoicesForTtsModel(ttsModel, selectedLanguage, voiceOptions);
@@ -505,7 +506,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                             name="voiceId"
                             render={({ field }) => (
                                 <FormItem className="min-w-0">
-                                    <FormLabel>Voice</FormLabel>
+                                    <FormLabel><Trans>{"Voice"}</Trans></FormLabel>
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
@@ -547,11 +548,11 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                     >
                         {save.isPending ? (
                             <>
-                                <Loader2 className="animate-spin" /> Saving...
+                                <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
                             </>
                         ) : (
                             <>
-                                <Save /> Save changes
+                                <Save /> <Trans>{"Save changes"}</Trans>
                             </>
                         )}
                     </Button>

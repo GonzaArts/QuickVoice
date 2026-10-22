@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
@@ -395,7 +396,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               name="initiation_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL</FormLabel>
+                  <FormLabel><Trans>{"URL"}</Trans></FormLabel>
                   <FormControl>
                     <Input
                       type="url"
@@ -538,7 +539,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               name="post_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL</FormLabel>
+                  <FormLabel><Trans>{"URL"}</Trans></FormLabel>
                   <FormControl>
                     <Input
                       type="url"
@@ -616,7 +617,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
               </p>
             </div>
             <Button type="button" size="sm" variant="outline" onClick={() => deliveryEvents.refetch()}>
-              <RefreshCw className="size-4" /> Refresh
+              <RefreshCw className="size-4" /> <Trans>{"Refresh"}</Trans>
             </Button>
           </div>
           <div className="mt-4 space-y-2" aria-live="polite">
@@ -646,7 +647,7 @@ export function WebhooksTab({ agentId }: { agentId: string }) {
           >
             {save.isPending ? (
               <>
-                <Loader2 className="animate-spin" /> Saving...
+                <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
               </>
             ) : (
               <>
