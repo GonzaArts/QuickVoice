@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
@@ -74,7 +75,7 @@ function AllowedValueInput({
           onClick={add}
           disabled={disabled || !draft.trim()}
         >
-          Add
+          <Trans>{"Add"}</Trans>
         </Button>
       </div>
       {values.length > 0 && (
@@ -139,7 +140,7 @@ function ParamCard({
       {/* Type + Value Type */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <Label className="text-xs text-muted-foreground">Type</Label>
+          <Label className="text-xs text-muted-foreground"><Trans>{"Type"}</Trans></Label>
           <Select
             value={param.type}
             onValueChange={(v) => set("type", v as ToolParam["type"])}
@@ -189,7 +190,7 @@ function ParamCard({
 
       {/* Description */}
       <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Description</Label>
+        <Label className="text-xs text-muted-foreground"><Trans>{"Description"}</Trans></Label>
         <Input
           value={param.description}
           onChange={(e) => set("description", e.target.value)}
@@ -290,7 +291,7 @@ export function ParamEditor({
             disabled={disabled}
           >
             <Plus className="size-3.5" />
-            Add
+            <Trans>{"Add"}</Trans>
           </Button>
         )}
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { AlertCircle, ExternalLink, Loader2, RefreshCw, ServerCrash, Trash2 } from "lucide-react";
 import { McpToolBadges } from "@/src/components/tools/McpToolBadges";
 import { Badge } from "@/src/components/ui/badge";
@@ -163,7 +164,7 @@ export function McpConnectionsList() {
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
                       <AlertDialogAction
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         onClick={() => disconnect.mutate(connection.mcpConnectionId)}
