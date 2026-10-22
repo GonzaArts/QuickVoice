@@ -49,6 +49,7 @@ test("signup rejects duplicate emails and new-account verification returns to th
     const mocks = {
       react: { useState: () => [false, noop] },
       "@/src/i18n/provider": { useT: () => identityT },
+      "@/src/i18n/provider": { useT: () => identityT },
       "react/jsx-runtime": { jsx: noop, jsxs: noop },
       "next/navigation": {
         useRouter: () => ({
@@ -152,6 +153,7 @@ test("invited email and Google sign-in preserve the invitation and use fixed int
         jsx: (type, props) => { elements.push({ type, props }); return { type, props }; },
         jsxs: (type, props) => { elements.push({ type, props }); return { type, props }; },
       },
+      "@/src/i18n/provider": { useT: () => identityT },
       "next/navigation": { useRouter: () => ({
         push: (path) => { nextPage = path; },
         refresh: () => { refreshed = true; },

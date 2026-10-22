@@ -52,7 +52,7 @@ test("quick outbound calls submit and dispatch dynamic variable values", async (
   const outboundSchema = await text("apps/server/src/modules/outbound/outbound-call.schema.ts");
   const outboundService = await text("apps/server/src/modules/outbound/outbound-call.service.ts");
 
-  assert.match(quickCallForm, /<DynamicVariableInputs[\s\S]*title="Call variables"/);
+  assert.match(quickCallForm, /<DynamicVariableInputs[\s\S]*title=\{translateUi\("Call variables"\)\}/);
   assert.match(quickCallForm, /dynamicVariables:\s*dynamicVariablePayload\(/);
   assert.match(quickCallModel, /dynamicVariables:\s*z\.record\(z\.string\(\),\s*z\.string\(\)\)\.optional\(\)/);
   assert.match(outboundSchema, /dynamicVariables:\s*z\.record\(z\.string\(\),\s*z\.string\(\)\)\.optional\(\)/);
@@ -70,7 +70,7 @@ test("batch templates include selected agent dynamic variables", async () => {
   assert.match(batchForm, /buildBatchTemplateHeader\(dynamicVariableNames\)/);
   assert.match(batchForm, /buildBatchTemplateCsv\(dynamicVariableNames\)/);
   assert.match(batchForm, /navigator\.clipboard\.writeText\(templateHeader\)/);
-  assert.match(batchForm, /<Download \/> Download CSV/);
+  assert.match(batchForm, /<Download \/> <Trans>\{"Download CSV"\}<\/Trans>/);
   assert.match(batchForm, /Template variables/);
 });
 
