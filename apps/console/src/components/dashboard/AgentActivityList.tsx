@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -69,7 +70,7 @@ export function AgentActivityList({
       <div className="flex items-center justify-between border-b bg-muted/20 px-5 py-4">
         <div>
           <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-            Agent activity
+            <Trans>{"Agent activity"}</Trans>
           </p>
           <h3 className="mt-1 text-base font-semibold text-foreground">Top agents</h3>
           <p className="text-xs text-muted-foreground">
@@ -80,7 +81,7 @@ export function AgentActivityList({
           href="/agents"
           className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 hover:underline"
         >
-          Manage <ArrowRight className="size-3" />
+          <Trans>{"Manage"}</Trans> <ArrowRight className="size-3" />
         </Link>
       </div>
       <div className="grid grid-cols-2 border-b bg-muted/20 text-xs">
@@ -122,7 +123,7 @@ export function AgentActivityList({
           action={
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button asChild size="sm">
-                <Link href="/agents">Create agent</Link>
+                <Link href="/agents"><Trans>{"Create agent"}</Trans></Link>
               </Button>
               <Button asChild size="sm" variant="outline">
                 <Link href="/numbers">Connect number</Link>

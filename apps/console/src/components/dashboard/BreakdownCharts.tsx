@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useId } from "react";
 import Link from "next/link";
 import { ArrowRight, PhoneCall } from "lucide-react";
@@ -292,8 +293,8 @@ export function BreakdownCharts({
                 <caption>Call outcome status breakdown data table</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Status</th>
-                    <th scope="col">Calls</th>
+                    <th scope="col"><Trans>{"Status"}</Trans></th>
+                    <th scope="col"><Trans>{"Calls"}</Trans></th>
                     <th scope="col">Percentage of calls</th>
                     <th scope="col">Legend pattern</th>
                   </tr>
@@ -394,7 +395,7 @@ export function BreakdownCharts({
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-medium text-muted-foreground">
-                      Outbound calls
+                      <Trans>{"Outbound calls"}</Trans>
                     </p>
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-blue-400 tabular-nums">
                       {outbound}
@@ -472,8 +473,8 @@ export function BreakdownCharts({
                 <caption>Inbound and outbound direction mix data table</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Direction</th>
-                    <th scope="col">Calls</th>
+                    <th scope="col"><Trans>{"Direction"}</Trans></th>
+                    <th scope="col"><Trans>{"Calls"}</Trans></th>
                     <th scope="col">Percentage of routed calls</th>
                     <th scope="col">Legend pattern</th>
                   </tr>

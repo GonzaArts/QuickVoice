@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useState, useTransition } from "react";
 import { CalendarDays, Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -135,7 +136,7 @@ export function RangeSwitcher({
               className="h-8 gap-1 rounded-md"
             >
               <CalendarDays className="size-3.5" />
-              Apply
+              <Trans>{"Apply"}</Trans>
             </Button>
           </div>
         ) : null}

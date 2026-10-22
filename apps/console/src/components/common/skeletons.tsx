@@ -1,3 +1,4 @@
+import { Trans } from "@/src/i18n/Trans";
 import type { ReactNode } from "react";
 
 import { PageHeader } from "@/src/components/common/PageHeader";
@@ -181,7 +182,7 @@ export function DashboardLoadingSkeleton() {
  <div className="flex items-center justify-between border-b px-5 py-4">
  <div className="space-y-2">
  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
- Agent activity
+ <Trans>{"Agent activity"}</Trans>
  </p>
  <Skeleton className="h-5 w-28" />
  <Skeleton className="h-3 w-44" />

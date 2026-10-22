@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, MoreHorizontal, PhoneCall, PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
@@ -267,19 +268,19 @@ export function RecentCallsTable({
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Agent</dt>
+                        <dt className="text-muted-foreground"><Trans>{"Agent"}</Trans></dt>
                         <dd className="truncate font-medium text-foreground">
                           {agentLabel}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Duration</dt>
+                        <dt className="text-muted-foreground"><Trans>{"Duration"}</Trans></dt>
                         <dd className="font-medium text-foreground">
                           {formatDuration(call.durationSeconds)}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-muted-foreground">Direction</dt>
+                        <dt className="text-muted-foreground"><Trans>{"Direction"}</Trans></dt>
                         <dd className="font-medium capitalize text-foreground">
                           {call.direction ?? "unknown"}
                         </dd>
@@ -303,22 +304,22 @@ export function RecentCallsTable({
                     Start Time
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Number
+                    <Trans>{"Number"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Agent
+                    <Trans>{"Agent"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Duration
+                    <Trans>{"Duration"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Direction
+                    <Trans>{"Direction"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
-                    Status
+                    <Trans>{"Status"}</Trans>
                   </TableHead>
                   <TableHead className="pr-5 text-right text-xs font-semibold text-foreground">
-                    Actions
+                    <Trans>{"Actions"}</Trans>
                   </TableHead>
                 </TableRow>
               </TableHeader>
