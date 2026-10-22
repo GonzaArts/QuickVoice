@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -25,6 +26,7 @@ import { CONSOLE_URL, invitationPath } from "@/src/lib/links";
 import { forgotSchema } from "@/src/models/auth/forgotSchema";
 
 function ForgotPasswordForm() {
+ const t = useT();
  const invitationId = useSearchParams().get("invitationId") ?? "";
  const [loading, setLoading] = useState(false);
  const [sent, setSent] = useState(false);
@@ -40,11 +42,11 @@ function ForgotPasswordForm() {
  email: values.email,
  redirectTo: `${CONSOLE_URL ?? window.location.origin}${invitationPath(invitationId, "/reset-password")}`,
  });
- if (error) throw new Error(error.message || "Could not send reset email");
+ if (error) throw new Error(error.message || t("Could not send reset email"));
  setSent(true);
- toast.message("Check your email for next steps");
+ toast.message(t("Check your email for next steps"));
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not send reset email");
+ toast.error(err instanceof Error ? err.message : t("Could not send reset email"));
  } finally {
  setLoading(false);
  }
@@ -55,7 +57,7 @@ function ForgotPasswordForm() {
  <div className="w-full max-w-md border bg-card p-6">
  <Button asChild variant="ghost" className="mb-6 px-0">
  <Link href={invitationPath(invitationId, "/login")}>
- <ArrowLeft className="size-4" /> Back to login
+ <ArrowLeft className="size-4" /> <Trans>{"Back to login"}</Trans>
  </Link>
  </Button>
  <div className="mb-6 space-y-2">
@@ -64,12 +66,12 @@ function ForgotPasswordForm() {
  </div>
  <h1 className="text-2xl font-semibold tracking-tight"><Trans>{"Forgot password?"}</Trans></h1>
  <p className="text-sm text-muted-foreground">
- Enter your email and we will send a reset link if the account exists.
+ <Trans>{"Enter your email and we will send a reset link if the account exists."}</Trans>
  </p>
  </div>
  {sent ? (
  <div className="border bg-muted/20 p-4 text-sm text-muted-foreground">
- If an account exists for this email, check your inbox and spam folder for password reset instructions. You can also return to sign in.
+ <Trans>{"If an account exists for this email, check your inbox and spam folder for password reset instructions. You can also return to sign in."}</Trans>
  </div>
  ) : (
  <Form {...form}>
@@ -98,10 +100,10 @@ function ForgotPasswordForm() {
  <Button type="submit" className="w-full" disabled={loading}>
  {loading ? (
  <>
- <Loader2 className="animate-spin" /> Sending...
+ <Loader2 className="animate-spin" /> <Trans>{"Sending..."}</Trans>
  </>
  ) : (
- "Send reset link"
+ <Trans>{"Send reset link"}</Trans>
  )}
  </Button>
  </form>
@@ -114,7 +116,7 @@ function ForgotPasswordForm() {
 
 export default function ForgotPasswordPage() {
  return (
- <Suspense fallback={<p role="status" className="p-6 text-sm text-muted-foreground">Loading password recovery…</p>}>
+ <Suspense fallback={<p role="status" className="p-6 text-sm text-muted-foreground"><Trans>{"Loading password recovery…"}</Trans></p>}>
  <ForgotPasswordForm />
  </Suspense>
  );

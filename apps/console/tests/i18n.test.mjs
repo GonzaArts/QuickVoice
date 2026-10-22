@@ -11,11 +11,52 @@ const en = JSON.parse(readFileSync(join(root, "src/i18n/messages/en.json"), "utf
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 test("Spanish and English dictionaries have identical keys and non-empty strings", () => {
+  for (const locale of ["es", "en"]) {
+    const raw = readFileSync(join(root, `src/i18n/messages/${locale}.json`), "utf8");
+    const declaredKeys = [...raw.matchAll(/^ {2}("(?:\\.|[^"\\])*")\s*:/gm)].map((match) => match[1]);
+    assert.equal(new Set(declaredKeys).size, declaredKeys.length, `Duplicate keys in ${locale}.json`);
+  }
   assert.deepEqual(Object.keys(es).sort(), Object.keys(en).sort());
   assert.ok(Object.keys(es).length >= 100);
   for (const [key, value] of Object.entries(es)) {
     assert.ok(key.length && typeof value === "string" && value.trim(), key);
     assert.equal(en[key], key);
+    const placeholders = (copy) => [...copy.matchAll(/\{([a-zA-Z][a-zA-Z0-9_]*)\}/g)]
+      .map((match) => match[1]).sort();
+    assert.deepEqual(placeholders(value), placeholders(key), `Interpolation tokens: ${key}`);
+  }
+});
+
+test("literal t() calls and automatically translated titles have dictionary entries", () => {
+  const translatedProps = {
+    PageHeader: new Set(["title", "description"]),
+    EmptyState: new Set(["title", "description"]),
+    StateView: new Set(["title", "description"]),
+    StatCard: new Set(["label"]),
+  };
+  const sourceFiles = walk(join(root, "src")).filter((f) => f.endsWith(".tsx"));
+  for (const filename of sourceFiles) {
+    const source = readFileSync(filename, "utf8");
+    for (const match of source.matchAll(/\bt\(\s*("(?:\\.|[^"\\])*")/g)) {
+      const key = JSON.parse(match[1]);
+      assert.ok(Object.hasOwn(es, key), `${filename}: t(${JSON.stringify(key)})`);
+    }
+    const tree = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    function visit(node) {
+      if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
+        const props = translatedProps[node.tagName.getText(tree)];
+        if (props) {
+          for (const attr of node.attributes.properties) {
+            if (!ts.isJsxAttribute(attr) || !props.has(attr.name.text) ||
+                !attr.initializer || !ts.isStringLiteral(attr.initializer)) continue;
+            assert.ok(Object.hasOwn(es, attr.initializer.text),
+              `${filename}: <${node.tagName.getText(tree)} ${attr.name.text}=${JSON.stringify(attr.initializer.text)}>`);
+          }
+        }
+      }
+      ts.forEachChild(node, visit);
+    }
+    visit(tree);
   }
 });
 

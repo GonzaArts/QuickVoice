@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { localeCode } from "@/src/i18n/config";
+import { useLocale } from "@/src/i18n/provider";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,10 +68,10 @@ function humanizeModelId(value: string) {
         .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function formatEstimatedMicros(value: number | string) {
+function formatEstimatedMicros(value: number | string, locale: "es" | "en") {
     const micros = Number(value);
     if (!Number.isFinite(micros)) return null;
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(localeCode(locale), {
         style: "currency",
         currency: "USD",
         minimumFractionDigits: 2,
@@ -149,6 +151,7 @@ function ensureSelectedVoiceOption(options: Voice[], value: string | undefined) 
 }
 
 export function VoiceTab({ agentId }: { agentId: string }) {
+    const { locale, t } = useLocale();
     const { data: config, isLoading, refetch: refetchConfig } = useAgentConfig(agentId);
     const { data: voiceCatalog, isLoading: isCatalogLoading, refetch: refetchCatalog } = useVoiceCatalog();
     const save = useSaveAgentConfig(agentId);
@@ -245,7 +248,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
         config?.estimatedPricePerMinuteMicros === null ||
         config?.estimatedPricePerMinuteMicros === undefined
             ? null
-            : formatEstimatedMicros(config.estimatedPricePerMinuteMicros);
+            : formatEstimatedMicros(config.estimatedPricePerMinuteMicros, locale);
     const estimateMatchesSelection = Boolean(
         config &&
         config.sttModel === selectedSttModel &&
@@ -257,23 +260,23 @@ export function VoiceTab({ agentId }: { agentId: string }) {
     async function onSubmit(values: FormValues) {
       if (!config || !voiceOptions) return;
       if (!languages.some((language) => language.code === values.agent_language)) {
-        form.setError("agent_language", { message: "Choose an available language." });
+        form.setError("agent_language", { message: t("Choose an available language.") });
         return;
       }
       if (!availableSttModels.some((model) => model.id === values.sttModel)) {
-        form.setError("sttModel", { message: "Choose an STT model for this language." });
+        form.setError("sttModel", { message: t("Choose an STT model for this language.") });
         return;
       }
       if (!llmModels.some((model) => model.id === values.llmModel)) {
-        form.setError("llmModel", { message: "Choose an available LLM model." });
+        form.setError("llmModel", { message: t("Choose an available LLM model.") });
         return;
       }
       if (!availableTtsModels.some((model) => model.id === values.ttsModel)) {
-        form.setError("ttsModel", { message: "Choose a TTS model for this language." });
+        form.setError("ttsModel", { message: t("Choose a TTS model for this language.") });
         return;
       }
       if (!availableVoices.some((voice) => voice.id === values.voiceId)) {
-        form.setError("voiceId", { message: "Choose a voice for this model and language." });
+        form.setError("voiceId", { message: t("Choose a voice for this model and language.") });
         return;
       }
       try {
@@ -285,7 +288,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
     }
 
     if (isLoading || isCatalogLoading) {
-        return <div className="h-96 animate-pulse border bg-card" aria-label="Loading voice settings" />;
+        return <div className="h-96 animate-pulse border bg-card" aria-label={t("Loading voice settings")} />;
     }
 
     if (!config || !voiceOptions) {
@@ -318,7 +321,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                         </p>
                         {selectedLanguage !== "en" && selectedLanguage !== "en-IN" ? (
                             <p className="text-sm text-muted-foreground">
-                                Standard greetings are spoken in {selectedLanguageLabel}. If you wrote a custom greeting, update it in Behavior to match.
+                                {t("Standard greetings are spoken in {language}. If you wrote a custom greeting, update it in Behavior to match.", {language: selectedLanguageLabel})}
                             </p>
                         ) : null}
                     </div>
@@ -449,7 +452,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                         <div className="mt-5 border bg-muted/20 p-4">
                             {estimateMatchesSelection ? (
                                 <p className="text-sm font-medium">
-                                    Estimated AI + platform spend: {estimatedModelPrice} / connected minute
+                                    {t("Estimated AI + platform spend: {amount} / connected minute", {amount: estimatedModelPrice})}
                                 </p>
                             ) : (
                                 <p className="text-sm font-medium">
@@ -457,7 +460,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                                 </p>
                             )}
                             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                                This estimate includes configured STT, TTS, and LLM usage plus the $0.01-per-connected-minute QuickVoice platform fee. Telephony is charged separately at the provider rate plus markup; actual spend varies with measured usage.
+                                <Trans>{"This estimate includes configured STT, TTS, and LLM usage plus the $0.01-per-connected-minute QuickVoice platform fee. Telephony is charged separately at the provider rate plus markup; actual spend varies with measured usage."}</Trans>
                             </p>
                         </div>
                     ) : null}
@@ -510,7 +513,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                                     <Select value={field.value} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger className="w-full min-w-0">
-                                                <SelectValue placeholder="Select a voice" />
+                                                <SelectValue placeholder={t("Select a voice")} />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>

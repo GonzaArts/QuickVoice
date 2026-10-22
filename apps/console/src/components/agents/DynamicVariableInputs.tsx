@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
 import { Braces } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
 import { Input } from "@/src/components/ui/input";
@@ -30,6 +31,7 @@ export function DynamicVariableInputs({
     idPrefix = "dynamic-variable",
     onValuesChange,
 }: DynamicVariableInputsProps) {
+    const t = useT();
     if (variableNames.length === 0) return null;
 
     return (
@@ -40,7 +42,7 @@ export function DynamicVariableInputs({
                         <Braces className="size-4 text-muted-foreground" />
                         <p className="text-sm font-medium">{title}</p>
                         <Badge variant="outline">
-                            {variableNames.length} variable{variableNames.length === 1 ? "" : "s"}
+                            {t(variableNames.length === 1 ? "{count} variable" : "{count} variables", {count: variableNames.length})}
                         </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">{description}</p>
@@ -58,8 +60,8 @@ export function DynamicVariableInputs({
                                 value={values[name] ?? ""}
                                 placeholder={
                                     fallback
-                                        ? `Fallback: ${fallback}`
-                                        : `Value for ${variableToken(name)}`
+                                        ? t("Fallback: {value}", {value: fallback})
+                                        : t("Value for {name}", {name: variableToken(name)})
                                 }
                                 disabled={disabled}
                                 onChange={(event) =>

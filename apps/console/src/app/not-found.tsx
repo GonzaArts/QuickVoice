@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/src/components/ui/button";
 import { ArrowRight, FileQuestion } from "lucide-react";
+import { Trans } from "@/src/i18n/Trans";
 
 export default function NotFound() {
  return (
@@ -9,14 +10,14 @@ export default function NotFound() {
  <div className="mx-auto mb-6 flex size-16 items-center justify-center bg-gradient-to-br from-primary/30 to-primary/5 text-primary">
  <FileQuestion className="size-8" />
  </div>
- <h1 className="text-3xl font-semibold tracking-tight">Page not found</h1>
+ <h1 className="text-3xl font-semibold tracking-tight"><Trans>{"Page not found"}</Trans></h1>
  <p className="mt-2 text-sm text-muted-foreground">
- The page you&apos;re looking for doesn&apos;t exist or has moved.
+ <Trans>{"The page you're looking for doesn't exist or has moved."}</Trans>
  </p>
  <div className="mt-6">
  <Button asChild>
  <Link href="/dashboard">
- Go to dashboard <ArrowRight />
+ <Trans>{"Go to dashboard"}</Trans> <ArrowRight />
  </Link>
  </Button>
  </div>

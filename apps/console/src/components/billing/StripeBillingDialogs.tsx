@@ -1,5 +1,8 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+import { localeCode } from "@/src/i18n/config";
+import { useLocale, useT } from "@/src/i18n/provider";
 import { useMemo, useState, type FormEvent } from "react";
 import {
   EmbeddedCheckout,
@@ -30,13 +33,11 @@ const stripePromise = stripePublishableKey
   : null;
 
 export const isStripeClientConfigured = Boolean(stripePublishableKey);
-const usdFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
-
-function formatUsd(cents: number) {
-  return usdFormatter.format(cents / 100);
+function formatUsd(cents: number, locale: "es" | "en") {
+  return new Intl.NumberFormat(localeCode(locale), {
+    style: "currency",
+    currency: "USD",
+  }).format(cents / 100);
 }
 
 export function TopUpCheckoutDialog({
@@ -50,6 +51,7 @@ export function TopUpCheckoutDialog({
   onClose: () => void;
   onComplete: () => void;
 }) {
+  const { locale, t } = useLocale();
   const options = useMemo(
     () => ({ clientSecret, onComplete }),
     [clientSecret, onComplete],
@@ -64,10 +66,9 @@ export function TopUpCheckoutDialog({
     >
       <DialogContent className="max-h-[92vh] overflow-y-auto p-0 sm:max-w-3xl">
         <DialogHeader className="border-b px-6 pt-6 pb-5">
-          <DialogTitle>Add {formatUsd(amountCents)} to your wallet</DialogTitle>
+          <DialogTitle>{t("Add {amount} to your wallet", {amount: formatUsd(amountCents, locale)})}</DialogTitle>
           <DialogDescription>
-            Complete payment securely with Stripe. The full selected amount is
-            credited after payment confirmation; applicable tax may be added.
+            <Trans>{"Complete payment securely with Stripe. The full selected amount is credited after payment confirmation; applicable tax may be added."}</Trans>
           </DialogDescription>
         </DialogHeader>
         <div className="min-h-80 px-2 pb-4 sm:px-5">
@@ -94,6 +95,7 @@ function SetupPaymentMethodForm({
   const stripe = useStripe();
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
+  const t = useT();
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -110,7 +112,7 @@ function SetupPaymentMethodForm({
       });
 
       if (result.error) {
-        toast.error(result.error.message ?? "Could not save this card");
+        toast.error(result.error.message ?? t("Could not save this card"));
         return;
       }
 
@@ -124,7 +126,7 @@ function SetupPaymentMethodForm({
       toast.error(
         error instanceof Error && error.message
           ? error.message
-          : "Could not save this card",
+          : t("Could not save this card"),
       );
     } finally {
       setSubmitting(false);
@@ -137,7 +139,7 @@ function SetupPaymentMethodForm({
       <DialogFooter>
         <Button type="submit" disabled={!stripe || submitting}>
           {submitting ? <Loader2 className="animate-spin" /> : null}
-          {submitting ? "Saving…" : "Save payment method"}
+          {submitting ? <Trans>{"Saving…"}</Trans> : <Trans>{"Save payment method"}</Trans>}
         </Button>
       </DialogFooter>
     </form>
@@ -162,10 +164,9 @@ export function PaymentMethodSetupDialog({
     >
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Save a payment method</DialogTitle>
+          <DialogTitle><Trans>{"Save a payment method"}</Trans></DialogTitle>
           <DialogDescription>
-            Stripe stores your card securely. QuickVoice uses it only for
-            top-ups you start and automatic recharges you enable.
+            <Trans>{"Stripe stores your card securely. QuickVoice uses it only for top-ups you start and automatic recharges you enable."}</Trans>
           </DialogDescription>
         </DialogHeader>
         {clientSecret && stripePromise ? (

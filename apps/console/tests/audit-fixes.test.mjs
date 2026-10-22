@@ -303,7 +303,7 @@ test("mobile and accessibility fixes are present", () => {
   );
   assert.match(
     read("src/components/agents/tabs/ToolsTab.tsx"),
-    /aria-label=\{`Detach/,
+    /aria-label=\{t\("Detach \{name\}", \{name: tool\.name\}\)\}/,
   );
 });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useMemo, useState } from "react";
 import { ClipboardCheck, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -84,6 +85,7 @@ const EMPTY_EVALUATION = {
 };
 
 export function AnalysisTab({ agentId }: { agentId: string }) {
+  const t = useT();
   const {
     data: config,
     isLoading,
@@ -177,7 +179,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
 
   function addDataItem() {
     if (!newDataItem.name.trim() || newDataItem.description.trim().length < 5) {
-      toast.error("Add a name and description before adding the field");
+      toast.error(t("Add a name and description before adding the field"));
       return;
     }
     const options = newDataItem.options
@@ -190,7 +192,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
         new Set(options.map((option) => option.toLowerCase())).size !==
           options.length)
     ) {
-      toast.error("Add at least two distinct comma-separated choices");
+      toast.error(t("Add at least two distinct comma-separated choices"));
       return;
     }
     if (
@@ -200,7 +202,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
           item.name.toLowerCase() === newDataItem.name.trim().toLowerCase(),
       )
     ) {
-      toast.error("Use a unique field name (up to 20 fields)");
+      toast.error(t("Use a unique field name (up to 20 fields)"));
       return;
     }
     setDataNeeded((items) => [
@@ -218,7 +220,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
 
   function addEvaluation() {
     if (!newEvaluation.name.trim() || !newEvaluation.criteria.trim()) {
-      toast.error("Add a name and criteria before adding the evaluation");
+      toast.error(t("Add a name and criteria before adding the evaluation"));
       return;
     }
     if (
@@ -228,7 +230,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
           item.name.toLowerCase() === newEvaluation.name.trim().toLowerCase(),
       )
     ) {
-      toast.error("Use a unique check name (up to 20 checks)");
+      toast.error(t("Use a unique check name (up to 20 checks)"));
       return;
     }
     setEvaluations((items) => [
@@ -263,9 +265,9 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
   if (isError || !isSuccess) {
     return (
       <div role="alert" className="border bg-card p-6 text-sm">
-        Could not load analysis settings.{" "}
+        <Trans>{"Could not load analysis settings."}</Trans>{" "}
         <Button type="button" variant="outline" onClick={() => void refetch()}>
-          Try again
+          <Trans>{"Try again"}</Trans>
         </Button>
       </div>
     );
@@ -276,15 +278,14 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
       <section className="border bg-card p-6">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
-            <h2 className="text-base font-semibold">Data extraction</h2>
+            <h2 className="text-base font-semibold"><Trans>{"Data extraction"}</Trans></h2>
             <p className="text-sm text-muted-foreground">
-              Define the structured fields the agent should collect during the
-              call.
+              <Trans>{"Define the structured fields the agent should collect during the call."}</Trans>
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <ClipboardCheck className="size-4" />
-            {dataNeeded.length} field{dataNeeded.length === 1 ? "" : "s"}
+            {t(dataNeeded.length === 1 ? "{count} field" : "{count} fields", {count: dataNeeded.length})}
           </div>
         </div>
 
@@ -310,7 +311,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
                         value={type}
                         className="capitalize"
                       >
-                        {type}
+                        {t(type)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -345,7 +346,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
                   type="button"
                   variant="ghost"
                   size="icon"
-                  aria-label={`Remove ${item.name || "data field"}`}
+                  aria-label={t("Remove {name}", {name: item.name || t("data field")})}
                   onClick={() =>
                     setDataNeeded((items) =>
                       items.filter((entry) => entry.id !== item.id),
@@ -358,7 +359,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               {item.type === "choice" && (
                 <div className="space-y-2 lg:col-span-3">
                   <Label htmlFor={`analysis-options-${item.id}`}>
-                    Choices (comma-separated)
+                    <Trans>{"Choices (comma-separated)"}</Trans>
                   </Label>
                   <Input
                     id={`analysis-options-${item.id}`}
@@ -389,8 +390,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
                       id={`analysis-options-help-${item.id}`}
                       className="text-xs text-muted-foreground"
                     >
-                      This existing field accepts any text until you add two or
-                      more choices.
+                      <Trans>{"This existing field accepts any text until you add two or more choices."}</Trans>
                     </p>
                   )}
                 </div>
@@ -413,7 +413,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
                 <SelectContent>
                   {DATA_TYPES.map((type) => (
                     <SelectItem key={type} value={type} className="capitalize">
-                      {type}
+                      {t(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -439,7 +439,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               <Input
                 id="analysis-new-description"
                 maxLength={500}
-                placeholder="Customer full name as confirmed on the call"
+                  placeholder={t("Customer full name as confirmed on the call")}
                 value={newDataItem.description}
                 onChange={(event) =>
                   setNewDataItem((item) => ({
@@ -452,13 +452,13 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
             <div className="flex items-end">
               <Button type="button" onClick={addDataItem}>
                 <Plus className="size-4" />
-                Add field
+                <Trans>{"Add field"}</Trans>
               </Button>
             </div>
             {newDataItem.type === "choice" && (
               <div className="space-y-2 lg:col-span-3">
                 <Label htmlFor="analysis-new-options">
-                  Choices (comma-separated)
+                  <Trans>{"Choices (comma-separated)"}</Trans>
                 </Label>
                 <Input
                   id="analysis-new-options"
@@ -479,10 +479,9 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
 
       <section className="border bg-card p-6">
         <div className="mb-5 space-y-1">
-          <h2 className="text-base font-semibold">Call evaluation</h2>
+          <h2 className="text-base font-semibold"><Trans>{"Call evaluation"}</Trans></h2>
           <p className="text-sm text-muted-foreground">
-            Define checks the agent should evaluate during the call when it has
-            enough evidence.
+            <Trans>{"Define checks the agent should evaluate during the call when it has enough evidence."}</Trans>
           </p>
         </div>
 
@@ -504,7 +503,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`analysis-criteria-${item.id}`}>Criteria</Label>
+                <Label htmlFor={`analysis-criteria-${item.id}`}><Trans>{"Criteria"}</Trans></Label>
                 <Textarea
                   id={`analysis-criteria-${item.id}`}
                   maxLength={500}
@@ -520,7 +519,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
                   type="button"
                   variant="ghost"
                   size="icon"
-                  aria-label={`Remove ${item.name || "evaluation"}`}
+                  aria-label={t("Remove {name}", {name: item.name || t("evaluation")})}
                   onClick={() =>
                     setEvaluations((items) =>
                       items.filter((entry) => entry.id !== item.id),
@@ -539,7 +538,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               <Input
                 id="analysis-new-check-name"
                 maxLength={100}
-                placeholder="Identity confirmed"
+                placeholder={t("Identity confirmed")}
                 value={newEvaluation.name}
                 onChange={(event) =>
                   setNewEvaluation((item) => ({
@@ -550,12 +549,12 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="analysis-new-criteria">Criteria</Label>
+              <Label htmlFor="analysis-new-criteria"><Trans>{"Criteria"}</Trans></Label>
               <Textarea
                 id="analysis-new-criteria"
                 maxLength={500}
                 rows={2}
-                placeholder="Pass when the caller identity was confirmed before sensitive details were discussed."
+                placeholder={t("Pass when the caller identity was confirmed before sensitive details were discussed.")}
                 value={newEvaluation.criteria}
                 onChange={(event) =>
                   setNewEvaluation((item) => ({
@@ -568,7 +567,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
             <div className="flex items-end">
               <Button type="button" onClick={addEvaluation}>
                 <Plus className="size-4" />
-                Add check
+                <Trans>{"Add check"}</Trans>
               </Button>
             </div>
           </div>
@@ -577,8 +576,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
 
       {config?.zero_pii_retention && (
         <p className="border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-          Zero PII retention is enabled. Extracted values and evaluation results
-          are not saved after the call.
+          <Trans>{"Zero PII retention is enabled. Extracted values and evaluation results are not saved after the call."}</Trans>
         </p>
       )}
       {hasConflict && (
@@ -586,8 +584,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
           role="alert"
           className="flex flex-wrap items-center gap-3 border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900"
         >
-          Analysis settings changed elsewhere. Reload the latest settings before
-          saving.{" "}
+          <Trans>{"Analysis settings changed elsewhere. Reload the latest settings before saving."}</Trans>{" "}
           <Button
             type="button"
             variant="outline"
@@ -600,7 +597,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
               });
             }}
           >
-            Reload latest
+            <Trans>{"Reload latest"}</Trans>
           </Button>
         </div>
       )}
@@ -614,7 +611,7 @@ export function AnalysisTab({ agentId }: { agentId: string }) {
           ) : (
             <Save className="size-4" />
           )}
-          Save analysis
+          <Trans>{"Save analysis"}</Trans>
         </Button>
       </div>
     </div>

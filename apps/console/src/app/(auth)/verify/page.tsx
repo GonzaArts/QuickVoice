@@ -19,15 +19,13 @@ export default async function VerifyAccount({
           <div className="bg-primary/10 p-4">
             <Mail className="h-10 w-10 text-primary" aria-hidden="true" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold">Check your email</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold"><Trans>{"Check your email"}</Trans></h1>
           <p className="text-muted-foreground text-sm sm:text-base">
-            If this email can be used for a new account, check your inbox and spam
-            folder for a verification link. Open it to finish signing up.
+            <Trans>{"If this email can be used for a new account, check your inbox and spam folder for a verification link. Open it to finish signing up."}</Trans>
           </p>
           <div className="w-full border-t pt-6 space-y-4">
             <p className="text-sm text-muted-foreground">
-              Already have an account? Sign in with your existing password or
-              reset it below.
+              <Trans>{"Already have an account? Sign in with your existing password or reset it below."}</Trans>
             </p>
             <div className="grid gap-3">
               <Button asChild className="min-h-11">

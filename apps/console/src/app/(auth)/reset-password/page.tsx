@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -25,6 +26,7 @@ import { invitationPath } from "@/src/lib/links";
 import { resetSchema } from "@/src/models/auth/resetSchema";
 
 function ResetPasswordForm() {
+ const t = useT();
  const router = useRouter();
  const searchParams = useSearchParams();
  const token = searchParams.get("token") ?? "";
@@ -47,11 +49,11 @@ function ResetPasswordForm() {
  token: values.token,
  newPassword: values.newPassword,
  });
- if (error) throw new Error(error.message || "Could not reset password");
- toast.success("Password updated");
+ if (error) throw new Error(error.message || t("Could not reset password"));
+ toast.success(t("Password updated"));
  router.push(invitationPath(invitationId, "/login"));
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not reset password");
+ toast.error(err instanceof Error ? err.message : t("Could not reset password"));
  } finally {
  setLoading(false);
  }
@@ -62,7 +64,7 @@ function ResetPasswordForm() {
  <div className="w-full max-w-md border bg-card p-6">
  <Button asChild variant="ghost" className="mb-6 px-0">
  <Link href={invitationPath(invitationId, "/login")}>
- <ArrowLeft className="size-4" /> Back to login
+ <ArrowLeft className="size-4" /> <Trans>{"Back to login"}</Trans>
  </Link>
  </Button>
  <div className="mb-6 space-y-2">
@@ -71,19 +73,19 @@ function ResetPasswordForm() {
  </div>
  <h1 className="text-2xl font-semibold tracking-tight"><Trans>{"Reset password"}</Trans></h1>
  <p className="text-sm text-muted-foreground">
- Choose a new password for your QuickVoice account.
+ <Trans>{"Choose a new password for your QuickVoice account."}</Trans>
  </p>
  </div>
  {invalidToken || !token ? (
  <div className="flex gap-3 border bg-muted/20 p-4 text-sm text-muted-foreground">
  <AlertCircle className="mt-0.5 size-4 shrink-0 text-destructive" />
  <div>
- <p className="font-medium text-foreground">Reset link is invalid or expired.</p>
+ <p className="font-medium text-foreground"><Trans>{"Reset link is invalid or expired."}</Trans></p>
  <p className="mt-1">
- Request a new password reset email to continue.
+ <Trans>{"Request a new password reset email to continue."}</Trans>
  </p>
  <Button asChild variant="outline" size="sm" className="mt-4">
- <Link href={invitationPath(invitationId, "/forgot-password")}>Request a new link</Link>
+ <Link href={invitationPath(invitationId, "/forgot-password")}><Trans>{"Request a new link"}</Trans></Link>
  </Button>
  </div>
  </div>
@@ -102,7 +104,7 @@ function ResetPasswordForm() {
  type="password"
  autoComplete="new-password"
  disabled={loading}
- placeholder="At least 8 characters"
+ placeholder={t("At least 8 characters")}
  />
  </FormControl>
  <FormMessage />
@@ -115,7 +117,7 @@ function ResetPasswordForm() {
  <Loader2 className="animate-spin" /> <Trans>{"Saving..."}</Trans>
  </>
  ) : (
- "Reset password"
+ <Trans>{"Reset password"}</Trans>
  )}
  </Button>
  </form>
