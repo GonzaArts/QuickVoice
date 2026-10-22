@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import {
   Download,
@@ -164,7 +165,7 @@ function OutboundCallDetailDialog({
           <div className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Status"}</Trans></p>
                 <Badge className="mt-2 capitalize" variant={statusVariant(shown.status)}>
                   {statusLabel(shown.status)}
                 </Badge>
@@ -174,7 +175,7 @@ function OutboundCallDetailDialog({
                 <p className="mt-1 font-medium capitalize">{shown.mode}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Duration</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Duration"}</Trans></p>
                 <p className="mt-1 font-medium tabular-nums">
                   {fmtDuration(shown.callLog?.durationSeconds)}
                 </p>
@@ -191,11 +192,11 @@ function OutboundCallDetailDialog({
                 <p className="mt-1 font-mono text-xs">{shown.fromNumber}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Scheduled</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Scheduled"}</Trans></p>
                 <p className="mt-1 font-medium">{fmtDate(shown.scheduledAt)}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Updated</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Updated"}</Trans></p>
                 <p className="mt-1 font-medium">{fmtDate(shown.updatedAt)}</p>
               </div>
             </div>
@@ -208,7 +209,7 @@ function OutboundCallDetailDialog({
 
             <div className="space-y-3">
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">First message</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"First message"}</Trans></p>
                 <p className="mt-2 whitespace-pre-wrap text-sm">
                   {shown.firstMessage || "-"}
                 </p>
@@ -301,7 +302,7 @@ export function OutboundCallsPanel() {
         action={
           <Button variant="outline" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-            Retry
+            <Trans>{"Retry"}</Trans>
           </Button>
         }
       />
@@ -339,7 +340,7 @@ export function OutboundCallsPanel() {
           <SelectContent>
             <SelectItem value="all">All modes</SelectItem>
             <SelectItem value="quick">Quick</SelectItem>
-            <SelectItem value="campaign">Campaign</SelectItem>
+            <SelectItem value="campaign"><Trans>{"Campaign"}</Trans></SelectItem>
           </SelectContent>
         </Select>
         <Button
@@ -351,7 +352,7 @@ export function OutboundCallsPanel() {
           disabled={!filteredCalls.length}
         >
           <Download className="size-4" />
-          Export CSV
+          <Trans>{"Export CSV"}</Trans>
         </Button>
       </div>
 
@@ -366,12 +367,12 @@ export function OutboundCallsPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Call</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Agent</TableHead>
-                <TableHead>Scheduled</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead className="w-12 text-right">Actions</TableHead>
+                <TableHead><Trans>{"Call"}</Trans></TableHead>
+                <TableHead><Trans>{"Status"}</Trans></TableHead>
+                <TableHead><Trans>{"Agent"}</Trans></TableHead>
+                <TableHead><Trans>{"Scheduled"}</Trans></TableHead>
+                <TableHead><Trans>{"Duration"}</Trans></TableHead>
+                <TableHead className="w-12 text-right"><Trans>{"Actions"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -415,7 +416,7 @@ export function OutboundCallsPanel() {
                         <DropdownMenuLabel>Call actions</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => setSelectedCall(call)}>
                           <PhoneCall className="size-4" />
-                          View details
+                          <Trans>{"View details"}</Trans>
                         </DropdownMenuItem>
                         {canRetry(call) ? (
                           <DropdownMenuItem
