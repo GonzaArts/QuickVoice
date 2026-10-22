@@ -49,7 +49,6 @@ test("signup rejects duplicate emails and new-account verification returns to th
     const mocks = {
       react: { useState: () => [false, noop] },
       "@/src/i18n/provider": { useT: () => identityT },
-      "@/src/i18n/provider": { useT: () => identityT },
       "react/jsx-runtime": { jsx: noop, jsxs: noop },
       "next/navigation": {
         useRouter: () => ({
