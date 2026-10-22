@@ -578,5 +578,22 @@
   "Unknown caller": "Unknown caller",
   "Unknown callee": "Unknown callee",
   "No start timestamp": "No start timestamp",
-  "Invalid timestamp": "Invalid timestamp"
+  "Invalid timestamp": "Invalid timestamp",
+  "Recent activity": "Recent activity",
+  "Recent call logs": "Recent call logs",
+  "Latest call log activity across all agents.": "Latest call log activity across all agents.",
+  "View call logs": "View call logs",
+  "Recent call logs with absolute timestamps, phone number, assigned agent, duration, direction, status, and actions.": "Recent call logs with absolute timestamps, phone number, assigned agent, duration, direction, status, and actions.",
+  "completed": "completed",
+  "failed": "failed",
+  "not answered": "not answered",
+  "in progress": "in progress",
+  "scheduled": "scheduled",
+  "processed": "processed",
+  "7 days": "7 days",
+  "30 days": "30 days",
+  "Custom range from": "Custom range from",
+  "Custom range to": "Custom range to",
+  "Dashboard date range": "Dashboard date range",
+  "Select an end date after the start date": "Select an end date after the start date"
 }

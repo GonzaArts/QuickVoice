@@ -578,5 +578,22 @@
   "Unknown caller": "Persona que llama no identificada",
   "Unknown callee": "Destino no identificado",
   "No start timestamp": "Sin hora de inicio",
-  "Invalid timestamp": "Fecha u hora no válida"
+  "Invalid timestamp": "Fecha u hora no válida",
+  "Recent activity": "Actividad reciente",
+  "Recent call logs": "Historial reciente de llamadas",
+  "Latest call log activity across all agents.": "Última actividad de llamadas de todos los asistentes.",
+  "View call logs": "Ver el historial de llamadas",
+  "Recent call logs with absolute timestamps, phone number, assigned agent, duration, direction, status, and actions.": "Historial reciente de llamadas con fecha y hora, número, asistente, duración, dirección, estado y acciones.",
+  "completed": "completada",
+  "failed": "fallida",
+  "not answered": "sin respuesta",
+  "in progress": "en curso",
+  "scheduled": "programada",
+  "processed": "procesada",
+  "7 days": "7 días",
+  "30 days": "30 días",
+  "Custom range from": "Inicio del intervalo personalizado",
+  "Custom range to": "Final del intervalo personalizado",
+  "Dashboard date range": "Intervalo de fechas del panel",
+  "Select an end date after the start date": "La fecha de fin debe ser posterior a la fecha de inicio"
 }

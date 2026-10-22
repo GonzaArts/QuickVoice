@@ -41,3 +41,12 @@ test("all literal Trans children have Spanish translations", () => {
     }
   }
 });
+
+
+test("native select options contain text, not translation components", () => {
+  const sourceFiles = walk(join(root, "src")).filter((f) => f.endsWith(".tsx"));
+  for (const filename of sourceFiles) {
+    const source = readFileSync(filename, "utf8");
+    assert.doesNotMatch(source, /<option[^>]*>\s*<Trans\b/, filename);
+  }
+});

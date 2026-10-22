@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useState, useTransition } from "react";
 import { CalendarDays, Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -40,6 +41,7 @@ export function RangeSwitcher({
   customTo?: string;
   loading?: boolean;
 }) {
+  const t = useT();
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -90,7 +92,7 @@ export function RangeSwitcher({
           size="sm"
           value={current}
           onValueChange={onChange}
-          aria-label="Dashboard date range"
+          aria-label={t("Dashboard date range")}
           aria-busy={busy}
           className="w-full rounded-md border bg-muted/40 p-1 shadow-xs sm:w-fit"
         >
@@ -100,7 +102,7 @@ export function RangeSwitcher({
               value={range.value}
               className="h-8 flex-1 px-3 text-xs font-semibold text-muted-foreground data-[state=on]:bg-blue-500/80 data-[state=on]:text-white sm:flex-none"
             >
-              {range.label}
+              {t(range.label)}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
@@ -108,7 +110,7 @@ export function RangeSwitcher({
         {customSelected ? (
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <label className="sr-only" htmlFor="dashboard-custom-from">
-              Custom range from
+              <Trans>{"Custom range from"}</Trans>
             </label>
             <input
               id="dashboard-custom-from"
@@ -119,7 +121,7 @@ export function RangeSwitcher({
             />
             <span className="hidden text-xs text-muted-foreground sm:inline">to</span>
             <label className="sr-only" htmlFor="dashboard-custom-to">
-              Custom range to
+              <Trans>{"Custom range to"}</Trans>
             </label>
             <input
               id="dashboard-custom-to"

@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
@@ -182,6 +183,7 @@ function MarketplaceAction({
 }
 
 export function McpMarketplace() {
+  const t = useT();
   const connectMcp = useConnectMcp();
   const openMcpSetup = useOpenMcpSetup();
   const [customUrl, setCustomUrl] = useState("");
@@ -432,7 +434,7 @@ export function McpMarketplace() {
             }}
           >
             <option value="popular">Popular</option>
-            <option value="name"><Trans>{"Name"}</Trans></option>
+            <option value="name">{t("Name")}</option>
           </select>
         </div>
       </div>
