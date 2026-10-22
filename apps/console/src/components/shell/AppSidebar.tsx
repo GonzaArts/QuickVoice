@@ -62,22 +62,27 @@ const settingsNav: NavItem[] = [
 function ThemeToggle() {
   const t = useT();
   const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-  const nextTheme = isDark ? "light" : "dark";
-  const Icon = isDark ? Sun : Moon;
+
+  // The resolved theme depends on browser preferences and localStorage. Rendering
+  // different icons or copy during SSR and hydration causes a React mismatch.
+  // Render both options consistently and let next-themes' <html>.dark class
+  // decide which one is visible; read resolvedTheme only in the click handler.
+  const toggleTheme = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton
           type="button"
-          tooltip={t(`Switch to ${nextTheme} mode`)}
-          aria-label={t(`Switch to ${nextTheme} mode`)}
-          onClick={() => setTheme(nextTheme)}
+          tooltip={t("Theme")}
+          aria-label={t("Theme")}
+          onClick={toggleTheme}
           className="h-11 !bg-transparent px-3 text-[15px] font-medium text-muted-foreground shadow-none transition-colors hover:!bg-sidebar-accent/60 hover:text-sidebar-foreground [&_svg]:size-[18px] [&_svg]:text-muted-foreground hover:[&_svg]:text-sidebar-foreground"
         >
-          <Icon />
-          <span>{t(`Switch to ${nextTheme} mode`)}</span>
+          <Moon className="dark:hidden" />
+          <Sun className="hidden dark:block" />
+          <span className="dark:hidden">{t("Switch to dark mode")}</span>
+          <span className="hidden dark:inline">{t("Switch to light mode")}</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>

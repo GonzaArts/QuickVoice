@@ -47,7 +47,7 @@ export default async function RootLayout({
         inter.variable
       )}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <I18nProvider initialLocale={initialLocale}>
           <ThemeProvider>
           <QueryProvider>
