@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -73,6 +75,7 @@ const schema = z.object({
 });
 
 export default function ApiKeysPage() {
+  const translateUi = useT();
   const { data: session } = authClient.useSession();
   const orgId = session?.session?.activeOrganizationId ?? null;
 
@@ -131,7 +134,7 @@ export default function ApiKeysPage() {
       form.reset();
       await refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not create key");
+      toast.error(err instanceof Error ? err.message : translateUi("Could not create key"));
     } finally {
       setCreating(false);
     }
@@ -147,10 +150,10 @@ export default function ApiKeysPage() {
       if (!api.delete) throw new Error("API key delete is not available");
       const { error } = await api.delete({ keyId });
       if (error) throw new Error(error.message ?? "Revoke failed");
-      toast.success("Key revoked");
+      toast.success(translateUi("Key revoked"));
       await refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not revoke key");
+      toast.error(err instanceof Error ? err.message : translateUi("Could not revoke key"));
     }
   }
 
@@ -169,30 +172,24 @@ export default function ApiKeysPage() {
           <div className="space-y-1">
             <h2 className="text-base font-semibold"><Trans>{"API keys"}</Trans></h2>
             <p className="text-sm text-muted-foreground">
-              Use these organization-scoped keys to authenticate the QuickVoice
-              API and QuickVoice MCP server with the{" "}
+              <Trans>{"Use these organization-scoped keys to authenticate the QuickVoice API and QuickVoice MCP server with the"}</Trans>{" "}
               <code className="bg-muted px-1 py-0.5 font-mono text-xs">
                 x-api-key
               </code>{" "}
-              header. Bearer authentication is not supported for these keys.
-              Organization API keys are read-only and cannot manage billing or
-              phone-number ownership.
+              <Trans>{"header. Bearer authentication is not supported for these keys. Organization API keys are read-only and cannot manage billing or phone-number ownership."}</Trans>
             </p>
           </div>
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
             <DialogTrigger asChild>
               <Button>
-                <Plus /> New API key
+                <Plus /> <Trans>{"New API key"}</Trans>
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create API key</DialogTitle>
+                <DialogTitle><Trans>{"Create API key"}</Trans></DialogTitle>
                 <DialogDescription>
-                  Give the key a descriptive name. You&apos;ll be able to copy
-                  it once — make sure to store it somewhere safe. New keys use
-                  the active organization, are MCP-ready, and receive read-only
-                  access.
+                  <Trans>{"Give the key a descriptive name. You'll be able to copy it once — make sure to store it somewhere safe. New keys use the active organization, are MCP-ready, and receive read-only access."}</Trans>
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>
@@ -207,7 +204,7 @@ export default function ApiKeysPage() {
                       <FormItem>
                         <FormLabel><Trans>{"Name"}</Trans></FormLabel>
                         <FormControl>
-                          <Input placeholder="Production API" {...field} />
+                          <Input placeholder={translateUi("Production API")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -228,7 +225,7 @@ export default function ApiKeysPage() {
                           <Loader2 className="animate-spin" /> <Trans>{"Creating…"}</Trans>
                         </>
                       ) : (
-                        "Create key"
+                        <Trans>{"Create key"}</Trans>
                       )}
                     </Button>
                   </DialogFooter>
@@ -258,7 +255,7 @@ export default function ApiKeysPage() {
                 <TableHead><Trans>{"Name"}</Trans></TableHead>
                 <TableHead><Trans>{"Key"}</Trans></TableHead>
                 <TableHead><Trans>{"Status"}</Trans></TableHead>
-                <TableHead>Created</TableHead>
+                <TableHead><Trans>{"Created"}</Trans></TableHead>
                 <TableHead className="text-right"><Trans>{"Actions"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
@@ -273,7 +270,7 @@ export default function ApiKeysPage() {
                     <Badge
                       variant={k.enabled === false ? "secondary" : "default"}
                     >
-                      {k.enabled === false ? "Disabled" : "Active"}
+                      {k.enabled === false ? <Trans>{"Disabled"}</Trans> : <Trans>{"Active"}</Trans>}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
@@ -287,23 +284,22 @@ export default function ApiKeysPage() {
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          aria-label="Revoke"
+                          aria-label={translateUi("Revoke")}
                         >
                           <Trash2 />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Revoke this key?</AlertDialogTitle>
+                          <AlertDialogTitle><Trans>{"Revoke this key?"}</Trans></AlertDialogTitle>
                           <AlertDialogDescription>
-                            Any application using this key will stop working
-                            immediately.
+                            <Trans>{"Any application using this key will stop working immediately."}</Trans>
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
                           <AlertDialogAction onClick={() => onRevoke(k.id)}>
-                            Revoke
+                            <Trans>{"Revoke"}</Trans>
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
@@ -319,10 +315,9 @@ export default function ApiKeysPage() {
       <Dialog open={!!newKey} onOpenChange={(open) => !open && setNewKey(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Copy your API key</DialogTitle>
+            <DialogTitle><Trans>{"Copy your API key"}</Trans></DialogTitle>
             <DialogDescription>
-              This is the only time you&apos;ll see the full key. Copy it now
-              and store it in a secure place.
+              <Trans>{"This is the only time you'll see the full key. Copy it now and store it in a secure place."}</Trans>
             </DialogDescription>
           </DialogHeader>
           <div className="border bg-muted/30 p-3 font-mono text-xs break-all">
@@ -336,11 +331,11 @@ export default function ApiKeysPage() {
                 </>
               ) : (
                 <>
-                  <Copy /> Copy key
+                  <Copy /> <Trans>{"Copy key"}</Trans>
                 </>
               )}
             </Button>
-            <Button onClick={() => setNewKey(null)}>I&apos;ve saved it</Button>
+            <Button onClick={() => setNewKey(null)}><Trans>{"I've saved it"}</Trans></Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

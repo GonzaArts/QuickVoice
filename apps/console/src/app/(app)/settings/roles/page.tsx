@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -90,6 +92,7 @@ function toRoleList(data: unknown): Role[] {
 }
 
 export default function RolesPage() {
+  const translateUi = useT();
  const { data: session } = authClient.useSession();
  const orgId = session?.session?.activeOrganizationId ?? null;
 
@@ -150,13 +153,13 @@ export default function RolesPage() {
  permission: permissions as Record<ResourceId, string[]>,
  });
  if (error) throw new Error(error.message);
- toast.success(`Role "${values.role}" created`);
+ toast.success(translateUi('Role "{name}" created', { name: values.role }));
  setCreateOpen(false);
  form.reset();
  setPermissions({});
  await refreshRoles();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not create role");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not create role"));
  } finally {
  setSaving(false);
  }
@@ -177,12 +180,12 @@ export default function RolesPage() {
  },
  });
  if (error) throw new Error(error.message);
- toast.success(`Role "${values.role}" saved`);
+ toast.success(translateUi('Role "{name}" saved', { name: values.role }));
  setEditRole(null);
  setEditPermissions({});
  await refreshRoles();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not update role");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not update role"));
  } finally {
  setSaving(false);
  }
@@ -199,11 +202,11 @@ export default function RolesPage() {
  roleId: deleteTarget.id,
  });
  if (error) throw new Error(error.message);
- toast.success(`Role "${deleteTarget.role}" deleted`);
+ toast.success(translateUi('Role "{name}" deleted', { name: deleteTarget.role }));
  setDeleteTarget(null);
  await refreshRoles();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not delete role");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not delete role"));
  } finally {
  setSaving(false);
  }
@@ -214,24 +217,22 @@ export default function RolesPage() {
  <section className="border bg-card p-6">
  <div className="mb-5 flex items-start justify-between gap-3">
  <div className="space-y-1">
- <h2 className="text-base font-semibold">Custom roles</h2>
+ <h2 className="text-base font-semibold"><Trans>{"Custom roles"}</Trans></h2>
  <p className="text-sm text-muted-foreground">
- Built-in roles (owner, admin, member) always exist. Add custom
- roles for fine-grained access.
+ <Trans>{"Built-in roles (owner, admin, member) always exist. Add custom roles for fine-grained access."}</Trans>
  </p>
  </div>
  <Dialog open={createOpen} onOpenChange={setCreateOpen}>
  <DialogTrigger asChild>
  <Button>
- <Plus /> New role
+ <Plus /> <Trans>{"New role"}</Trans>
  </Button>
  </DialogTrigger>
  <DialogContent className="max-w-2xl">
  <DialogHeader>
- <DialogTitle>Create custom role</DialogTitle>
+ <DialogTitle><Trans>{"Create custom role"}</Trans></DialogTitle>
  <DialogDescription>
- Pick the permissions this role should have. Role names are
- lowercase and can include dashes.
+ <Trans>{"Pick the permissions this role should have. Role names are lowercase and can include dashes."}</Trans>
  </DialogDescription>
  </DialogHeader>
  <Form {...form}>
@@ -244,9 +245,9 @@ export default function RolesPage() {
  name="role"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Role name</FormLabel>
+ <FormLabel><Trans>{"Role name"}</Trans></FormLabel>
  <FormControl>
- <Input placeholder="e.g. auditor" {...field} />
+ <Input placeholder={translateUi("e.g. auditor")} {...field} />
  </FormControl>
  <FormMessage />
  </FormItem>
@@ -270,11 +271,11 @@ export default function RolesPage() {
  <Button type="submit" disabled={saving}>
  {saving ? (
  <>
- <Loader2 className="animate-spin" /> Creating...
+ <Loader2 className="animate-spin" /> <Trans>{"Creating..."}</Trans>
  </>
  ) : (
  <>
- <Save /> Create role
+ <Save /> <Trans>{"Create role"}</Trans>
  </>
  )}
  </Button>
@@ -297,7 +298,7 @@ export default function RolesPage() {
  </div>
  <div>
  <p className="text-sm font-medium capitalize">{role}</p>
- <p className="text-xs text-muted-foreground">Built-in</p>
+ <p className="text-xs text-muted-foreground"><Trans>{"Built-in"}</Trans></p>
  </div>
  </div>
  <Badge variant="secondary"><Trans>{"System"}</Trans></Badge>
@@ -337,14 +338,14 @@ export default function RolesPage() {
  <div>
  <p className="text-sm font-medium">{role.role}</p>
  <p className="text-xs text-muted-foreground">
- {Object.keys(role.permission ?? {}).length} resources
+ {Object.keys(role.permission ?? {}).length} <Trans>{"resources"}</Trans>
  </p>
  </div>
  <div className="flex items-center gap-1">
  <Button
  variant="ghost"
  size="icon-sm"
- aria-label={`Edit role ${role.role}`}
+ aria-label={translateUi("Edit role {role}", {role: role.role})}
  onClick={() => openEdit(role)}
  >
  <Pencil />
@@ -352,7 +353,7 @@ export default function RolesPage() {
  <Button
  variant="ghost"
  size="icon-sm"
- aria-label={`Delete role ${role.role}`}
+ aria-label={translateUi("Delete role {role}", {role: role.role})}
  onClick={() => setDeleteTarget(role)}
  >
  <Trash2 />
@@ -372,9 +373,9 @@ export default function RolesPage() {
  >
  <DialogContent className="max-w-2xl">
  <DialogHeader>
- <DialogTitle>Edit custom role</DialogTitle>
+ <DialogTitle><Trans>{"Edit custom role"}</Trans></DialogTitle>
  <DialogDescription>
- Update the role name or permission matrix for this organization.
+ <Trans>{"Update the role name or permission matrix for this organization."}</Trans>
  </DialogDescription>
  </DialogHeader>
  <Form {...editForm}>
@@ -384,7 +385,7 @@ export default function RolesPage() {
  name="role"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Role name</FormLabel>
+ <FormLabel><Trans>{"Role name"}</Trans></FormLabel>
  <FormControl>
  <Input {...field} />
  </FormControl>
@@ -414,7 +415,7 @@ export default function RolesPage() {
  </>
  ) : (
  <>
- <Save /> Save role
+ <Save /> <Trans>{"Save role"}</Trans>
  </>
  )}
  </Button>
@@ -432,10 +433,9 @@ export default function RolesPage() {
  >
  <AlertDialogContent>
  <AlertDialogHeader>
- <AlertDialogTitle>Delete custom role?</AlertDialogTitle>
+ <AlertDialogTitle><Trans>{"Delete custom role?"}</Trans></AlertDialogTitle>
  <AlertDialogDescription>
- This removes {deleteTarget?.role ?? "this role"} from the organization.
- Members using it should be reassigned before deletion.
+ <Trans>{"This removes"}</Trans> {deleteTarget?.role ?? <Trans>{"this role"}</Trans>} <Trans>{"from the organization. Members using it should be reassigned before deletion."}</Trans>
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
@@ -450,7 +450,7 @@ export default function RolesPage() {
  <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
  </>
  ) : (
- "Delete"
+ <Trans>{"Delete"}</Trans>
  )}
  </AlertDialogAction>
  </AlertDialogFooter>

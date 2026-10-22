@@ -65,10 +65,10 @@ export default function OrgId() {
  <div className="flex h-16 w-16 items-center justify-center bg-destructive/10 mx-auto mb-4">
  <Shield className="h-8 w-8 text-destructive" />
  </div>
- <h3 className="text-lg font-semibold text-foreground mb-2">Error loading organization</h3>
+ <h3 className="text-lg font-semibold text-foreground mb-2"><Trans>{"Error loading organization"}</Trans></h3>
  <p className="text-sm text-muted-foreground mb-6">{error}</p>
  <Link href="/orgs">
- <Button>Back to organizations</Button>
+ <Button><Trans>{"Back to organizations"}</Trans></Button>
  </Link>
  </div>
  </div>
@@ -79,9 +79,9 @@ export default function OrgId() {
  return (
  <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-10 max-w-6xl mx-auto">
  <div className="text-center py-12">
- <h3 className="text-lg font-semibold text-foreground mb-2">Organization not found</h3>
+ <h3 className="text-lg font-semibold text-foreground mb-2"><Trans>{"Organization not found"}</Trans></h3>
  <Link href="/orgs">
- <Button>Back to organizations</Button>
+ <Button><Trans>{"Back to organizations"}</Trans></Button>
  </Link>
  </div>
  </div>
@@ -95,7 +95,7 @@ export default function OrgId() {
  <div className="flex items-center gap-4">
  <Link href="/orgs" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
  <ArrowLeft className="h-4 w-4" />
- Back to organizations
+ <Trans>{"Back to organizations"}</Trans>
  </Link>
  </div>
  <div className="flex items-center gap-2">
@@ -119,17 +119,17 @@ export default function OrgId() {
  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
  <span>@{data.slug}</span>
  <span>•</span>
- <span>ID: {data.id}</span>
+ <span><Trans>{"ID:"}</Trans> {data.id}</span>
  </div>
  <div className="flex items-center gap-6">
  <div className="flex items-center gap-2 text-sm">
  <Users className="h-4 w-4 text-muted-foreground" />
- <span className="text-foreground font-medium">{data.members.length} members</span>
+ <span className="text-foreground font-medium">{data.members.length} <Trans>{"members"}</Trans></span>
  </div>
  <div className="flex items-center gap-2 text-sm">
  <Calendar className="h-4 w-4 text-muted-foreground" />
  <span className="text-muted-foreground">
- Created {new Date(data.createdAt).toLocaleDateString()}
+ <Trans>{"Created"}</Trans> {new Date(data.createdAt).toLocaleDateString()}
  </span>
  </div>
  </div>
@@ -140,17 +140,17 @@ export default function OrgId() {
  {/* Members Section */}
  <div className="border border-border bg-card p-6 sm:p-8">
  <div className="flex items-center justify-between mb-6">
- <h2 className="text-xl font-semibold text-foreground">Team Members</h2>
+ <h2 className="text-xl font-semibold text-foreground"><Trans>{"Team Members"}</Trans></h2>
  <Button size="sm">
  <Users className="h-4 w-4 mr-2" />
- Invite Member
+ <Trans>{"Invite Member"}</Trans>
  </Button>
  </div>
 
  {data.members.length === 0 ? (
  <div className="text-center py-8">
  <Users className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
- <p className="text-sm text-muted-foreground">No members found</p>
+ <p className="text-sm text-muted-foreground"><Trans>{"No members found"}</Trans></p>
  </div>
  ) : (
  <div className="space-y-4">
@@ -162,7 +162,7 @@ export default function OrgId() {
  </div>
  <div>
  <p className="font-medium text-foreground">
- {member.user.name || "Unknown User"}
+ {member.user.name || <Trans>{"Unknown User"}</Trans>}
  </p>
  <div className="flex items-center gap-2 text-sm text-muted-foreground">
  <Mail className="h-3 w-3" />
@@ -175,7 +175,7 @@ export default function OrgId() {
  {member.role}
  </Badge>
  <span className="text-xs text-muted-foreground">
- Joined {new Date(member.createdAt).toLocaleDateString()}
+ <Trans>{"Joined"}</Trans> {new Date(member.createdAt).toLocaleDateString()}
  </span>
  </div>
  </div>

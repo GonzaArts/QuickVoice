@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -19,45 +21,48 @@ export function useAgentWidgets(agentId: string) {
 }
 
 export function useCreateAgentWidget(agentId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: CreateAgentWidgetInput) =>
       widgetsApi.createForAgent(agentId, input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.agents.widgets(agentId) });
-      toast.success("Widget created");
+      toast.success(translateUi("Widget created"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not create widget");
+      toast.error(err.message || translateUi("Could not create widget"));
     },
   });
 }
 
 export function useUpdateAgentWidget(agentId: string, widgetId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: UpdateAgentWidgetInput) =>
       widgetsApi.update(widgetId, input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.agents.widgets(agentId) });
-      toast.success("Widget saved");
+      toast.success(translateUi("Widget saved"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not save widget");
+      toast.error(err.message || translateUi("Could not save widget"));
     },
   });
 }
 
 export function useDeleteAgentWidget(agentId: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (widgetId: string) => widgetsApi.remove(widgetId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.agents.widgets(agentId) });
-      toast.success("Widget deleted");
+      toast.success(translateUi("Widget deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not delete widget");
+      toast.error(err.message || translateUi("Could not delete widget"));
     },
   });
 }

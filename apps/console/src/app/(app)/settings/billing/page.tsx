@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale, useT } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -83,23 +86,24 @@ function asMicros(value: MoneyMicros | null | undefined) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function formatMicros(value: MoneyMicros | null | undefined, currency = "USD") {
+function formatMicros(value: MoneyMicros | null | undefined, currency = "USD", language = "es-ES") {
   const normalizedCurrency = currency.toUpperCase();
-  let formatter = currencyFormatters.get(normalizedCurrency);
+  const formatterKey = language + ":" + normalizedCurrency;
+  let formatter = currencyFormatters.get(formatterKey);
   if (!formatter) {
-    formatter = new Intl.NumberFormat("en-US", {
+    formatter = new Intl.NumberFormat(language, {
       style: "currency",
       currency: normalizedCurrency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-    currencyFormatters.set(normalizedCurrency, formatter);
+    currencyFormatters.set(formatterKey, formatter);
   }
   return formatter.format(asMicros(value) / 1_000_000);
 }
 
-function formatDate(value: string) {
-  return new Date(value).toLocaleString("en-US", {
+function formatDate(value: string, language: string) {
+  return new Date(value).toLocaleString(language, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -154,15 +158,16 @@ function BalanceCard({
   description: string;
   className?: string;
 }) {
+  const t = useT();
   return (
     <div className={cn("border bg-card p-5", className)}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-medium text-muted-foreground">{label}</p>
+        <p className="text-sm font-medium text-muted-foreground">{t(label)}</p>
         <Icon className="size-4 text-primary" />
       </div>
       <p className="mt-3 text-2xl font-semibold tracking-tight">{amount}</p>
       <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-        {description}
+        {t(description)}
       </p>
     </div>
   );
@@ -185,6 +190,7 @@ function OrganizationBillingPage({
 }: {
   organizationId: string | null;
 }) {
+  const { locale, t: translateUi } = useLocale();
   const summary = useBillingSummary(organizationId);
   const transactions = useBillingTransactions(organizationId);
   const createCheckout = useCreateTopUpCheckout();
@@ -326,7 +332,7 @@ function OrganizationBillingPage({
       if (controller.signal.aborted) return;
       if (result === "matched") {
         setTopUpConfirmation(null);
-        toast.success("Payment confirmed and wallet balance updated");
+        toast.success(translateUi("Payment confirmed and wallet balance updated"));
       } else if (result === "timed-out") {
         setTopUpConfirmation({ status: "timed-out", topUpId });
       }
@@ -334,7 +340,7 @@ function OrganizationBillingPage({
         topUpPollController.current = null;
       }
     },
-    [organizationId, queryClient],
+    [organizationId, queryClient, translateUi],
   );
 
   const pollForPaymentMethodConfirmation = useCallback(
@@ -387,7 +393,7 @@ function OrganizationBillingPage({
       if (controller.signal.aborted) return;
       if (result === "matched") {
         setPaymentMethodConfirmation(null);
-        toast.success("Payment method saved");
+        toast.success(translateUi("Payment method saved"));
       } else if (result === "timed-out") {
         setPaymentMethodConfirmation({
           ...confirmation,
@@ -398,7 +404,7 @@ function OrganizationBillingPage({
         paymentMethodPollController.current = null;
       }
     },
-    [organizationId, queryClient],
+    [organizationId, queryClient, translateUi],
   );
 
   const onCheckoutComplete = useCallback(() => {
@@ -408,27 +414,27 @@ function OrganizationBillingPage({
     setTopUpAttempt(null);
 
     if (!completedTopUpId) {
-      toast.info("Payment submitted. Refreshing wallet activity…");
+      toast.info(translateUi("Payment submitted. Refreshing wallet activity…"));
       void queryClient.invalidateQueries({ queryKey: queryKeys.billing.all });
       return;
     }
 
-    toast.info("Payment submitted. Waiting for secure confirmation…");
+    toast.info(translateUi("Payment submitted. Waiting for secure confirmation…"));
     void pollForTopUpConfirmation(completedTopUpId);
-  }, [checkoutTopUpId, pollForTopUpConfirmation, queryClient, topUpAttempt]);
+  }, [checkoutTopUpId, pollForTopUpConfirmation, queryClient, topUpAttempt, translateUi]);
 
   const onSetupComplete = useCallback(
     (expectedPaymentMethodId: string | null) => {
       const baselinePaymentMethodId = setupBaselinePaymentMethodId;
       setSetupSecret(null);
       setSetupBaselinePaymentMethodId(null);
-      toast.info("Card submitted. Waiting for secure confirmation…");
+      toast.info(translateUi("Card submitted. Waiting for secure confirmation…"));
       void pollForPaymentMethodConfirmation(
         expectedPaymentMethodId,
         baselinePaymentMethodId,
       );
     },
-    [pollForPaymentMethodConfirmation, setupBaselinePaymentMethodId],
+    [pollForPaymentMethodConfirmation, setupBaselinePaymentMethodId, translateUi],
   );
 
   function changeTopUpAmount(nextDollars: number) {
@@ -443,15 +449,15 @@ function OrganizationBillingPage({
 
   async function beginTopUp() {
     if (!topUpValid) {
-      toast.error("Choose an amount from $5 to $500 in $5 increments");
+      toast.error(translateUi("Choose an amount from $5 to $500 in $5 increments"));
       return;
     }
     if (!isStripeClientConfigured) {
-      toast.error("Stripe is not configured for this console");
+      toast.error(translateUi("Stripe is not configured for this console"));
       return;
     }
     if (!organizationId) {
-      toast.error("Choose an organization before adding credit");
+      toast.error(translateUi("Choose an organization before adding credit"));
       return;
     }
 
@@ -463,7 +469,7 @@ function OrganizationBillingPage({
         : null;
     if (!reusableAttempt && !globalThis.crypto?.randomUUID) {
       toast.error(
-        "Secure payment IDs are unavailable. Reload this page over HTTPS.",
+        translateUi("Secure payment IDs are unavailable. Reload this page over HTTPS."),
       );
       return;
     }
@@ -482,7 +488,7 @@ function OrganizationBillingPage({
       });
       if (!isActiveRef.current) return;
       if (!result.topUpId) {
-        toast.error("Stripe did not return top-up tracking information");
+        toast.error(translateUi("Stripe did not return top-up tracking information"));
         return;
       }
       setTopUpAttempt((current) =>
@@ -500,7 +506,7 @@ function OrganizationBillingPage({
         openCheckoutUrl(result.url);
         return;
       }
-      toast.error("Stripe did not return a checkout session");
+      toast.error(translateUi("Stripe did not return a checkout session"));
     } catch {
       // Mutation-level error feedback handles failed checkout requests.
     }
@@ -508,11 +514,11 @@ function OrganizationBillingPage({
 
   async function beginPaymentSetup() {
     if (!isStripeClientConfigured) {
-      toast.error("Stripe is not configured for this console");
+      toast.error(translateUi("Stripe is not configured for this console"));
       return;
     }
     if (!organizationId) {
-      toast.error("Choose an organization before saving a payment method");
+      toast.error(translateUi("Choose an organization before saving a payment method"));
       return;
     }
     try {
@@ -528,7 +534,7 @@ function OrganizationBillingPage({
         openCheckoutUrl(result.url);
         return;
       }
-      toast.error("Stripe did not return a setup session");
+      toast.error(translateUi("Stripe did not return a setup session"));
     } catch {
       // Mutation-level error feedback handles failed setup requests.
     }
@@ -536,11 +542,11 @@ function OrganizationBillingPage({
 
   async function saveAutoRecharge() {
     if (!autoValuesValid) {
-      toast.error("Use $5 increments between $5 and $500");
+      toast.error(translateUi("Use $5 increments between $5 and $500"));
       return;
     }
     if (!organizationId) {
-      toast.error("Choose an organization before changing auto-recharge");
+      toast.error(translateUi("Choose an organization before changing auto-recharge"));
       return;
     }
     try {
@@ -558,7 +564,7 @@ function OrganizationBillingPage({
 
   if (summary.isLoading) {
     return (
-      <div className="space-y-5" aria-label="Loading billing">
+      <div className="space-y-5" aria-label={translateUi("Loading billing")}>
         <Skeleton className="h-28 w-full" />
         <div className="grid gap-4 sm:grid-cols-3">
           {[0, 1, 2].map((item) => (
@@ -601,7 +607,7 @@ function OrganizationBillingPage({
               <h2 className="text-base font-semibold"><Trans>{"Prepaid wallet"}</Trans></h2>
               <Badge variant={isUnmetered ? "secondary" : "outline"}>
                 {isUnmetered
-                  ? "Self-hosted · unmetered"
+                  ? <Trans>{"Self-hosted · unmetered"}</Trans>
                   : humanize(summary.data?.status ?? "active")}
               </Badge>
             </div>
@@ -622,7 +628,7 @@ function OrganizationBillingPage({
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-destructive" />
           <div>
             <p className="font-medium text-destructive">
-              Outstanding balance: {formatMicros(debtMicros, currency)}
+              <Trans>{"Outstanding balance:"}</Trans> {formatMicros(debtMicros, currency, localeCode(locale))}
             </p>
             <p className="mt-1 text-muted-foreground">
               <Trans>{"Provider charges exceeded the final call reserve. Add paid credit to clear the balance before starting more calls."}</Trans>
@@ -638,7 +644,7 @@ function OrganizationBillingPage({
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-500" />
           <div>
             <p className="font-medium">
-              Billing is {humanize(summary.data.status).toLowerCase()}
+              <Trans>{"Billing is"}</Trans> {humanize(summary.data.status).toLowerCase()}
             </p>
             <p className="mt-1 text-muted-foreground">
               <Trans>{"Recharge the wallet to restore calling and protect rented phone numbers from release."}</Trans>
@@ -649,9 +655,8 @@ function OrganizationBillingPage({
 
       {summary.data?.legacySubscription?.endsAt ? (
         <div className="border bg-muted/20 p-4 text-sm text-muted-foreground">
-          Your existing subscription remains active until{" "}
-          {formatDate(summary.data.legacySubscription.endsAt)}. Prepaid billing
-          takes over after that date.
+          <Trans>{"Your existing subscription remains active until"}</Trans>{" "}
+          {formatDate(summary.data.legacySubscription.endsAt, localeCode(locale))}<Trans>{". Prepaid billing takes over after that date."}</Trans>
         </div>
       ) : null}
 
@@ -660,20 +665,20 @@ function OrganizationBillingPage({
           icon={WalletCards}
           label="Available balance"
           amount={
-            isUnmetered ? "Unmetered" : formatMicros(availableMicros, currency)
+            isUnmetered ? translateUi("Unmetered") : formatMicros(availableMicros, currency, localeCode(locale))
           }
           description="Available for connected call usage right now."
         />
         <BalanceCard
           icon={CreditCard}
           label="Paid credit"
-          amount={isUnmetered ? "—" : formatMicros(paidMicros, currency)}
+          amount={isUnmetered ? "—" : formatMicros(paidMicros, currency, localeCode(locale))}
           description="Pays for calls, phone-number rental, renewals, and reconciled charges."
         />
         <BalanceCard
           icon={Gift}
           label="Promotional credit"
-          amount={isUnmetered ? "—" : formatMicros(promotionalMicros, currency)}
+          amount={isUnmetered ? "—" : formatMicros(promotionalMicros, currency, localeCode(locale))}
           description="Pays for calls only. It cannot buy or renew phone numbers."
         />
       </div>
@@ -754,7 +759,7 @@ function OrganizationBillingPage({
                 <WalletCards />
               )}
               {createCheckout.isPending
-                ? "Opening secure checkout…"
+                ? <Trans>{"Opening secure checkout…"}</Trans>
                 : `Add $${topUpDollars}`}
             </Button>
             {topUpConfirmation ? (
@@ -776,13 +781,13 @@ function OrganizationBillingPage({
                   <div>
                     <p className="font-medium">
                       {topUpConfirmation.status === "processing"
-                        ? "Payment is processing"
-                        : "Confirmation is taking longer than expected"}
+                        ? <Trans>{"Payment is processing"}</Trans>
+                        : <Trans>{"Confirmation is taking longer than expected"}</Trans>}
                     </p>
                     <p className="mt-1 leading-relaxed">
                       {topUpConfirmation.status === "processing"
-                        ? "We are waiting for Stripe confirmation before showing the wallet credit."
-                        : "The payment may still complete. Check again before starting another top-up; retries will not credit this payment twice."}
+                        ? <Trans>{"We are waiting for Stripe confirmation before showing the wallet credit."}</Trans>
+                        : <Trans>{"The payment may still complete. Check again before starting another top-up; retries will not credit this payment twice."}</Trans>}
                     </p>
                     {topUpConfirmation.status === "timed-out" ? (
                       <Button
@@ -827,12 +832,12 @@ function OrganizationBillingPage({
                   {paymentMethod?.brand && paymentMethod.last4
                     ? `${humanize(paymentMethod.brand)} •••• ${paymentMethod.last4}`
                     : hasPaymentMethod
-                      ? "Saved payment method"
-                      : "No payment method saved"}
+                      ? <Trans>{"Saved payment method"}</Trans>
+                      : <Trans>{"No payment method saved"}</Trans>}
                 </p>
                 {paymentMethod?.expMonth && paymentMethod.expYear ? (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Expires {String(paymentMethod.expMonth).padStart(2, "0")}/
+                    <Trans>{"Expires"}</Trans> {String(paymentMethod.expMonth).padStart(2, "0")}/
                     {paymentMethod.expYear}
                   </p>
                 ) : null}
@@ -849,7 +854,7 @@ function OrganizationBillingPage({
                 {createPaymentSetup.isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : null}
-                {hasPaymentMethod ? "Replace" : "Add card"}
+                {hasPaymentMethod ? <Trans>{"Replace"}</Trans> : <Trans>{"Add card"}</Trans>}
               </Button>
             </div>
 
@@ -872,13 +877,13 @@ function OrganizationBillingPage({
                   <div>
                     <p className="font-medium">
                       {paymentMethodConfirmation.status === "processing"
-                        ? "Saving payment method"
-                        : "Payment method confirmation timed out"}
+                        ? <Trans>{"Saving payment method"}</Trans>
+                        : <Trans>{"Payment method confirmation timed out"}</Trans>}
                     </p>
                     <p className="mt-1 leading-relaxed">
                       {paymentMethodConfirmation.status === "processing"
-                        ? "We are waiting for Stripe to confirm the saved payment method."
-                        : "Stripe may still finish saving the card. Check again before submitting another card."}
+                        ? <Trans>{"We are waiting for Stripe to confirm the saved payment method."}</Trans>
+                        : <Trans>{"Stripe may still finish saving the card. Check again before submitting another card."}</Trans>}
                     </p>
                     {paymentMethodConfirmation.status === "timed-out" ? (
                       <Button
@@ -1006,7 +1011,7 @@ function OrganizationBillingPage({
                 {updateAutoRecharge.isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : null}
-                Save auto-recharge
+                <Trans>{"Save auto-recharge"}</Trans>
               </Button>
             </div>
           </section>
@@ -1112,9 +1117,9 @@ function OrganizationBillingPage({
                           <TransactionIcon className="size-4" />
                         </span>
                         <div className="min-w-0 whitespace-normal">
-                          <p className="font-medium">{presentation.label}</p>
+                          <p className="font-medium">{translateUi(presentation.label)}</p>
                           <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
-                            {presentation.detail}
+                            {presentation.detail.split(" · ").map((part) => translateUi(part)).join(" · ")}
                           </p>
                         </div>
                       </div>
@@ -1131,11 +1136,11 @@ function OrganizationBillingPage({
                             "border-destructive/30 text-destructive",
                         )}
                       >
-                        {presentation.statusLabel}
+                        {translateUi(presentation.statusLabel)}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(transaction.createdAt)}
+                      {formatDate(transaction.createdAt, localeCode(locale))}
                     </TableCell>
                     <TableCell
                       className={cn(
@@ -1149,8 +1154,8 @@ function OrganizationBillingPage({
                           "text-foreground",
                       )}
                     >
-                      {presentation.amountPrefix}
-                      {formatMicros(presentation.amountMicros, currency)}
+                      {translateUi(presentation.amountPrefix)}
+                      {formatMicros(presentation.amountMicros, currency, localeCode(locale))}
                     </TableCell>
                   </TableRow>
                 );

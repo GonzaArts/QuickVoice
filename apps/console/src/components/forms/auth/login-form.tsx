@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -33,6 +35,7 @@ import { invitationPath } from "@/src/lib/links";
 import { clearIdentityCache } from "@/src/lib/query-cache";
 
 export function LoginForm({ invitationId = "" }: { invitationId?: string } = {}) {
+  const translateUi = useT();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
@@ -57,7 +60,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
         fetchOptions: {
           onSuccess: () => {
             clearIdentityCache(queryClient);
-            toast.success("Login successful");
+            toast.success(translateUi("Login successful"));
             router.push(invitationId ? invitationPath(invitationId) : "/dashboard");
             router.refresh();
           },
@@ -82,7 +85,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
       <div className="flex  flex-col items-center gap-2 text-center py-2 ">
         <h1 className="text-2xl font-bold "><Trans>{"Welcome back!"}</Trans></h1>
         <p className="text-muted-foreground text-sm text-balance">
-          {invitationId ? "Sign in with the email address that received the invitation." : "Enter your details to login to your account"}
+          {invitationId ? <Trans>{"Sign in with the email address that received the invitation."}</Trans> : <Trans>{"Enter your details to login to your account"}</Trans>}
         </p>
       </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 ">
@@ -140,7 +143,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
                   />
                 </FormControl>
                   <InputGroupButton
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={translateUi(showPassword ? "Hide password" : "Show password")}
                     onClick={() => setShowPassword(!showPassword)}
                     className="cursor-pointer mr-2"
                   >
@@ -191,7 +194,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
         </div>
         <OAuthButtons invitationId={invitationId} />
         <div className="text-center text-sm">
-          Don&apos;t have an account?{" "}
+          <Trans>{"Don't have an account?"}</Trans>{" "}
           <Link href={invitationPath(invitationId, "/register")} className="underline underline-offset-4">
             <Trans>{"Sign up"}</Trans>
           </Link>

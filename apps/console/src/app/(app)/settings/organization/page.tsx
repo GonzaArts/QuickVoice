@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -118,6 +120,7 @@ type OrgRoleApi = {
 };
 
 export default function OrganizationPage() {
+  const translateUi = useT();
  const { data: session } = authClient.useSession();
  const activeOrgId = session?.session?.activeOrganizationId ?? null;
 
@@ -158,10 +161,10 @@ export default function OrganizationPage() {
  data: { name: values.name, slug: values.slug },
  });
  if (error) throw new Error(error.message);
- toast.success("Organization updated");
+ toast.success(translateUi("Organization updated"));
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not update");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not update"));
  } finally {
  setSaving(false);
  }
@@ -172,9 +175,9 @@ export default function OrganizationPage() {
  {loadError && <p role="alert" className="text-sm text-destructive">{loadError.message}</p>}
  <section className="border bg-card p-6">
  <div className="mb-5 space-y-1">
- <h2 className="text-base font-semibold">Workspace details</h2>
+ <h2 className="text-base font-semibold"><Trans>{"Workspace details"}</Trans></h2>
  <p className="text-sm text-muted-foreground">
- The name and slug shown in the org switcher and URLs.
+ <Trans>{"The name and slug shown in the org switcher and URLs."}</Trans>
  </p>
  </div>
  {loading ? (
@@ -214,12 +217,12 @@ export default function OrganizationPage() {
  name="slug"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Slug</FormLabel>
+ <FormLabel><Trans>{"Slug"}</Trans></FormLabel>
  <FormControl>
  <Input {...field} />
  </FormControl>
  <FormDescription>
- Lowercase letters, numbers, and hyphens only.
+ <Trans>{"Lowercase letters, numbers, and hyphens only."}</Trans>
  </FormDescription>
  <FormMessage />
  </FormItem>
@@ -273,6 +276,7 @@ function MembersSection({
  loading: boolean;
  refresh: () => Promise<void>;
 }) {
+  const translateUi = useT();
  const [inviteOpen, setInviteOpen] = useState(false);
  const [inviting, setInviting] = useState(false);
  const [resendingId, setResendingId] = useState<string | null>(null);
@@ -334,11 +338,11 @@ function MembersSection({
  resend: !!invitationId,
  });
  if (error) throw new Error(error.message);
- toast.success(`Invitation email sent to ${values.email}`);
+ toast.success(translateUi("Invitation email sent to {email}", { email: values.email }));
  setInviteOpen(false);
  inviteForm.reset();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not send invite");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not send invite"));
  } finally {
  await refresh();
  setInviting(false);
@@ -360,10 +364,10 @@ function MembersSection({
  organizationId: orgId,
  });
  if (error) throw new Error(error.message);
- toast.success("Member role updated");
+ toast.success(translateUi("Member role updated"));
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not update role");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not update role"));
  } finally {
  setUpdatingMemberId(null);
  }
@@ -377,11 +381,11 @@ function MembersSection({
  organizationId: orgId,
  });
  if (error) throw new Error(error.message);
- toast.success("Member removed");
+ toast.success(translateUi("Member removed"));
  setRemoveTarget(null);
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not remove member");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not remove member"));
  }
  }
 
@@ -393,11 +397,11 @@ function MembersSection({
  }
  const { error } = await orgApi.cancelInvitation({ invitationId });
  if (error) throw new Error(error.message);
- toast.success("Invitation canceled");
+ toast.success(translateUi("Invitation canceled"));
  setCancelTarget(null);
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not cancel invite");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not cancel invite"));
  }
  }
 
@@ -405,9 +409,9 @@ function MembersSection({
  <section className="border bg-card p-6">
  <div className="mb-5 flex items-start justify-between gap-3">
  <div className="space-y-1">
- <h2 className="text-base font-semibold">Team members</h2>
+ <h2 className="text-base font-semibold"><Trans>{"Team members"}</Trans></h2>
  <p className="text-sm text-muted-foreground">
- Invite teammates and manage their roles.
+ <Trans>{"Invite teammates and manage their roles."}</Trans>
  </p>
  </div>
  <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
@@ -418,9 +422,9 @@ function MembersSection({
  </DialogTrigger>
  <DialogContent>
  <DialogHeader>
- <DialogTitle>Invite a member</DialogTitle>
+ <DialogTitle><Trans>{"Invite a member"}</Trans></DialogTitle>
  <DialogDescription>
- They&apos;ll receive an email to join this organization.
+ <Trans>{"They'll receive an email to join this organization."}</Trans>
  </DialogDescription>
  </DialogHeader>
  <Form {...inviteForm}>
@@ -479,7 +483,7 @@ function MembersSection({
  <Button type="submit" disabled={inviting || !canInvite}>
  {inviting ? (
  <>
- <Loader2 className="animate-spin" /> Sending…
+ <Loader2 className="animate-spin" /> <Trans>{"Sending…"}</Trans>
  </>
  ) : (
  <>
@@ -502,7 +506,7 @@ function MembersSection({
  </div>
  ) : !members.length ? (
  <p className="py-6 text-center text-sm text-muted-foreground">
- No members yet.
+ <Trans>{"No members yet."}</Trans>
  </p>
  ) : (
  <div className="divide-y">
@@ -547,7 +551,7 @@ function MembersSection({
  variant="ghost"
  size="icon-sm"
  onClick={() => setRemoveTarget(m)}
- aria-label={`Remove ${m.user.name || m.user.email}`}
+ aria-label={translateUi("Remove {name}", {name: m.user.name || m.user.email})}
  >
  <Trash2 />
  </Button>
@@ -558,9 +562,9 @@ function MembersSection({
  {invitations.length ? (
  <div className="mt-6 border-t pt-5">
  <div className="mb-3">
- <h3 className="text-sm font-semibold">Pending invites</h3>
+ <h3 className="text-sm font-semibold"><Trans>{"Pending invites"}</Trans></h3>
  <p className="text-xs text-muted-foreground">
- Resend an invitation email or cancel access before it is accepted.
+ <Trans>{"Resend an invitation email or cancel access before it is accepted."}</Trans>
  </p>
  </div>
  <div className="divide-y">
@@ -580,11 +584,11 @@ function MembersSection({
  size="sm"
  className="min-h-11 scroll-mb-24"
  disabled={inviting || !canInviteRole(invitation.role)}
- aria-label={`Resend invitation to ${invitation.email}`}
+ aria-label={translateUi("Resend invitation to {email}", {email: invitation.email})}
  onClick={() => onInvite({ email: invitation.email, role: invitation.role }, invitation.id)}
  >
  {resendingId === invitation.id ? <Loader2 className="motion-safe:animate-spin" /> : <Mail />}
- Resend
+ <Trans>{"Resend"}</Trans>
  </Button>
  <Button
  variant="ghost"
@@ -608,10 +612,9 @@ function MembersSection({
  >
  <AlertDialogContent>
  <AlertDialogHeader>
- <AlertDialogTitle>Remove member?</AlertDialogTitle>
+ <AlertDialogTitle><Trans>{"Remove member?"}</Trans></AlertDialogTitle>
  <AlertDialogDescription>
- This removes {removeTarget?.user.name || removeTarget?.user.email} from the
- organization and revokes their access.
+ <Trans>{"This removes"}</Trans> {removeTarget?.user.name || removeTarget?.user.email} <Trans>{"from the organization and revokes their access."}</Trans>
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
@@ -633,18 +636,18 @@ function MembersSection({
  >
  <AlertDialogContent>
  <AlertDialogHeader>
- <AlertDialogTitle>Cancel invite?</AlertDialogTitle>
+ <AlertDialogTitle><Trans>{"Cancel invite?"}</Trans></AlertDialogTitle>
  <AlertDialogDescription>
- This cancels the invitation for {cancelTarget?.email}.
+ <Trans>{"This cancels the invitation for"}</Trans> {cancelTarget?.email}.
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
- <AlertDialogCancel>Keep invite</AlertDialogCancel>
+ <AlertDialogCancel><Trans>{"Keep invite"}</Trans></AlertDialogCancel>
  <AlertDialogAction
  onClick={() => cancelTarget && onCancelInvitation(cancelTarget.id)}
  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
  >
- Cancel invite
+ <Trans>{"Cancel invite"}</Trans>
  </AlertDialogAction>
  </AlertDialogFooter>
  </AlertDialogContent>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import {
@@ -54,6 +55,7 @@ export function AgentActivityList({
   customFrom?: string;
   customTo?: string;
 }) {
+  const translateUi = useT();
   const {
     data: agents,
     isLoading: agentsLoading,
@@ -72,9 +74,9 @@ export function AgentActivityList({
           <p className="text-[11px] font-semibold uppercase text-muted-foreground">
             <Trans>{"Agent activity"}</Trans>
           </p>
-          <h3 className="mt-1 text-base font-semibold text-foreground">Top agents</h3>
+          <h3 className="mt-1 text-base font-semibold text-foreground"><Trans>{"Top agents"}</Trans></h3>
           <p className="text-xs text-muted-foreground">
-            Ranked by call volume in this period.
+            <Trans>{"Ranked by call volume in this period."}</Trans>
           </p>
         </div>
         <Link
@@ -87,11 +89,11 @@ export function AgentActivityList({
       <div className="grid grid-cols-2 border-b bg-muted/20 text-xs">
         <div className="border-r px-5 py-3">
           <p className="font-semibold text-foreground">{top.length}</p>
-          <p className="text-muted-foreground">active agents</p>
+          <p className="text-muted-foreground"><Trans>{"active agents"}</Trans></p>
         </div>
         <div className="px-5 py-3">
           <p className="font-semibold text-foreground">{totalCalls}</p>
-          <p className="text-muted-foreground">assigned calls</p>
+          <p className="text-muted-foreground"><Trans>{"assigned calls"}</Trans></p>
         </div>
       </div>
       {hasAgentLookupGap ? (
@@ -102,9 +104,7 @@ export function AgentActivityList({
         >
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
           <span>
-            <span className="font-semibold">Partial agent data:</span> call
-            counts loaded, but agent names could not be resolved. Use the call
-            links to inspect the source records.
+            <span className="font-semibold"><Trans>{"Partial agent data:"}</Trans></span> <Trans>{"call counts loaded, but agent names could not be resolved. Use the call links to inspect the source records."}</Trans>
           </span>
         </div>
       ) : null}
@@ -126,7 +126,7 @@ export function AgentActivityList({
                 <Link href="/agents"><Trans>{"Create agent"}</Trans></Link>
               </Button>
               <Button asChild size="sm" variant="outline">
-                <Link href="/numbers">Connect number</Link>
+                <Link href="/numbers"><Trans>{"Connect number"}</Trans></Link>
               </Button>
             </div>
           }
@@ -147,7 +147,7 @@ export function AgentActivityList({
                 key={agent.agentId ?? "unknown"}
                 href={dashboardCallsHref({ range, agentId: agent.agentId, from: customFrom, to: customTo })}
                 className="group block rounded-lg border bg-background p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-500/25 hover:bg-muted/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                aria-label={`View calls for ${agentName} in the selected dashboard range`}
+                aria-label={translateUi("View calls for {name} in the selected dashboard range", {name: agentName})}
               >
                 <div className="flex items-start gap-3">
                   <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted/40 text-xs font-semibold text-blue-400">
@@ -157,24 +157,24 @@ export function AgentActivityList({
                     <div className="flex items-start justify-between gap-3 text-sm">
                       <div className="min-w-0">
                         <p className="truncate font-medium text-foreground">
-                          {agentName}
+                          {translateUi(agentName)}
                         </p>
                         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                           <span className="inline-flex items-center gap-1">
                             <PhoneCall className="size-3" />
-                            {agent.calls} calls
+                            {agent.calls} <Trans>{"calls"}</Trans>
                           </span>
                           <span className="inline-flex items-center gap-1">
                             <CheckCircle2 className="size-3" />
-                            {successPct}% success
+                            {successPct}<Trans>{"% success"}</Trans>
                           </span>
                         </div>
                       </div>
                       <div className="shrink-0 text-right text-xs text-muted-foreground">
                         <p className="font-semibold text-foreground">{agent.minutes}m</p>
-                        <p>talk time</p>
+                        <p><Trans>{"talk time"}</Trans></p>
                         <p className="mt-1 inline-flex items-center gap-1 font-medium text-blue-400">
-                          View calls
+                          <Trans>{"View calls"}</Trans>
                           <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                         </p>
                       </div>

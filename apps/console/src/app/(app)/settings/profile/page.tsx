@@ -45,6 +45,7 @@ const passwordSchema = z
  });
 
 export default function ProfilePage() {
+  const translateUi = useT();
  const t = useT();
  const { data: session } = authClient.useSession();
  const [saving, setSaving] = useState(false);
@@ -73,10 +74,10 @@ export default function ProfilePage() {
  try {
  const { error } = await authClient.updateUser({ name: values.name });
  if (error) throw new Error(error.message);
- toast.success("Profile updated");
+ toast.success(translateUi("Profile updated"));
  profileForm.reset(values);
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not update profile");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not update profile"));
  } finally {
  setSaving(false);
  }
@@ -90,10 +91,10 @@ export default function ProfilePage() {
  newPassword: values.newPassword,
  });
  if (error) throw new Error(error.message);
- toast.success("Password changed");
+ toast.success(translateUi("Password changed"));
  passwordForm.reset();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : "Could not change password");
+ toast.error(err instanceof Error ? err.message : translateUi("Could not change password"));
  } finally {
  setChangingPw(false);
  }
@@ -238,7 +239,7 @@ export default function ProfilePage() {
  <Loader2 className="animate-spin" /> <Trans>{"Updating…"}</Trans>
  </>
  ) : (
- "Change password"
+ <Trans>{"Change password"}</Trans>
  )}
  </Button>
  </div>

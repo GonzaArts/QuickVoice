@@ -200,9 +200,8 @@ export function RecentCallsTable({
         >
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
           <span>
-            <span className="font-semibold">Partial call log data:</span>{" "}
-            recent call logs loaded, but agent names could not be resolved. Open
-            a call detail for the full source record.
+            <span className="font-semibold"><Trans>{"Partial call log data:"}</Trans></span>{" "}
+            <Trans>{"recent call logs loaded, but agent names could not be resolved. Open a call detail for the full source record."}</Trans>
           </span>
         </div>
       ) : null}
@@ -221,10 +220,10 @@ export function RecentCallsTable({
           action={
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button asChild size="sm">
-                <Link href="/outbound">Start with a test call</Link>
+                <Link href="/outbound"><Trans>{"Start with a test call"}</Trans></Link>
               </Button>
               <Button asChild size="sm" variant="outline">
-                <Link href="/numbers">Connect number</Link>
+                <Link href="/numbers"><Trans>{"Connect number"}</Trans></Link>
               </Button>
             </div>
           }
@@ -245,7 +244,7 @@ export function RecentCallsTable({
                 <li key={call.callId}>
                   <Link
                     href={`/calls/${call.callId}`}
-                    aria-label={`Open call ${call.callId}: ${parties.caller} to ${parties.callee}`}
+                    aria-label={t("Open call {id}: {caller} to {callee}", { id: call.callId, caller: parties.caller, callee: parties.callee })}
                     className={`group block px-5 py-4 transition-colors hover:bg-muted/40 ${linkFocusClass}`}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -266,7 +265,7 @@ export function RecentCallsTable({
                     </div>
                     <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                       <div>
-                        <dt className="text-muted-foreground">Callee</dt>
+                        <dt className="text-muted-foreground"><Trans>{"Callee"}</Trans></dt>
                         <dd className="truncate font-medium text-foreground">
                           {parties.callee}
                         </dd>
@@ -286,7 +285,7 @@ export function RecentCallsTable({
                       <div>
                         <dt className="text-muted-foreground"><Trans>{"Direction"}</Trans></dt>
                         <dd className="font-medium capitalize text-foreground">
-                          {call.direction ?? "unknown"}
+                          {call.direction ?? <Trans>{"unknown"}</Trans>}
                         </dd>
                       </div>
                     </dl>
@@ -299,8 +298,7 @@ export function RecentCallsTable({
           <div className="hidden overflow-x-auto md:block">
             <Table className="min-w-[1120px] border-collapse">
               <TableCaption className="sr-only">
-                Recent call logs with absolute timestamps, phone number,
-                assigned agent, duration, direction, status, and actions.
+                <Trans>{"Recent call logs with absolute timestamps, phone number, assigned agent, duration, direction, status, and actions."}</Trans>
               </TableCaption>
               <TableHeader>
                 <TableRow className="border-b bg-background/70 hover:bg-background/70">
@@ -358,7 +356,7 @@ export function RecentCallsTable({
                           {agentLabel}
                         </p>
                         <span className="sr-only">
-                          {call.agentId ? `ID ${shortId(call.agentId)}` : "No agent assigned"}
+                          {call.agentId ? `ID ${shortId(call.agentId)}` : <Trans>{"No agent assigned"}</Trans>}
                         </span>
                       </TableCell>
                       <TableCell className="align-middle text-sm font-semibold tabular-nums text-foreground">
@@ -369,7 +367,7 @@ export function RecentCallsTable({
                           className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-medium capitalize ${directionClasses(call.direction)}`}
                         >
                           <DirectionIcon className="size-3.5" aria-hidden="true" />
-                          {call.direction ?? "unknown"}
+                          {call.direction ?? <Trans>{"unknown"}</Trans>}
                         </span>
                       </TableCell>
                       <TableCell className="align-middle">
@@ -383,7 +381,7 @@ export function RecentCallsTable({
                       <TableCell className="pr-5 text-right align-middle">
                         <Link
                           href={`/calls/${call.callId}`}
-                          aria-label={`Open call ${call.callId}: ${parties.caller} to ${parties.callee}`}
+                          aria-label={t("Open call {id}: {caller} to {callee}", { id: call.callId, caller: parties.caller, callee: parties.callee })}
                           className={`inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${linkFocusClass}`}
                         >
                           <MoreHorizontal className="size-4" aria-hidden="true" />

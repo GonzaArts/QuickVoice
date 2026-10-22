@@ -1,5 +1,9 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
+import { Trans } from "@/src/i18n/Trans";
+
 import { Plus, Trash2, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, Info, Lightbulb } from "lucide-react";
 import { useState, useCallback } from "react";
 import { Button } from "@/src/components/ui/button";
@@ -106,6 +110,7 @@ function VariantEditor({
   totalVariants: number;
   showAllocation: boolean;
 }) {
+  const translateUi = useT();
   const allocationPercent = variant.allocationBps / 100;
   
   return (
@@ -113,16 +118,16 @@ function VariantEditor({
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 grid gap-3 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Variant Name</Label>
+            <Label><Trans>{"Variant Name"}</Trans></Label>
             <Input
-              placeholder="e.g., Treatment A"
+              placeholder={translateUi("e.g., Treatment A")}
               value={variant.name}
               onChange={(e) => onChange({ ...variant, name: e.target.value })}
             />
           </div>
           
           <div className="space-y-2">
-            <Label>Key (no spaces)</Label>
+            <Label><Trans>{"Key (no spaces)"}</Trans></Label>
             <Input
               placeholder="variant_a"
               value={variant.key}
@@ -134,7 +139,7 @@ function VariantEditor({
         <div className="flex flex-col items-center gap-2">
           {variant.isControl && (
             <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-              Control
+              <Trans>{"Control"}</Trans>
             </span>
           )}
           {!variant.isControl && totalVariants > 2 && (
@@ -154,7 +159,7 @@ function VariantEditor({
       {showAllocation && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>Traffic Allocation</Label>
+            <Label><Trans>{"Traffic Allocation"}</Trans></Label>
             <span className="text-sm font-medium">{allocationPercent}%</span>
           </div>
           <Slider
@@ -169,9 +174,9 @@ function VariantEditor({
       
       <div className="grid gap-3">
         <div className="space-y-2">
-          <Label>First Message (optional)</Label>
+          <Label><Trans>{"First Message (optional)"}</Trans></Label>
           <Textarea
-            placeholder="Override the default first message for this variant"
+            placeholder={translateUi("Override the default first message for this variant")}
             rows={2}
             value={variant.firstMessage || ""}
             onChange={(e) => onChange({ ...variant, firstMessage: e.target.value })}
@@ -179,9 +184,9 @@ function VariantEditor({
         </div>
         
         <div className="space-y-2">
-          <Label>Prompt Override (optional)</Label>
+          <Label><Trans>{"Prompt Override (optional)"}</Trans></Label>
           <Textarea
-            placeholder="Override the system prompt for this variant"
+            placeholder={translateUi("Override the system prompt for this variant")}
             rows={2}
             value={variant.prompt || ""}
             onChange={(e) => onChange({ ...variant, prompt: e.target.value })}
@@ -205,6 +210,7 @@ function ExperimentEditor({
   isExpanded: boolean;
   onToggleExpand: () => void;
 }) {
+  const translateUi = useT();
   const hasError = !experiment.experimentId.trim();
   
   const totalAllocation = experiment.variants.reduce((sum, v) => sum + v.allocationBps, 0);
@@ -246,7 +252,7 @@ function ExperimentEditor({
             <CheckCircle2 className="size-4 text-emerald-500" />
           )}
           <span className="font-medium text-sm">
-            {experiment.experimentId.trim() || "New Experiment"}
+            {experiment.experimentId.trim() || <Trans>{"New Experiment"}</Trans>}
           </span>
           {allocationValid ? (
             <CheckCircle2 className="size-3 text-emerald-500" />
@@ -284,16 +290,15 @@ function ExperimentEditor({
           <div className="p-3 rounded-lg bg-blue-50 border border-blue-100 flex gap-2">
             <Info className="size-4 text-blue-600 mt-0.5 shrink-0" />
             <div className="text-sm text-blue-800">
-              <strong>A/B Testing:</strong> Test different scripts or approaches to see which performs better. 
-              Recipients will be randomly assigned to variants based on your allocation percentages.
+              <strong><Trans>{"A/B Testing:"}</Trans></strong> <Trans>{"Test different scripts or approaches to see which performs better. Recipients will be randomly assigned to variants based on your allocation percentages."}</Trans>
             </div>
           </div>
           
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Experiment ID *</Label>
+              <Label><Trans>{"Experiment ID *"}</Trans></Label>
               <Input
-                placeholder="e.g., opening_script_test"
+                placeholder={translateUi("e.g., opening_script_test")}
                 value={experiment.experimentId}
                 onChange={(e) => onChange({ 
                   ...experiment, 
@@ -303,7 +308,7 @@ function ExperimentEditor({
             </div>
             
             <div className="space-y-2">
-              <Label>Primary Metric</Label>
+              <Label><Trans>{"Primary Metric"}</Trans></Label>
               <Select
                 value={experiment.primaryMetric}
                 onValueChange={(value) => onChange({ ...experiment, primaryMetric: value })}
@@ -314,7 +319,7 @@ function ExperimentEditor({
                 <SelectContent>
                   {METRIC_OPTIONS.map((metric) => (
                     <SelectItem key={metric.value} value={metric.value}>
-                      {metric.label}
+                      {translateUi(metric.label)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -323,9 +328,9 @@ function ExperimentEditor({
           </div>
           
           <div className="space-y-2">
-            <Label>Hypothesis</Label>
+            <Label><Trans>{"Hypothesis"}</Trans></Label>
             <Textarea
-              placeholder="What do you expect to learn from this experiment?"
+              placeholder={translateUi("What do you expect to learn from this experiment?")}
               rows={2}
               value={experiment.hypothesis}
               onChange={(e) => onChange({ ...experiment, hypothesis: e.target.value })}
@@ -334,19 +339,19 @@ function ExperimentEditor({
           
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Guardrail Metrics (optional)</Label>
+              <Label><Trans>{"Guardrail Metrics (optional)"}</Trans></Label>
               <Input
-                placeholder="e.g., abandon_rate, cost_per_call"
+                placeholder={translateUi("e.g., abandon_rate, cost_per_call")}
                 value={experiment.guardrailMetrics}
                 onChange={(e) => onChange({ ...experiment, guardrailMetrics: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                Metrics to monitor for negative effects
+                <Trans>{"Metrics to monitor for negative effects"}</Trans>
               </p>
             </div>
             
             <div className="space-y-2">
-              <Label>Stopping Policy</Label>
+              <Label><Trans>{"Stopping Policy"}</Trans></Label>
               <Select
                 value={experiment.stoppingPolicy}
                 onValueChange={(value) => onChange({ 
@@ -361,7 +366,7 @@ function ExperimentEditor({
                   {STOPPING_POLICIES.map((policy) => (
                     <SelectItem key={policy.value} value={policy.value}>
                       <div className="flex flex-col items-start">
-                        <span>{policy.label}</span>
+                        <span>{translateUi(policy.label)}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -373,13 +378,13 @@ function ExperimentEditor({
           <div className="space-y-3 pt-4 border-t">
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-base">Variants</Label>
+                <Label className="text-base"><Trans>{"Variants"}</Trans></Label>
                 <p className="text-xs text-muted-foreground">
                   {allocationValid ? (
-                    <span className="text-emerald-600">✓ Total allocation: 100%</span>
+                    <span className="text-emerald-600"><Trans>{"✓ Total allocation: 100%"}</Trans></span>
                   ) : (
                     <span className="text-amber-600">
-                      ⚠ Total allocation: {totalAllocation / 100}% (should be 100%)
+                      <Trans>{"⚠ Total allocation:"}</Trans> {totalAllocation / 100}<Trans>{"% (should be 100%)"}</Trans>
                     </span>
                   )}
                 </p>
@@ -391,7 +396,7 @@ function ExperimentEditor({
                 onClick={handleAddVariant}
               >
                 <Plus className="size-4" />
-                Add Variant
+                <Trans>{"Add Variant"}</Trans>
               </Button>
             </div>
             
@@ -453,9 +458,9 @@ export function ExperimentBuilder({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold">A/B Test Experiments</h3>
+          <h3 className="text-sm font-semibold"><Trans>{"A/B Test Experiments"}</Trans></h3>
           <p className="text-xs text-muted-foreground">
-            Test different approaches to improve your results
+            <Trans>{"Test different approaches to improve your results"}</Trans>
           </p>
         </div>
         <Button
@@ -465,7 +470,7 @@ export function ExperimentBuilder({
           onClick={handleAddExperiment}
         >
           <Plus className="size-4" />
-          Add Experiment
+          <Trans>{"Add Experiment"}</Trans>
         </Button>
       </div>
       
@@ -473,10 +478,10 @@ export function ExperimentBuilder({
         <div className="rounded-lg border border-dashed bg-muted/20 p-8 text-center">
           <Lightbulb className="size-8 mx-auto text-muted-foreground mb-3" />
           <p className="text-sm font-medium text-muted-foreground mb-2">
-            No experiments configured
+            <Trans>{"No experiments configured"}</Trans>
           </p>
           <p className="text-xs text-muted-foreground mb-4">
-            A/B testing helps you optimize your campaigns by comparing different approaches.
+            <Trans>{"A/B testing helps you optimize your campaigns by comparing different approaches."}</Trans>
           </p>
           <Button
             type="button"
@@ -485,7 +490,7 @@ export function ExperimentBuilder({
             onClick={handleAddExperiment}
           >
             <Plus className="size-4" />
-            Create Your First Experiment
+            <Trans>{"Create Your First Experiment"}</Trans>
           </Button>
         </div>
       ) : (

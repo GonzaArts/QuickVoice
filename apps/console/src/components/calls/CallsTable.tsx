@@ -155,6 +155,7 @@ export function CallsTable({
 }: {
   filters: Omit<CallListParams, "cursor" | "limit">;
 }) {
+  const translateUi = useT();
   const {locale} = useLocale();
   const router      = useRouter();
   const pathname    = usePathname();
@@ -313,7 +314,7 @@ export function CallsTable({
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
                 <Columns3 className="size-4" />
-                Columns {visibleCols.size} / {COLUMNS.length}
+                <Trans>{"Columns"}</Trans> {visibleCols.size} / {COLUMNS.length}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
@@ -327,7 +328,7 @@ export function CallsTable({
                   checked={visibleCols.has(col.key)}
                   onCheckedChange={() => toggleCol(col.key)}
                 >
-                  {col.label}
+                  {translateUi(col.label)}
                 </DropdownMenuCheckboxItem>
               ))}
             </DropdownMenuContent>
@@ -342,7 +343,7 @@ export function CallsTable({
             >
               <div className="flex items-start gap-3">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{c.callerId ?? "Unknown number"}</p>
+                  <p className="truncate font-medium">{c.callerId ?? <Trans>{"Unknown number"}</Trans>}</p>
                   <p className="text-xs text-muted-foreground">{fmtStartTime(c.startTime, localeCode(locale))}</p>
                 </div>
                 <StatusBadge status={c.status} />
@@ -422,7 +423,7 @@ export function CallsTable({
                   <TableCell className="pr-4 text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="size-8" aria-label="Row actions">
+                        <Button variant="ghost" size="icon" className="size-8" aria-label={translateUi("Row actions")}>
                           <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -484,7 +485,7 @@ export function CallsTable({
 
                 {/* page indicator */}
                 <span className="whitespace-nowrap font-medium text-foreground">
-                  Page {displayPage}{allFetched ? ` of ${totalKnownPages}` : ""}
+                  <Trans>{"Page"}</Trans> {displayPage}{allFetched ? ` of ${totalKnownPages}` : ""}
                 </span>
 
                 {/* nav buttons */}
@@ -492,21 +493,21 @@ export function CallsTable({
                   <Button variant="outline" size="icon" className="size-8"
                     onClick={() => setPageIdx(0)}
                     disabled={!hasPrev || query.isFetchingNextPage}
-                    aria-label="First page"
+                    aria-label={translateUi("First page")}
                   >
                     <ChevronsLeft className="size-4" />
                   </Button>
                   <Button variant="outline" size="icon" className="size-8"
                     onClick={goPrev}
                     disabled={!hasPrev || query.isFetchingNextPage}
-                    aria-label="Previous page"
+                    aria-label={translateUi("Previous page")}
                   >
                     <ChevronLeft className="size-4" />
                   </Button>
                   <Button variant="outline" size="icon" className="size-8"
                     onClick={goNext}
                     disabled={!hasNext || query.isFetchingNextPage}
-                    aria-label="Next page"
+                    aria-label={translateUi("Next page")}
                   >
                     {query.isFetchingNextPage
                       ? <Loader2 className="size-4 animate-spin" />
@@ -515,7 +516,7 @@ export function CallsTable({
                   <Button variant="outline" size="icon" className="size-8"
                     onClick={() => setPageIdx(totalKnownPages - 1)}
                     disabled={!allFetched || pageIdx >= totalKnownPages - 1 || query.isFetchingNextPage}
-                    aria-label="Last page"
+                    aria-label={translateUi("Last page")}
                   >
                     <ChevronsRight className="size-4" />
                   </Button>
@@ -547,7 +548,7 @@ export function CallsTable({
               disabled={del.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {del.isPending ? <><Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans></> : "Delete"}
+              {del.isPending ? <><Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans></> : <Trans>{"Delete"}</Trans>}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

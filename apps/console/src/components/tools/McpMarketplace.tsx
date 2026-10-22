@@ -133,7 +133,7 @@ function MarketplaceAction({
         onClick={() => onSetup(item.setupUrl as string, item.mcpConnectionId as string)}
       >
         <ExternalLink className="size-4" />
-        Re-authorize
+        <Trans>{"Re-authorize"}</Trans>
       </Button>
     );
   }
@@ -155,12 +155,12 @@ function MarketplaceAction({
         onClick={() => onSetup(item.setupUrl as string, item.mcpConnectionId as string)}
       >
         <ExternalLink className="size-4" />
-        {missingGoogleDriveScope ? "Re-authorize" : "Setup"}
+        {missingGoogleDriveScope ? <Trans>{"Re-authorize"}</Trans> : <Trans>{"Setup"}</Trans>}
       </Button>
     ) : (
       <Badge className="gap-1 bg-blue-500/10 text-blue-700 hover:bg-blue-500/10 dark:text-blue-300">
         <AlertCircle className="size-3" />
-        {missingGoogleDriveScope ? "Drive access not granted" : "Setup required"}
+        {missingGoogleDriveScope ? <Trans>{"Drive access not granted"}</Trans> : <Trans>{"Setup required"}</Trans>}
       </Badge>
     );
   }
@@ -169,7 +169,7 @@ function MarketplaceAction({
     return (
       <Button variant="outline" size="sm" disabled={isDisabled} onClick={onConnect}>
         {isPending ? <Loader2 className="size-4 animate-spin" /> : <AlertCircle className="size-4" />}
-        Retry setup
+        <Trans>{"Retry setup"}</Trans>
       </Button>
     );
   }
@@ -177,12 +177,13 @@ function MarketplaceAction({
   return (
     <Button size="sm" disabled={isDisabled} onClick={onConnect}>
       {isPending ? <Loader2 className="size-4 animate-spin" /> : <PlugZap className="size-4" />}
-      Connect
+      <Trans>{"Connect"}</Trans>
     </Button>
   );
 }
 
 export function McpMarketplace() {
+  const translateUi = useT();
   const t = useT();
   const connectMcp = useConnectMcp();
   const openMcpSetup = useOpenMcpSetup();
@@ -227,47 +228,44 @@ export function McpMarketplace() {
       <div className="border bg-card">
         <div className="flex items-start justify-between gap-4">
           <div className="p-4">
-            <p className="text-sm font-semibold">Connect a custom MCP server</p>
+            <p className="text-sm font-semibold"><Trans>{"Connect a custom MCP server"}</Trans></p>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              Use this option when a server provider has given you a remote MCP endpoint that is not in the
-              verified catalog.
+              <Trans>{"Use this option when a server provider has given you a remote MCP endpoint that is not in the verified catalog."}</Trans>
             </p>
           </div>
-          <Badge variant="outline" className="m-4 shrink-0">Unverified</Badge>
+          <Badge variant="outline" className="m-4 shrink-0"><Trans>{"Unverified"}</Trans></Badge>
         </div>
 
         <div className="border-y bg-muted/30 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Before you connect
+            <Trans>{"Before you connect"}</Trans>
           </p>
           <div className="mt-3 grid gap-3 md:grid-cols-3">
             <div className="flex gap-3">
               <Globe2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
               <div>
-                <p className="text-sm font-medium">Remote endpoint</p>
+                <p className="text-sm font-medium"><Trans>{"Remote endpoint"}</Trans></p>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  Use the full public HTTPS endpoint, usually ending in <code>/mcp</code>. Legacy <code>/sse</code>{" "}
-                  endpoints are accepted.
+                  <Trans>{"Use the full public HTTPS endpoint, usually ending in"}</Trans> <code>/mcp</code><Trans>{". Legacy"}</Trans> <code>/sse</code>{" "}
+                  <Trans>{"endpoints are accepted."}</Trans>
                 </p>
               </div>
             </div>
             <div className="flex gap-3">
               <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
               <div>
-                <p className="text-sm font-medium">Publicly reachable</p>
+                <p className="text-sm font-medium"><Trans>{"Publicly reachable"}</Trans></p>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  The server must be reachable from the internet. Localhost and private network URLs are not
-                  supported.
+                  <Trans>{"The server must be reachable from the internet. Localhost and private network URLs are not supported."}</Trans>
                 </p>
               </div>
             </div>
             <div className="flex gap-3">
               <KeyRound aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
               <div>
-                <p className="text-sm font-medium">Authorization comes next</p>
+                <p className="text-sm font-medium"><Trans>{"Authorization comes next"}</Trans></p>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  Do not put tokens or passwords in the URL. If the server needs sign-in or setup, you will
-                  complete it after connecting.
+                  <Trans>{"Do not put tokens or passwords in the URL. If the server needs sign-in or setup, you will complete it after connecting."}</Trans>
                 </p>
               </div>
             </div>
@@ -304,7 +302,7 @@ export function McpMarketplace() {
         >
           <div className="space-y-1.5">
             <Label htmlFor="custom-mcp-url">
-              MCP endpoint URL <span className="text-destructive">*</span>
+              <Trans>{"MCP endpoint URL"}</Trans> <span className="text-destructive">*</span>
             </Label>
             <Input
               id="custom-mcp-url"
@@ -322,7 +320,7 @@ export function McpMarketplace() {
               }}
             />
             <p id="custom-mcp-url-help" className="text-xs leading-5 text-muted-foreground">
-              Paste the exact endpoint URL, including its <code>/mcp</code> or <code>/sse</code> path.
+              <Trans>{"Paste the exact endpoint URL, including its"}</Trans> <code>/mcp</code> <Trans>{"or"}</Trans> <code>/sse</code> <Trans>{"path."}</Trans>
             </p>
             <p
               id="custom-mcp-url-status"
@@ -340,18 +338,17 @@ export function McpMarketplace() {
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="custom-mcp-name">
-              Display name <span className="font-normal text-muted-foreground">(optional)</span>
+              <Trans>{"Display name"}</Trans> <span className="font-normal text-muted-foreground"><Trans>{"(optional)"}</Trans></span>
             </Label>
             <Input
               id="custom-mcp-name"
               value={displayName}
               maxLength={100}
-              placeholder="Cloudflare demo"
+              placeholder={translateUi("Cloudflare demo")}
               onChange={(event) => setDisplayName(event.target.value)}
             />
             <p className="text-xs leading-5 text-muted-foreground">
-              This label is shown only inside QuickVoice so your team can recognize the connection. If left
-              blank, the server hostname is used.
+              <Trans>{"This label is shown only inside QuickVoice so your team can recognize the connection. If left blank, the server hostname is used."}</Trans>
             </p>
           </div>
           <Button
@@ -364,7 +361,7 @@ export function McpMarketplace() {
             ) : (
               <PlugZap className="size-4" />
             )}
-            Connect
+            <Trans>{"Connect"}</Trans>
           </Button>
         </form>
 
@@ -373,9 +370,9 @@ export function McpMarketplace() {
             <div className="flex gap-3">
               <Tag aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-blue-700 dark:text-blue-300" />
               <div>
-                <p className="text-sm font-medium">{customSetup.displayName} needs additional setup</p>
+                <p className="text-sm font-medium">{customSetup.displayName} <Trans>{"needs additional setup"}</Trans></p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Continue in a new tab to authorize or configure the server, then return to QuickVoice.
+                  <Trans>{"Continue in a new tab to authorize or configure the server, then return to QuickVoice."}</Trans>
                 </p>
               </div>
             </div>
@@ -387,7 +384,7 @@ export function McpMarketplace() {
               }
             >
               <ExternalLink className="size-4" />
-              Continue setup
+              <Trans>{"Continue setup"}</Trans>
             </Button>
           </div>
         )}
@@ -395,20 +392,20 @@ export function McpMarketplace() {
 
       {isError && (
         <div className="border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
-          The API catalog is not available yet. Restart the API server to enable connection actions.
+          <Trans>{"The API catalog is not available yet. Restart the API server to enable connection actions."}</Trans>
         </div>
       )}
 
       <div className="flex flex-col gap-3 border bg-card p-4 md:flex-row md:items-end">
         <div className="min-w-0 flex-1 space-y-1.5">
-          <Label htmlFor="mcp-marketplace-search">Search marketplace</Label>
+          <Label htmlFor="mcp-marketplace-search"><Trans>{"Search marketplace"}</Trans></Label>
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="mcp-marketplace-search"
               value={searchInput}
               className="pl-9"
-              placeholder="Search apps, tools, or providers"
+              placeholder={translateUi("Search apps, tools, or providers")}
               onChange={(event) => setSearchInput(event.target.value)}
             />
           </div>
@@ -423,7 +420,7 @@ export function McpMarketplace() {
             }}
           >
             <ShieldCheck className="size-4" />
-            Verified
+            <Trans>{"Verified"}</Trans>
           </Button>
           <select
             className="h-9 border bg-background px-3 text-sm"
@@ -433,7 +430,7 @@ export function McpMarketplace() {
               setSortBy(event.target.value as "popular" | "name");
             }}
           >
-            <option value="popular">Popular</option>
+            <option value="popular">{t("Popular")}</option>
             <option value="name">{t("Name")}</option>
           </select>
         </div>
@@ -451,16 +448,16 @@ export function McpMarketplace() {
                     {item.verified && (
                       <Badge variant="outline" className="gap-1 text-[10px]">
                         <ShieldCheck className="size-3" />
-                        Verified
+                        <Trans>{"Verified"}</Trans>
                       </Badge>
                     )}
                     {!!(item.useCount ?? item.toolCount) && (
                       <Badge variant="secondary" className="text-[10px]">
-                        {(item.useCount ?? item.toolCount).toLocaleString()} uses
+                        {(item.useCount ?? item.toolCount).toLocaleString()} <Trans>{"uses"}</Trans>
                       </Badge>
                     )}
                   </div>
-                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{item.description}</p>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{t(item.description)}</p>
                   {item.qualifiedName && (
                     <p className="mt-1 truncate font-mono text-[11px] text-muted-foreground/80">
                       {item.qualifiedName}
@@ -468,7 +465,7 @@ export function McpMarketplace() {
                   )}
                   {hasMissingGoogleDriveScope(item.metadata) && (
                     <p className="mt-2 text-xs text-blue-700 dark:text-blue-300">
-                      On the Google consent screen, check Google Drive access before continuing.
+                      <Trans>{"On the Google consent screen, check Google Drive access before continuing."}</Trans>
                     </p>
                   )}
                 </div>
@@ -487,7 +484,7 @@ export function McpMarketplace() {
             <div className="mt-4 flex flex-wrap gap-1.5">
               {item.categories.map((category) => (
                 <Badge key={category} variant="secondary" className="text-[10px]">
-                  {category}
+                  {t(category)}
                 </Badge>
               ))}
             </div>
@@ -496,13 +493,13 @@ export function McpMarketplace() {
       </div>
       {!catalog.length && (
         <div className="border bg-card px-4 py-8 text-center text-sm text-muted-foreground">
-          {isLoading ? "Loading MCP servers..." : "No MCP servers match the current filters."}
+          {isLoading ? <Trans>{"Loading MCP servers..."}</Trans> : <Trans>{"No MCP servers match the current filters."}</Trans>}
         </div>
       )}
       {pagination && pagination.totalCount > 0 && (
         <div className="flex flex-col gap-3 border bg-card p-3 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
           <div>
-            Page {pagination.page} of {pagination.totalPages} - {pagination.totalCount.toLocaleString()} results
+            <Trans>{"Page"}</Trans> {pagination.page} <Trans>{"of"}</Trans> {pagination.totalPages} - {pagination.totalCount.toLocaleString()} <Trans>{"results"}</Trans>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <select
@@ -513,9 +510,9 @@ export function McpMarketplace() {
                 setPageSize(Number(event.target.value));
               }}
             >
-              <option value={12}>12 / page</option>
-              <option value={24}>24 / page</option>
-              <option value={48}>48 / page</option>
+              <option value={12}>{t("{count} / page", { count: 12 })}</option>
+              <option value={24}>{t("{count} / page", { count: 24 })}</option>
+              <option value={48}>{t("{count} / page", { count: 48 })}</option>
             </select>
             <Button
               type="button"

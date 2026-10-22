@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useId } from "react";
 import Link from "next/link";
@@ -127,6 +129,7 @@ export function BreakdownCharts({
   customFrom?: string;
   customTo?: string;
 }) {
+  const translateUi = useT();
   const statusTitleId = useId();
   const statusSummaryId = useId();
   const directionTitleId = useId();
@@ -161,15 +164,15 @@ export function BreakdownCharts({
   const completionPct = percent(completedCalls, totalStatus);
   const statusChartData = statusData.map((item) => ({
     ...item,
-    label: labelStatus(item.status),
-    pattern: statusPattern[item.status] ?? "solid bar",
+    label: translateUi(labelStatus(item.status)),
+    pattern: translateUi(statusPattern[item.status] ?? "solid bar"),
     percentage: percent(item.count, totalStatus),
     style: statusStyles[item.status] ?? statusStyles.PROCESSED,
   }));
   const directionChartData = directionData.map((item) => ({
     ...item,
-    label: directionStyles[item.direction].label,
-    pattern: directionPattern[item.direction],
+    label: translateUi(directionStyles[item.direction].label),
+    pattern: translateUi(directionPattern[item.direction]),
     percentage: percent(item.count, directionTotal),
     style: directionStyles[item.direction],
   }));
@@ -183,17 +186,16 @@ export function BreakdownCharts({
         <div className="flex flex-col gap-4 border-b bg-muted/20 p-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-              Outcomes
+              <Trans>{"Outcomes"}</Trans>
             </p>
             <h3
               id={statusTitleId}
               className="mt-1 text-base font-semibold text-foreground"
             >
-              Call outcomes
+              <Trans>{"Call outcomes"}</Trans>
             </h3>
             <p id={statusSummaryId} className="text-xs text-muted-foreground">
-              Status distribution for the selected range by count and share of
-              calls.
+              <Trans>{"Status distribution for the selected range by count and share of calls."}</Trans>
             </p>
           </div>
           <div className="grid grid-cols-2 overflow-hidden rounded-xl border bg-background/80 text-center text-xs shadow-sm backdrop-blur sm:min-w-56">
@@ -201,13 +203,13 @@ export function BreakdownCharts({
               <p className="font-semibold text-foreground tabular-nums">
                 {totalStatus}
               </p>
-              <p className="text-muted-foreground">tracked</p>
+              <p className="text-muted-foreground"><Trans>{"tracked"}</Trans></p>
             </div>
             <div className="px-3 py-2.5">
               <p className="font-semibold text-green-400/80 tabular-nums">
                 {completionPct}%
               </p>
-              <p className="text-muted-foreground">completed</p>
+              <p className="text-muted-foreground"><Trans>{"completed"}</Trans></p>
             </div>
           </div>
         </div>
@@ -215,16 +217,16 @@ export function BreakdownCharts({
           <div
             className="space-y-5 p-5"
             role="group"
-            aria-label="Call outcome status breakdown chart"
+            aria-label={translateUi("Call outcome status breakdown chart")}
             aria-describedby={statusSummaryId}
           >
             <div className="rounded-xl border bg-background/60 p-4">
               <div className="mb-3 flex items-center justify-between gap-3 text-xs">
                 <span className="font-medium text-muted-foreground">
-                  Outcome share
+                  <Trans>{"Outcome share"}</Trans>
                 </span>
                 <span className="font-semibold text-foreground tabular-nums">
-                  {totalStatus} total
+                  {totalStatus} <Trans>{"total"}</Trans>
                 </span>
               </div>
               <div className="flex h-4 overflow-hidden rounded-full bg-muted" aria-hidden="true">
@@ -249,7 +251,7 @@ export function BreakdownCharts({
                   href={dashboardCallsHref({ range, status: item.status, from: customFrom, to: customTo })}
                   className={`group rounded-xl border p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 ${item.style.surfaceClass}`}
                   style={{ animationDelay: `${index * 60}ms` }}
-                  aria-label={`Review ${labelStatus(item.status)} calls in the selected dashboard range`}
+                  aria-label={translateUi("Review {status} calls in the selected dashboard range", { status: translateUi(labelStatus(item.status)) })}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -281,7 +283,7 @@ export function BreakdownCharts({
                       {item.pattern}
                     </span>
                     <span className={`inline-flex items-center gap-1 font-medium ${item.style.textClass}`}>
-                      Review
+                      <Trans>{"Review"}</Trans>
                       <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </div>
@@ -290,13 +292,13 @@ export function BreakdownCharts({
             </div>
             <div className="sr-only">
               <table aria-describedby={statusSummaryId}>
-                <caption>Call outcome status breakdown data table</caption>
+                <caption><Trans>{"Call outcome status breakdown data table"}</Trans></caption>
                 <thead>
                   <tr>
                     <th scope="col"><Trans>{"Status"}</Trans></th>
                     <th scope="col"><Trans>{"Calls"}</Trans></th>
-                    <th scope="col">Percentage of calls</th>
-                    <th scope="col">Legend pattern</th>
+                    <th scope="col"><Trans>{"Percentage of calls"}</Trans></th>
+                    <th scope="col"><Trans>{"Legend pattern"}</Trans></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -320,7 +322,7 @@ export function BreakdownCharts({
             className="m-5 h-64 bg-background/40"
             action={
               <Button asChild size="sm">
-                <Link href="/outbound">Place a test call</Link>
+                <Link href="/outbound"><Trans>{"Place a test call"}</Trans></Link>
               </Button>
             }
           />
@@ -333,17 +335,16 @@ export function BreakdownCharts({
         <div className="flex min-w-0 flex-col gap-4 border-b bg-muted/20 p-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-              Routing
+              <Trans>{"Routing"}</Trans>
             </p>
             <h3
               id={directionTitleId}
               className="mt-1 text-base font-semibold text-foreground"
             >
-              Direction mix
+              <Trans>{"Direction mix"}</Trans>
             </h3>
             <p id={directionSummaryId} className="text-xs text-muted-foreground">
-              Inbound and outbound call composition by count and share of
-              routed calls.
+              <Trans>{"Inbound and outbound call composition by count and share of routed calls."}</Trans>
             </p>
           </div>
           <div className="grid grid-cols-2 overflow-hidden rounded-xl border bg-background/80 text-center text-xs shadow-sm backdrop-blur sm:min-w-56">
@@ -351,13 +352,13 @@ export function BreakdownCharts({
               <p className="font-semibold tabular-nums text-muted-foreground">
                 {inboundPct}%
               </p>
-              <p className="text-muted-foreground">inbound</p>
+              <p className="text-muted-foreground"><Trans>{"inbound"}</Trans></p>
             </div>
             <div className="px-3 py-2.5">
               <p className="font-semibold tabular-nums text-blue-400">
                 {outboundPct}%
               </p>
-              <p className="text-muted-foreground">outbound</p>
+              <p className="text-muted-foreground"><Trans>{"outbound"}</Trans></p>
             </div>
           </div>
         </div>
@@ -365,7 +366,7 @@ export function BreakdownCharts({
           <div
             className="space-y-5 p-5"
             role="group"
-            aria-label="Inbound and outbound direction mix chart"
+            aria-label={translateUi("Inbound and outbound direction mix chart")}
             aria-describedby={directionSummaryId}
           >
             <div className="grid gap-3 sm:grid-cols-2">
@@ -373,7 +374,7 @@ export function BreakdownCharts({
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-medium text-muted-foreground">
-                      Inbound calls
+                      <Trans>{"Inbound calls"}</Trans>
                     </p>
                     <p className="mt-2 text-3xl font-semibold tracking-tight text-muted-foreground tabular-nums">
                       {inbound}
@@ -417,10 +418,10 @@ export function BreakdownCharts({
             <div className="rounded-xl border bg-background/60 p-4">
               <div className="mb-3 flex items-center justify-between gap-3 text-xs">
                 <span className="font-medium text-muted-foreground">
-                  Routed call share
+                  <Trans>{"Routed call share"}</Trans>
                 </span>
                 <span className="font-semibold text-foreground tabular-nums">
-                  {directionTotal} total
+                  {directionTotal} <Trans>{"total"}</Trans>
                 </span>
               </div>
               <div className="flex h-4 overflow-hidden rounded-full bg-muted" aria-hidden="true">
@@ -462,7 +463,7 @@ export function BreakdownCharts({
                       </div>
                     </div>
                     <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                      Percentage of routed calls, {item.pattern}.
+                      <Trans>{"Percentage of routed calls,"}</Trans> {item.pattern}.
                     </p>
                   </div>
                 ))}
@@ -470,13 +471,13 @@ export function BreakdownCharts({
             </div>
             <div className="sr-only">
               <table aria-describedby={directionSummaryId}>
-                <caption>Inbound and outbound direction mix data table</caption>
+                <caption><Trans>{"Inbound and outbound direction mix data table"}</Trans></caption>
                 <thead>
                   <tr>
                     <th scope="col"><Trans>{"Direction"}</Trans></th>
                     <th scope="col"><Trans>{"Calls"}</Trans></th>
-                    <th scope="col">Percentage of routed calls</th>
-                    <th scope="col">Legend pattern</th>
+                    <th scope="col"><Trans>{"Percentage of routed calls"}</Trans></th>
+                    <th scope="col"><Trans>{"Legend pattern"}</Trans></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -501,10 +502,10 @@ export function BreakdownCharts({
             action={
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Button asChild size="sm">
-                  <Link href="/numbers">Connect a number</Link>
+                  <Link href="/numbers"><Trans>{"Connect a number"}</Trans></Link>
                 </Button>
                 <Button asChild size="sm" variant="outline">
-                  <Link href="/outbound">Place a test call</Link>
+                  <Link href="/outbound"><Trans>{"Place a test call"}</Trans></Link>
                 </Button>
               </div>
             }

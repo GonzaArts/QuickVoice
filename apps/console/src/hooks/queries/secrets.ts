@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -19,6 +21,7 @@ export function useSecrets() {
 }
 
 export function useCreateSecret() {
+  const translateUi = useT();
   const qc = useQueryClient();
 
   return useMutation({
@@ -27,12 +30,13 @@ export function useCreateSecret() {
       qc.invalidateQueries({ queryKey: queryKeys.secrets.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not create secret");
+      toast.error(err.message || translateUi("Could not create secret"));
     },
   });
 }
 
 export function useDeleteSecret() {
+  const translateUi = useT();
   const qc = useQueryClient();
 
   return useMutation({
@@ -41,7 +45,7 @@ export function useDeleteSecret() {
       qc.invalidateQueries({ queryKey: queryKeys.secrets.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not delete secret");
+      toast.error(err.message || translateUi("Could not delete secret"));
     },
   });
 }

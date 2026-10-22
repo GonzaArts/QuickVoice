@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import {
@@ -150,9 +152,9 @@ function OutboundCallDetailDialog({
     <Dialog open={!!call} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Outbound call</DialogTitle>
+          <DialogTitle><Trans>{"Outbound call"}</Trans></DialogTitle>
           <DialogDescription>
-            Call destination, dispatch status, and prompt overrides.
+            <Trans>{"Call destination, dispatch status, and prompt overrides."}</Trans>
           </DialogDescription>
         </DialogHeader>
 
@@ -171,7 +173,7 @@ function OutboundCallDetailDialog({
                 </Badge>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Mode</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Mode"}</Trans></p>
                 <p className="mt-1 font-medium capitalize">{shown.mode}</p>
               </div>
               <div className="border p-3">
@@ -184,11 +186,11 @@ function OutboundCallDetailDialog({
 
             <div className="grid gap-3 text-sm sm:grid-cols-2">
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">To</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"To"}</Trans></p>
                 <p className="mt-1 font-mono text-xs">{shown.phoneNumber}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">From</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"From"}</Trans></p>
                 <p className="mt-1 font-mono text-xs">{shown.fromNumber}</p>
               </div>
               <div className="border p-3">
@@ -215,7 +217,7 @@ function OutboundCallDetailDialog({
                 </p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">System prompt override</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"System prompt override"}</Trans></p>
                 <p className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-sm">
                   {shown.systemPrompt || "-"}
                 </p>
@@ -229,6 +231,7 @@ function OutboundCallDetailDialog({
 }
 
 export function OutboundCallsPanel() {
+  const translateUi = useT();
   const { data: agents = [] } = useAgents();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"all" | CallStatus>("all");
@@ -317,7 +320,7 @@ export function OutboundCallsPanel() {
           <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search calls, numbers, agents, or status"
+            placeholder={translateUi("Search calls, numbers, agents, or status")}
             className="pl-9"
           />
         </div>
@@ -328,7 +331,7 @@ export function OutboundCallsPanel() {
           <SelectContent>
             {STATUS_OPTIONS.map((item) => (
               <SelectItem key={item} value={item} className="capitalize">
-                {item === "all" ? "All statuses" : statusLabel(item)}
+                {item === "all" ? <Trans>{"All statuses"}</Trans> : statusLabel(item)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -338,8 +341,8 @@ export function OutboundCallsPanel() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All modes</SelectItem>
-            <SelectItem value="quick">Quick</SelectItem>
+            <SelectItem value="all"><Trans>{"All modes"}</Trans></SelectItem>
+            <SelectItem value="quick"><Trans>{"Quick"}</Trans></SelectItem>
             <SelectItem value="campaign"><Trans>{"Campaign"}</Trans></SelectItem>
           </SelectContent>
         </Select>
@@ -347,7 +350,7 @@ export function OutboundCallsPanel() {
           variant="outline"
           onClick={() => {
             downloadOutboundCsv(filteredCalls, (id) => agentNames.get(id ?? "") ?? "-");
-            toast.success("Outbound export downloaded");
+            toast.success(translateUi("Outbound export downloaded"));
           }}
           disabled={!filteredCalls.length}
         >
@@ -385,7 +388,7 @@ export function OutboundCallsPanel() {
                         <p className="font-mono text-xs">{call.phoneNumber}</p>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        From {call.fromNumber} · {call.mode}
+                        <Trans>{"From"}</Trans> {call.fromNumber} · {call.mode}
                       </p>
                     </div>
                   </TableCell>
@@ -407,13 +410,13 @@ export function OutboundCallsPanel() {
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          aria-label={`Actions for outbound call ${call.outboundId}`}
+                          aria-label={translateUi("Actions for outbound call {id}", {id: call.outboundId})}
                         >
                           <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Call actions</DropdownMenuLabel>
+                        <DropdownMenuLabel><Trans>{"Call actions"}</Trans></DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => setSelectedCall(call)}>
                           <PhoneCall className="size-4" />
                           <Trans>{"View details"}</Trans>
@@ -424,7 +427,7 @@ export function OutboundCallsPanel() {
                             disabled={retryCall.isPending}
                           >
                             <RotateCcw className="size-4" />
-                            Retry call
+                            <Trans>{"Retry call"}</Trans>
                           </DropdownMenuItem>
                         ) : null}
                         {canCancel(call) ? (
@@ -435,7 +438,7 @@ export function OutboundCallsPanel() {
                               onClick={() => setCancelTarget(call)}
                             >
                               <SquareX className="size-4" />
-                              Cancel call
+                              <Trans>{"Cancel call"}</Trans>
                             </DropdownMenuItem>
                           </>
                         ) : null}
@@ -464,15 +467,14 @@ export function OutboundCallsPanel() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel outbound call?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"Cancel outbound call?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
-              This cancels the scheduled call to {cancelTarget?.phoneNumber}.
-              Calls already in progress cannot be cancelled here.
+              <Trans>{"This cancels the scheduled call to"}</Trans> {cancelTarget?.phoneNumber}<Trans>{". Calls already in progress cannot be cancelled here."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={cancelCall.isPending}>
-              Keep call
+              <Trans>{"Keep call"}</Trans>
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -485,7 +487,7 @@ export function OutboundCallsPanel() {
               {cancelCall.isPending ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : null}
-              Cancel call
+              <Trans>{"Cancel call"}</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

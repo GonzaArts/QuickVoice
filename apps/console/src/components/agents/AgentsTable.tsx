@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import Link from "next/link";
@@ -73,13 +75,13 @@ function ConfiguredChip({ configured }: { configured: boolean }) {
           )}
         >
           <BadgeCheck className="size-3" />
-          {configured ? "Configured" : "Not set"}
+          {configured ? <Trans>{"Configured"}</Trans> : <Trans>{"Not set"}</Trans>}
         </span>
       </TooltipTrigger>
       <TooltipContent>
         {configured
-          ? "Agent has a saved configuration"
-          : "Open the agent to configure voice, prompts, and tools"}
+          ? <Trans>{"Agent has a saved configuration"}</Trans>
+          : <Trans>{"Open the agent to configure voice, prompts, and tools"}</Trans>}
       </TooltipContent>
     </Tooltip>
   );
@@ -88,13 +90,14 @@ function ConfiguredChip({ configured }: { configured: boolean }) {
 // ── status switch row ─────────────────────────────────────────────────────────
 
 function StatusCell({ agent }: { agent: Agent }) {
+  const translateUi = useT();
   const update = useUpdateAgent(agent.agentId);
   return (
     <Switch
       checked={agent.isActive}
       onCheckedChange={(v) => update.mutate({ isActive: v })}
       disabled={update.isPending}
-      aria-label={agent.isActive ? "Pause agent" : "Resume agent"}
+      aria-label={translateUi(agent.isActive ? "Pause agent" : "Resume agent")}
     />
   );
 }
@@ -107,6 +110,7 @@ interface Props {
 }
 
 export function AgentsTable({ agents, isLoading }: Props) {
+  const translateUi = useT();
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<Agent | null>(null);
@@ -172,7 +176,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={`Preview ${agent.name}`}
+                  aria-label={translateUi("Preview {name}", {name: agent.name})}
                   onClick={() => setPreviewTarget(agent)}
                 >
                   <FlaskConical />
@@ -180,7 +184,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={`Delete ${agent.name}`}
+                  aria-label={translateUi("Delete {name}", {name: agent.name})}
                   onClick={() => setDeleteTarget(agent)}
                 >
                   <Trash2 />
@@ -298,7 +302,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
                         variant="ghost"
                         size="icon"
                         className="size-8"
-                        aria-label="Row actions"
+                        aria-label={translateUi("Row actions")}
                       >
                         <MoreHorizontal className="size-4" />
                       </Button>
@@ -335,7 +339,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
       <div className="flex flex-col gap-3 px-1 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-end">
         <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
           <span className="whitespace-nowrap font-medium text-foreground">
-            Page {currentPage} of {totalPages}
+            <Trans>{"Page"}</Trans> {currentPage} <Trans>{"of"}</Trans> {totalPages}
           </span>
           <div className="flex items-center gap-0.5">
             <Button
@@ -344,7 +348,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(1)}
               disabled={currentPage <= 1}
-              aria-label="First page"
+              aria-label={translateUi("First page")}
             >
               <ChevronsLeft className="size-4" />
             </Button>
@@ -354,7 +358,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(Math.max(1, currentPage - 1))}
               disabled={currentPage <= 1}
-              aria-label="Previous page"
+              aria-label={translateUi("Previous page")}
             >
               <ChevronLeft className="size-4" />
             </Button>
@@ -364,7 +368,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage >= totalPages}
-              aria-label="Next page"
+              aria-label={translateUi("Next page")}
             >
               <ChevronRight className="size-4" />
             </Button>
@@ -374,7 +378,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
               className="size-8"
               onClick={() => setPage(totalPages)}
               disabled={currentPage >= totalPages}
-              aria-label="Last page"
+              aria-label={translateUi("Last page")}
             >
               <ChevronsRight className="size-4" />
             </Button>
@@ -391,9 +395,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
           <AlertDialogHeader>
             <AlertDialogTitle><Trans>{"Delete this agent?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
-              This deletes {deleteTarget?.name ?? "this agent"} and detaches it
-              from phone numbers, tools, and knowledge sources. This cannot be
-              undone.
+              <Trans>{"This deletes"}</Trans> {deleteTarget?.name ?? <Trans>{"this agent"}</Trans>} <Trans>{"and detaches it from phone numbers, tools, and knowledge sources. This cannot be undone."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -408,7 +410,7 @@ export function AgentsTable({ agents, isLoading }: Props) {
                   <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
                 </>
               ) : (
-                "Delete"
+                <Trans>{"Delete"}</Trans>
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

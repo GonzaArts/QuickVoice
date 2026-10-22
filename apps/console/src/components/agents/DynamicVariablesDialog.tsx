@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
 import { Trans } from "@/src/i18n/Trans";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
@@ -39,6 +40,7 @@ export function DynamicVariablesDialog({
     onValuesChange,
     onConfirm,
 }: DynamicVariablesDialogProps) {
+    const translateUi = useT();
     const missingValues = variableNames.some((name) => !values[name]?.trim());
 
     return (
@@ -60,7 +62,7 @@ export function DynamicVariablesDialog({
                             <Input
                                 id={`dynamic-variable-${name}`}
                                 value={values[name] ?? ""}
-                                placeholder={`Fallback for ${variableToken(name)}`}
+                                placeholder={translateUi("Fallback for {name}", {name: variableToken(name)})}
                                 onChange={(event) =>
                                     onValuesChange({
                                         ...values,

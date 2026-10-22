@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -75,6 +77,7 @@ function isQuoteExpired(value: string, nowMs: number) {
 }
 
 export function BuyNumberDrawer() {
+  const translateUi = useT();
   const [open, setOpen] = useState(false);
   const [countryOpen, setCountryOpen] = useState(false);
   const [searchParams, setSearchParams] = useState<NumberSearchParams | null>(
@@ -135,7 +138,7 @@ export function BuyNumberDrawer() {
     const nowMs = Date.now();
     if (isQuoteExpired(number.quoteExpiresAt, nowMs)) {
       setQuoteClock(nowMs);
-      toast.error("Quote expired. Search again for current pricing.");
+      toast.error(translateUi("Quote expired. Search again for current pricing."));
       return;
     }
     setBuyingNumber(number.phoneNumber);
@@ -164,10 +167,9 @@ export function BuyNumberDrawer() {
       </SheetTrigger>
       <SheetContent className="flex flex-col gap-0 overflow-y-auto p-0 data-[side=right]:w-full data-[side=right]:sm:w-[min(94vw,940px)] data-[side=right]:sm:max-w-none">
         <SheetHeader className="shrink-0 border-b px-6 py-5">
-          <SheetTitle>Buy a phone number</SheetTitle>
+          <SheetTitle><Trans>{"Buy a phone number"}</Trans></SheetTitle>
           <SheetDescription>
-            Search available numbers from your telephony provider and purchase
-            one for this organization.
+            <Trans>{"Search available numbers from your telephony provider and purchase one for this organization."}</Trans>
           </SheetDescription>
         </SheetHeader>
 
@@ -221,8 +223,8 @@ export function BuyNumberDrawer() {
                             className="w-full min-w-0 justify-between font-normal"
                           >
                             <span className="truncate">
-                              {countries.isPending ? "Loading countries…" : selectedCountry
-                                ? `${selectedCountry.name} (${selectedCountry.code})` : "Select country"}
+                              {countries.isPending ? <Trans>{"Loading countries…"}</Trans> : selectedCountry
+                                ? `${selectedCountry.name} (${selectedCountry.code})` : <Trans>{"Select country"}</Trans>}
                             </span>
                             <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
                           </Button>
@@ -230,12 +232,12 @@ export function BuyNumberDrawer() {
                       </PopoverTrigger>
                       <PopoverContent align="start" className="w-[var(--radix-popover-trigger-width)] max-h-[var(--radix-popover-content-available-height)] overflow-hidden p-0">
                         <Command>
-                          <CommandInput placeholder="Search country or code…" aria-label="Search country or code" />
+                          <CommandInput placeholder={translateUi("Search country or code…")} aria-label={translateUi("Search country or code")} />
                           <CommandList>
                             <CommandEmpty className="px-3 py-5 text-left">
-                              <p className="font-medium">Country not available</p>
+                              <p className="font-medium"><Trans>{"Country not available"}</Trans></p>
                               <p className="mt-1 text-xs text-muted-foreground">
-                                No supported country matches your search. Local numbers are not provided in all countries by {providerName}.
+                                <Trans>{"No supported country matches your search. Local numbers are not provided in all countries by"}</Trans> {providerName}.
                               </p>
                             </CommandEmpty>
                             {countries.data?.map((country) => (
@@ -256,7 +258,7 @@ export function BuyNumberDrawer() {
                       </PopoverContent>
                     </Popover>
                     <FormDescription className="text-[11px]">
-                      Countries offering local numbers through {providerName}.
+                      <Trans>{"Countries offering local numbers through"}</Trans> {providerName}.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -267,7 +269,7 @@ export function BuyNumberDrawer() {
                 name="areaCode"
                 render={({ field }) => (
                   <FormItem className="min-w-0">
-                    <FormLabel>Area code</FormLabel>
+                    <FormLabel><Trans>{"Area code"}</Trans></FormLabel>
                     <FormControl>
                       <Input placeholder="415" {...field} disabled={buy.isPending} onChange={(event) => {
                         field.onChange(event);
@@ -287,26 +289,26 @@ export function BuyNumberDrawer() {
                 ) : (
                   <Search />
                 )}
-                Search
+                <Trans>{"Search"}</Trans>
               </Button>
             </form>
           </Form>
           <p className="mt-3 text-xs text-muted-foreground lg:hidden">
-            Rentals use paid credit. Promotional credit cannot buy or renew numbers.
+            <Trans>{"Rentals use paid credit. Promotional credit cannot buy or renew numbers."}</Trans>
           </p>
           {countries.isError ? (
             <div role="alert" className="mt-3 flex flex-wrap items-center gap-2 text-sm text-destructive">
-              <span>Could not load countries from {providerName}. Please try again.</span>
+              <span><Trans>{"Could not load countries from"}</Trans> {providerName}<Trans>{". Please try again."}</Trans></span>
               <Button type="button" variant="outline" size="sm" disabled={countries.isFetching}
-                onClick={() => void countries.refetch()}>Retry countries</Button>
+                onClick={() => void countries.refetch()}><Trans>{"Retry countries"}</Trans></Button>
             </div>
           ) : countries.isSuccess && !countries.data.length ? (
             <p role="status" className="mt-3 text-sm text-muted-foreground">
-              No countries with local voice numbers are currently provided by {providerName}. Try another provider.
+              <Trans>{"No countries with local voice numbers are currently provided by"}</Trans> {providerName}<Trans>{". Try another provider."}</Trans>
             </p>
           ) : countries.isSuccess && watchedCountry && !selectedCountry ? (
             <p role="status" className="mt-3 text-sm text-muted-foreground">
-              Local numbers are not provided in this country by {providerName}. Select another country.
+              <Trans>{"Local numbers are not provided in this country by"}</Trans> {providerName}<Trans>{". Select another country."}</Trans>
             </p>
           ) : null}
         </div>
@@ -315,7 +317,7 @@ export function BuyNumberDrawer() {
           <aside className="hidden lg:block border-b bg-muted/10 px-6 py-5 lg:border-r lg:border-b-0">
             <div className="rounded-xl border bg-background p-4 shadow-sm">
               <p className="text-sm font-semibold text-foreground">
-                Search criteria
+                <Trans>{"Search criteria"}</Trans>
               </p>
               <dl className="mt-4 space-y-3 text-sm">
                 <div>
@@ -331,21 +333,20 @@ export function BuyNumberDrawer() {
                     <Trans>{"Country"}</Trans>
                   </dt>
                   <dd className="mt-1 font-mono text-foreground">
-                    {selectedCountry?.name || "Select a country"}
+                    {selectedCountry?.name || <Trans>{"Select a country"}</Trans>}
                   </dd>
                 </div>
                 <div>
                   <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Area code
+                    <Trans>{"Area code"}</Trans>
                   </dt>
                   <dd className="mt-1 font-mono text-foreground">
-                    {watchedAreaCode || "Any"}
+                    {watchedAreaCode || <Trans>{"Any"}</Trans>}
                   </dd>
                 </div>
               </dl>
               <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-                Phone numbers start at $2 per 30 days. Promotional credit cannot
-                buy or renew numbers; rental is charged from paid credit.
+                <Trans>{"Phone numbers start at $2 per 30 days. Promotional credit cannot buy or renew numbers; rental is charged from paid credit."}</Trans>
               </p>
             </div>
           </aside>
@@ -367,7 +368,7 @@ export function BuyNumberDrawer() {
             ) : search.isError ? (
               <EmptyState
                 icon={Phone}
-                title={unsupportedCountry ? "Not provided in this country" : "Search failed"}
+                title={translateUi(unsupportedCountry ? "Not provided in this country" : "Search failed")}
                 description={unsupportedCountry ? search.error.message : "The provider could not complete this search. Please try again."}
                 className="border-0"
               />
@@ -403,14 +404,14 @@ export function BuyNumberDrawer() {
                             <MapPin className="size-3" />
                             {[n.locality, n.region, n.isoCountry]
                               .filter(Boolean)
-                              .join(" · ") || "Location unavailable"}
+                              .join(" · ") || <Trans>{"Location unavailable"}</Trans>}
                           </p>
                           <p className="mt-2 text-sm font-semibold text-foreground">
-                            {monthlyPrice ?? "Price confirmed before purchase"}
+                            {monthlyPrice ?? <Trans>{"Price confirmed before purchase"}</Trans>}
                             {monthlyPrice ? (
                               <span className="font-normal text-muted-foreground">
                                 {" "}
-                                / 30 days
+                                <Trans>{"/ 30 days"}</Trans>
                               </span>
                             ) : null}
                           </p>
@@ -419,11 +420,11 @@ export function BuyNumberDrawer() {
                               className="mt-1 text-[11px] font-medium text-destructive"
                               role="alert"
                             >
-                              Quote expired — search again
+                              <Trans>{"Quote expired — search again"}</Trans>
                             </p>
                           ) : n.quoteExpiresAt ? (
                             <p className="mt-1 text-[11px] text-muted-foreground">
-                              Quote expires{" "}
+                              <Trans>{"Quote expires"}</Trans>{" "}
                               {new Date(n.quoteExpiresAt).toLocaleTimeString(
                                 [],
                                 { hour: "numeric", minute: "2-digit" },
@@ -439,15 +440,15 @@ export function BuyNumberDrawer() {
                         className="mt-4 w-full"
                       >
                         {quoteExpired ? (
-                          "Quote expired — search again"
+                          <Trans>{"Quote expired — search again"}</Trans>
                         ) : buyingNumber === n.phoneNumber ? (
                           <>
-                            <Loader2 className="animate-spin" /> Buying…
+                            <Loader2 className="animate-spin" /> <Trans>{"Buying…"}</Trans>
                           </>
                         ) : monthlyPrice ? (
                           `Buy for ${monthlyPrice}`
                         ) : (
-                          "Buy this number"
+                          <Trans>{"Buy this number"}</Trans>
                         )}
                       </Button>
                     </div>

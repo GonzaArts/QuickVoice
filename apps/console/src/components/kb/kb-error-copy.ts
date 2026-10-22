@@ -72,6 +72,8 @@ export function getKbErrorCopy(
       guidance ||
       (source.errorRetryable
         ? "Delete this failed entry and try uploading the document again. If it still fails, contact your workspace administrator."
-        : `Check the ${source.sourceType === "URL" ? "URL" : "document"}, correct the issue, and upload it again.`),
+        : source.sourceType === "URL"
+          ? "Check the URL, correct the issue, and upload it again."
+          : "Check the document, correct the issue, and upload it again."),
   };
 }

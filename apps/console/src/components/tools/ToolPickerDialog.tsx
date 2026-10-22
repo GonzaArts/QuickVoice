@@ -1,5 +1,9 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
+import { Trans } from "@/src/i18n/Trans";
+
 import { useState } from "react";
 import { Wrench, Search, Loader2, Check, Plus } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
@@ -35,6 +39,7 @@ export function ToolPickerDialog({
   open,
   onOpenChange,
 }: ToolPickerDialogProps) {
+  const translateUi = useT();
   const [search, setSearch] = useState("");
   const { data: allTools = [], isLoading } = useTools();
   const attachTool = useAttachTool(agentId);
@@ -63,13 +68,13 @@ export function ToolPickerDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Add tools</DialogTitle>
+          <DialogTitle><Trans>{"Add tools"}</Trans></DialogTitle>
         </DialogHeader>
 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search tools…"
+            placeholder={translateUi("Search tools…")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="h-9 pl-9"
@@ -85,7 +90,7 @@ export function ToolPickerDialog({
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <Wrench className="size-8 text-muted-foreground/40" />
               <p className="mt-2 text-sm text-muted-foreground">
-                {allTools.length === 0 ? "No tools in your organization yet." : "No tools match your search."}
+                {allTools.length === 0 ? <Trans>{"No tools in your organization yet."}</Trans> : <Trans>{"No tools match your search."}</Trans>}
               </p>
             </div>
           ) : (
@@ -119,9 +124,9 @@ export function ToolPickerDialog({
                     {pending ? (
                       <Loader2 className="size-3 animate-spin" />
                     ) : attached ? (
-                      <><Check className="size-3" /> Attached</>
+                      <><Check className="size-3" /> <Trans>{"Attached"}</Trans></>
                     ) : (
-                      <><Plus className="size-3" /> Attach</>
+                      <><Plus className="size-3" /> <Trans>{"Attach"}</Trans></>
                     )}
                   </Button>
                 </div>

@@ -1,5 +1,5 @@
 import { Trans } from "@/src/i18n/Trans";
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 
 import { PageHeader } from "@/src/components/common/PageHeader";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -13,16 +13,17 @@ function LoadingRegion({
  children: ReactNode;
  className?: string;
 }) {
+ const labelId = useId();
  return (
  <div
  role="status"
- aria-label={label}
+ aria-labelledby={labelId}
  aria-live="polite"
  aria-busy="true"
  aria-atomic="true"
  className={className}
  >
- <span className="sr-only">{label}</span>
+ <span id={labelId} className="sr-only"><Trans>{label}</Trans></span>
  <div aria-hidden="true" className={className}>
  {children}
  </div>
@@ -97,7 +98,8 @@ export function DashboardLoadingSkeleton() {
  title="Dashboard"
  description="A compact view of call volume, outcomes, routing, and agent performance."
  actions={
- <div aria-label="Dashboard date range" className="space-y-2 sm:w-56">
+ <div className="space-y-2 sm:w-56">
+ <span className="sr-only"><Trans>{"Dashboard date range"}</Trans></span>
  <div className="grid grid-cols-3 gap-1 border bg-background p-1">
  <Skeleton className="h-8 w-full" />
  <Skeleton className="h-8 w-full" />
@@ -119,7 +121,7 @@ export function DashboardLoadingSkeleton() {
  <section className="grid gap-4 border bg-card p-5 lg:grid-cols-[1fr_340px] lg:items-center">
  <div className="space-y-3">
  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
- Operations snapshot
+ <Trans>{"Operations snapshot"}</Trans>
  </p>
  <Skeleton className="h-7 w-72 max-w-full" />
  <Skeleton className="h-4 w-full max-w-2xl" />
@@ -153,7 +155,7 @@ export function DashboardLoadingSkeleton() {
  <div className="flex flex-col gap-4 border-b p-5 xl:flex-row xl:items-end xl:justify-between">
  <div className="space-y-2">
  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
- Traffic timeline
+ <Trans>{"Traffic timeline"}</Trans>
  </p>
  <Skeleton className="h-6 w-72 max-w-full" />
  <Skeleton className="h-4 w-full max-w-xl" />
@@ -192,11 +194,11 @@ export function DashboardLoadingSkeleton() {
  <div className="grid grid-cols-2 border-b bg-muted/20 text-xs">
  <div className="border-r px-5 py-3">
  <Skeleton className="h-4 w-8" />
- <p className="mt-1 text-muted-foreground">active agents</p>
+ <p className="mt-1 text-muted-foreground"><Trans>{"active agents"}</Trans></p>
  </div>
  <div className="px-5 py-3">
  <Skeleton className="h-4 w-8" />
- <p className="mt-1 text-muted-foreground">assigned calls</p>
+ <p className="mt-1 text-muted-foreground"><Trans>{"assigned calls"}</Trans></p>
  </div>
  </div>
  <div className="space-y-4 p-5">
@@ -241,13 +243,13 @@ export function DashboardLoadingSkeleton() {
  <div className="flex items-center justify-between border-b px-5 py-4">
  <div>
  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
- Recent activity
+ <Trans>{"Recent activity"}</Trans>
  </p>
  <h3 className="mt-1 text-base font-semibold text-foreground">
- Recent call logs
+ <Trans>{"Recent call logs"}</Trans>
  </h3>
  <p className="text-xs text-muted-foreground">
- Latest call log activity across all agents.
+ <Trans>{"Latest call log activity across all agents."}</Trans>
  </p>
  </div>
  <Skeleton className="h-4 w-24" />

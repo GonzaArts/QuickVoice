@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -45,17 +47,19 @@ export function useVoiceCatalog() {
 }
 
 export function useCreateAgentPreviewSession(agentId: string) {
+  const translateUi = useT();
   return useMutation({
     mutationKey: queryKeys.agents.previewSession(agentId),
     mutationFn: (input?: CreatePreviewSessionInput) =>
       agentsApi.createPreviewSession(agentId, input),
     onError: (err: Error) => {
-      toast.error(err.message || "Could not start preview");
+      toast.error(err.message || translateUi("Could not start preview"));
     },
   });
 }
 
 export function useCreateAgent() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: CreateAgentInput) => agentsApi.create(input),
@@ -63,12 +67,13 @@ export function useCreateAgent() {
       qc.invalidateQueries({ queryKey: queryKeys.agents.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not create agent");
+      toast.error(err.message || translateUi("Could not create agent"));
     },
   });
 }
 
 export function useUpdateAgent(id: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: UpdateAgentInput) => agentsApi.update(id, input),
@@ -77,26 +82,28 @@ export function useUpdateAgent(id: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.detail(id) });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not update agent");
+      toast.error(err.message || translateUi("Could not update agent"));
     },
   });
 }
 
 export function useDeleteAgent() {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => agentsApi.remove(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
-      toast.success("Agent deleted");
+      toast.success(translateUi("Agent deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not delete agent");
+      toast.error(err.message || translateUi("Could not delete agent"));
     },
   });
 }
 
 export function useSaveAgentConfig(id: string) {
+  const translateUi = useT();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: ConfigureAgentInput) => agentsApi.saveConfig(id, input),
@@ -107,10 +114,10 @@ export function useSaveAgentConfig(id: string) {
       });
       qc.invalidateQueries({ queryKey: queryKeys.agents.list() });
       qc.invalidateQueries({ queryKey: queryKeys.agents.detail(id) });
-      toast.success("Saved");
+      toast.success(translateUi("Saved"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Could not save configuration");
+      toast.error(err.message || translateUi("Could not save configuration"));
     },
   });
 }

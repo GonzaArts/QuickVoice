@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -50,6 +52,7 @@ function variableToken(name: string) {
 }
 
 export function BehaviorTab({ agentId }: { agentId: string }) {
+  const translateUi = useT();
     const { data: config, isLoading } = useAgentConfig(agentId);
     const save = useSaveAgentConfig(agentId);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -201,7 +204,7 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                                     <FormLabel><Trans>{"First message"}</Trans></FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Hi, thanks for calling..."
+                                            placeholder={translateUi("Hi, thanks for calling...")}
                                             {...field}
                                         />
                                     </FormControl>
@@ -221,13 +224,13 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                                     <FormControl>
                                         <Textarea
                                             rows={10}
-                                            placeholder="Describe the agent's role, constraints, and tone."
+                                            placeholder={translateUi("Describe the agent's role, constraints, and tone.")}
                                             className="resize-none font-mono text-xs leading-relaxed"
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        Use {variableToken("variable")} to interpolate runtime values.
+                                        <Trans>{"Use"}</Trans> {variableToken("variable")} <Trans>{"to interpolate runtime values."}</Trans>
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -245,7 +248,7 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                                                 </Badge>
                                             ) : (
                                                 <Badge variant="outline">
-                                                    {missingVariableNames.length} fallback{missingVariableNames.length === 1 ? "" : "s"} needed
+                                                    {missingVariableNames.length} <Trans>{"fallback"}</Trans>{missingVariableNames.length === 1 ? "" : "s"} <Trans>{"needed"}</Trans>
                                                 </Badge>
                                             )}
                                         </div>

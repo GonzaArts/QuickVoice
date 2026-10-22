@@ -1,5 +1,7 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
+
 import { Loader2, PlugZap } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
@@ -35,16 +37,16 @@ export function McpPickerDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="grid-cols-[minmax(0,1fr)] sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Add MCP connection</DialogTitle>
-          <DialogDescription>Choose a connected server to make its tools available to this agent.</DialogDescription>
+          <DialogTitle><Trans>{"Add MCP connection"}</Trans></DialogTitle>
+          <DialogDescription><Trans>{"Choose a connected server to make its tools available to this agent."}</Trans></DialogDescription>
         </DialogHeader>
 
         <div className="min-w-0 max-h-[min(60dvh,28rem)] space-y-2 overflow-y-auto pr-1">
           {isLoading ? (
-            <p className="text-sm text-muted-foreground">Loading connections...</p>
+            <p className="text-sm text-muted-foreground"><Trans>{"Loading connections..."}</Trans></p>
           ) : !available.length ? (
             <p className="text-sm text-muted-foreground">
-              No available MCP connections. Connect one from the MCP marketplace first.
+              <Trans>{"No available MCP connections. Connect one from the MCP marketplace first."}</Trans>
             </p>
           ) : (
             available.map((connection) => (
@@ -63,7 +65,7 @@ export function McpPickerDialog({
                     </Badge>
                   </div>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground" title={connection.mcpUrl}>
-                    {(connection.tools?.length ?? 0)} tools · {connection.mcpUrl}
+                    {(connection.tools?.length ?? 0)} <Trans>{"tools ·"}</Trans> {connection.mcpUrl}
                   </p>
                   {typeof connection.metadata?.lastSyncError === "string" && (
                     <p className="mt-1 text-xs text-destructive" role="status">{connection.metadata.lastSyncError}</p>
@@ -84,7 +86,7 @@ export function McpPickerDialog({
                   ) : (
                     <PlugZap className="size-4" />
                   )}
-                  Attach
+                  <Trans>{"Attach"}</Trans>
                 </Button> : <Button
                   size="sm"
                   variant="outline"
@@ -99,7 +101,7 @@ export function McpPickerDialog({
                       })}
                 >
                   {refresh.isPending && refresh.variables === connection.mcpConnectionId && <Loader2 className="size-4 animate-spin" />}
-                  {connection.setupUrl ? "Complete setup" : "Retry setup"}
+                  {connection.setupUrl ? <Trans>{"Complete setup"}</Trans> : <Trans>{"Retry setup"}</Trans>}
                 </Button>}
               </div>
             ))

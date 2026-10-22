@@ -27,8 +27,8 @@ export function Transcript({ callId }: { callId: string }) {
         <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-muted text-muted-foreground">
           <MessageCircle className="size-5" />
         </div>
-        <p className="font-medium text-foreground">No transcript captured</p>
-        <p className="mt-1">This call does not have transcript messages yet.</p>
+        <p className="font-medium text-foreground"><Trans>{"No transcript captured"}</Trans></p>
+        <p className="mt-1"><Trans>{"This call does not have transcript messages yet."}</Trans></p>
       </div>
     );
   }
@@ -51,7 +51,7 @@ export function Transcript({ callId }: { callId: string }) {
               )}
             >
               <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.14em] opacity-70">
-                {isAgent ? "Agent" : "Caller"}
+                {isAgent ? <Trans>{"Agent"}</Trans> : <Trans>{"Caller"}</Trans>}
               </p>
               <p className="text-sm leading-6">{r.messageText}</p>
               <p className={cn("mt-2 text-right text-[10px]", isAgent ? "text-muted-foreground" : "text-white/70")}>
@@ -75,7 +75,7 @@ export function Transcript({ callId }: { callId: string }) {
                 <Loader2 className="animate-spin" /> <Trans>{"Loading…"}</Trans>
               </>
             ) : (
-              "Load more"
+              <Trans>{"Load more"}</Trans>
             )}
           </Button>
         </div>

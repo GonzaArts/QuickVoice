@@ -1,5 +1,9 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
+import { Trans } from "@/src/i18n/Trans";
+
 import { useEffect, useState } from "react";
 import { ArrowLeft, Download, Loader2 } from "lucide-react";
 
@@ -14,6 +18,7 @@ export function KbDocumentPreview({ source, fileName, onBack }: {
   fileName: string;
   onBack: () => void;
 }) {
+  const translateUi = useT();
   const [document, setDocument] = useState<{ blob: Blob; url?: string; text?: string; truncated?: boolean } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -47,45 +52,45 @@ export function KbDocumentPreview({ source, fileName, onBack }: {
     <DialogContent className="flex h-[calc(100dvh-2rem)] min-h-0 w-[calc(100vw_-_2rem)] max-w-none flex-col gap-4 overflow-hidden sm:max-w-5xl motion-reduce:animate-none [&>[data-slot=dialog-close]]:size-11">
       <DialogHeader className="min-w-0 pr-10">
         <DialogTitle className="break-words leading-6">{fileName}</DialogTitle>
-        <DialogDescription>Document preview · {source.sourceType}</DialogDescription>
+        <DialogDescription><Trans>{"Document preview ·"}</Trans> {source.sourceType}</DialogDescription>
       </DialogHeader>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Button type="button" variant="outline" className="min-h-11" onClick={onBack}>
-          <ArrowLeft aria-hidden="true" /> Back to details
+          <ArrowLeft aria-hidden="true" /> <Trans>{"Back to details"}</Trans>
         </Button>
         <Button type="button" className="min-h-11" disabled={!document} onClick={() => {
           if (document) downloadBlobAsFile(fileName, document.blob);
         }}>
-          <Download aria-hidden="true" /> Download file
+          <Download aria-hidden="true" /> <Trans>{"Download file"}</Trans>
         </Button>
       </div>
 
       <div className="min-h-0 flex-1 overflow-auto border bg-muted/20">
         {error ? (
           <div className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">
-            <p role="alert">{error}</p>
+            <p role="alert">{translateUi(error)}</p>
             <Button type="button" variant="outline" className="min-h-11" onClick={() => {
               setError(null);
               setAttempt((value) => value + 1);
-            }}>Try again</Button>
+            }}><Trans>{"Try again"}</Trans></Button>
           </div>
         ) : !document ? (
           <div className="flex h-full items-center justify-center gap-2 p-6" role="status">
-            <Loader2 aria-hidden="true" className="size-4 animate-spin motion-reduce:animate-none" /> Loading document…
+            <Loader2 aria-hidden="true" className="size-4 animate-spin motion-reduce:animate-none" /> <Trans>{"Loading document…"}</Trans>
           </div>
         ) : document.url ? (
-          <iframe className="h-full w-full border-0" title={`PDF preview: ${fileName}`} src={document.url} />
+          <iframe className="h-full w-full border-0" title={translateUi("PDF preview: {name}", {name: fileName})} src={document.url} />
         ) : (
-          <pre tabIndex={0} aria-label="Document contents" className="min-h-full whitespace-pre-wrap break-words p-4 font-mono text-sm leading-6 sm:p-6">
+          <pre tabIndex={0} aria-label={translateUi("Document contents")} className="min-h-full whitespace-pre-wrap break-words p-4 font-mono text-sm leading-6 sm:p-6">
             {document.text}
           </pre>
         )}
       </div>
       {document?.truncated ? (
-        <p className="text-sm text-muted-foreground" role="status">Showing the first 200 KB. Download the file to read the full document.</p>
+        <p className="text-sm text-muted-foreground" role="status"><Trans>{"Showing the first 200 KB. Download the file to read the full document."}</Trans></p>
       ) : source.sourceType === "PDF" ? (
-        <p className="text-sm text-muted-foreground">If your browser cannot display this PDF, download it to open in a PDF reader.</p>
+        <p className="text-sm text-muted-foreground"><Trans>{"If your browser cannot display this PDF, download it to open in a PDF reader."}</Trans></p>
       ) : null}
     </DialogContent>
   );

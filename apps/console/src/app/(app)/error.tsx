@@ -19,7 +19,7 @@ export default function AppError({
  </div>
  <h2 className="text-lg font-semibold"><Trans>{"Something went wrong"}</Trans></h2>
  <p className="mt-2 text-sm text-muted-foreground">
- {error.message || "An unexpected error occurred."}
+ {error.message || <Trans>{"An unexpected error occurred."}</Trans>}
  </p>
  {error.digest ? (
  <p className="mt-2 font-mono text-[10px] text-muted-foreground">
@@ -28,7 +28,7 @@ export default function AppError({
  ) : null}
  <div className="mt-6 flex items-center justify-center gap-2">
  <Button onClick={reset}>
- <RotateCcw /> Try again
+ <RotateCcw /> <Trans>{"Try again"}</Trans>
  </Button>
  </div>
  </div>

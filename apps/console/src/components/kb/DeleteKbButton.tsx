@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useState } from "react";
 import { Trash2, Loader2 } from "lucide-react";
 
@@ -19,6 +20,8 @@ import {
 import { useDeleteKb } from "@/src/hooks/queries/kb";
 
 export function DeleteKbButton({ kbId, name }: { kbId: string; name: string }) {
+  const translateUi = useT();
+  const t = useT();
   const [open, setOpen] = useState(false);
   const del = useDeleteKb();
 
@@ -34,15 +37,15 @@ export function DeleteKbButton({ kbId, name }: { kbId: string; name: string }) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon-sm" aria-label="Delete">
+        <Button variant="ghost" size="icon-sm" aria-label={translateUi("Delete")}>
           <Trash2 />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete &quot;{name}&quot;?</AlertDialogTitle>
+          <AlertDialogTitle>{t("Delete {name}?", { name })}</AlertDialogTitle>
           <AlertDialogDescription>
-            This removes the document from any agents currently referencing it.
+            <Trans>{"This removes the document from any agents currently referencing it."}</Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -53,7 +56,7 @@ export function DeleteKbButton({ kbId, name }: { kbId: string; name: string }) {
                 <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
               </>
             ) : (
-              "Delete"
+              <Trans>{"Delete"}</Trans>
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

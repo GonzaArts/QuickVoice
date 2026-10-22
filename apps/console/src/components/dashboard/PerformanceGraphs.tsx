@@ -1,8 +1,11 @@
 "use client";
 
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode, formatNumber } from "@/src/i18n/config";
+
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
-import { useId, type ReactNode } from "react";
+import { useId, useMemo, type ReactNode } from "react";
 import { AlertTriangle, ArrowRight, BarChart3 } from "lucide-react";
 import {
   Area,
@@ -45,10 +48,10 @@ const efficiencyConfig = {
   minutesPerCall: { label: "Minutes per call", color: "var(--chart-2)" },
 } satisfies ChartConfig;
 
-function formatTick(iso: string, range: DashboardRange) {
+function formatTick(iso: string, range: DashboardRange, locale: string) {
   const date = new Date(iso);
-  if (range === "24h") return date.toLocaleTimeString([], { hour: "numeric" });
-  return date.toLocaleDateString([], { month: "short", day: "numeric" });
+  if (range === "24h") return date.toLocaleTimeString(locale, { hour: "numeric" });
+  return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
 }
 
 function formatSuccess(value: number) {
@@ -97,7 +100,7 @@ function GraphCard({
           <p className="text-sm font-semibold tabular-nums text-foreground">
             {metric}
           </p>
-          <p className="text-xs text-muted-foreground">current</p>
+          <p className="text-xs text-muted-foreground"><Trans>{"current"}</Trans></p>
         </div>
       </div>
       {children}
@@ -118,9 +121,23 @@ export function PerformanceGraphs({
   customFrom?: string;
   customTo?: string;
 }) {
+  const { locale, t: translateUi } = useLocale();
   const successSummaryId = useId();
   const exceptionSummaryId = useId();
   const efficiencySummaryId = useId();
+  const localizedCharts = useMemo(() => ({
+    success: {
+      successRate: { ...successConfig.successRate, label: translateUi("Success rate") },
+    },
+    exception: {
+      failed: { ...exceptionConfig.failed, label: translateUi("Failed") },
+      missed: { ...exceptionConfig.missed, label: translateUi("Missed") },
+    },
+    efficiency: {
+      calls: { ...efficiencyConfig.calls, label: translateUi("Calls") },
+      minutesPerCall: { ...efficiencyConfig.minutesPerCall, label: translateUi("Minutes per call") },
+    },
+  }), [translateUi]);
 
   if (loading) {
     return (
@@ -154,10 +171,10 @@ export function PerformanceGraphs({
           action={
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button asChild size="sm">
-                <Link href="/outbound">Place a test call</Link>
+                <Link href="/outbound"><Trans>{"Place a test call"}</Trans></Link>
               </Button>
               <Button asChild size="sm" variant="outline">
-                <Link href="/numbers">Connect number</Link>
+                <Link href="/numbers"><Trans>{"Connect number"}</Trans></Link>
               </Button>
             </div>
           }
@@ -169,19 +186,19 @@ export function PerformanceGraphs({
   return (
     <div
       className="grid gap-4 xl:grid-cols-3"
-      aria-label="Performance analytics graphs"
+      aria-label={translateUi("Performance analytics graphs")}
     >
       <GraphCard
-        eyebrow="Quality"
-        title="Success trend"
-        description="Completion quality over the selected reporting window."
+        eyebrow={translateUi("Quality")}
+        title={translateUi("Success trend")}
+        description={translateUi("Completion quality over the selected reporting window.")}
         metric={latest ? `${latest.successRate}%` : "0%"}
       >
         <ChartContainer
-          config={successConfig}
+          config={localizedCharts.success}
           className="h-64 w-full p-5"
           role="group"
-          aria-label="Success rate trend chart"
+          aria-label={translateUi("Success rate trend chart")}
         >
           <AreaChart
             accessibilityLayer
@@ -212,7 +229,7 @@ export function PerformanceGraphs({
             <CartesianGrid vertical={false} className="stroke-border" />
             <XAxis
               dataKey="t"
-              tickFormatter={(value) => formatTick(value, range)}
+              tickFormatter={(value) => formatTick(value, range, localeCode(locale))}
               tickLine={false}
               axisLine={false}
               className="text-xs text-muted-foreground"
@@ -228,7 +245,7 @@ export function PerformanceGraphs({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => formatTick(String(value), range)}
+                  labelFormatter={(value) => formatTick(String(value), range, localeCode(locale))}
                 />
               }
             />
@@ -245,20 +262,20 @@ export function PerformanceGraphs({
         </ChartContainer>
         <div className="sr-only">
           <p id={successSummaryId}>
-            Success rate trend across the selected dashboard range.
+            <Trans>{"Success rate trend across the selected dashboard range."}</Trans>
           </p>
           <table aria-describedby={successSummaryId}>
-            <caption>Success rate trend data table</caption>
+            <caption><Trans>{"Success rate trend data table"}</Trans></caption>
             <thead>
               <tr>
-                <th scope="col">Time bucket</th>
+                <th scope="col"><Trans>{"Time bucket"}</Trans></th>
                 <th scope="col"><Trans>{"Success rate"}</Trans></th>
               </tr>
             </thead>
             <tbody>
               {data.map((point) => (
                 <tr key={point.t}>
-                  <th scope="row">{formatTick(point.t, range)}</th>
+                  <th scope="row">{formatTick(point.t, range, localeCode(locale))}</th>
                   <td>{point.successRate}%</td>
                 </tr>
               ))}
@@ -268,16 +285,16 @@ export function PerformanceGraphs({
       </GraphCard>
 
       <GraphCard
-        eyebrow="Risk"
-        title="Exception pressure"
-        description="Failed and missed calls stacked by time bucket."
-        metric={totalExceptions.toLocaleString()}
+        eyebrow={translateUi("Risk")}
+        title={translateUi("Exception pressure")}
+        description={translateUi("Failed and missed calls stacked by time bucket.")}
+        metric={formatNumber(locale, totalExceptions)}
       >
         <ChartContainer
-          config={exceptionConfig}
+          config={localizedCharts.exception}
           className="h-64 w-full p-5"
           role="group"
-          aria-label="Exception pressure stacked bar chart"
+          aria-label={translateUi("Exception pressure stacked bar chart")}
         >
           <BarChart
             accessibilityLayer
@@ -288,7 +305,7 @@ export function PerformanceGraphs({
             <CartesianGrid vertical={false} className="stroke-border" />
             <XAxis
               dataKey="t"
-              tickFormatter={(value) => formatTick(value, range)}
+              tickFormatter={(value) => formatTick(value, range, localeCode(locale))}
               tickLine={false}
               axisLine={false}
               className="text-xs text-muted-foreground"
@@ -302,20 +319,20 @@ export function PerformanceGraphs({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => formatTick(String(value), range)}
+                  labelFormatter={(value) => formatTick(String(value), range, localeCode(locale))}
                 />
               }
             />
             <Bar
               dataKey="failed"
-              name="Failed"
+              name={translateUi("Failed")}
               stackId="exceptions"
               fill="var(--color-failed)"
               radius={[3, 3, 0, 0]}
             />
             <Bar
               dataKey="missed"
-              name="Missed"
+              name={translateUi("Missed")}
               stackId="exceptions"
               fill="var(--color-missed)"
               radius={[3, 3, 0, 0]}
@@ -325,32 +342,32 @@ export function PerformanceGraphs({
         <div className="flex items-center justify-between border-t px-5 py-3 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-2">
             <AlertTriangle className="size-3 text-destructive" />
-            Failed + missed call buckets
+            <Trans>{"Failed + missed call buckets"}</Trans>
           </span>
           <Link
             href={dashboardCallsHref({ range, status: "FAILED", from: customFrom, to: customTo })}
             className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
           >
-            Review failed <ArrowRight className="size-3" />
+            <Trans>{"Review failed"}</Trans> <ArrowRight className="size-3" />
           </Link>
         </div>
         <div className="sr-only">
           <p id={exceptionSummaryId}>
-            Failed and missed call counts stacked over time.
+            <Trans>{"Failed and missed call counts stacked over time."}</Trans>
           </p>
           <table aria-describedby={exceptionSummaryId}>
-            <caption>Exception pressure data table</caption>
+            <caption><Trans>{"Exception pressure data table"}</Trans></caption>
             <thead>
               <tr>
-                <th scope="col">Time bucket</th>
-                <th scope="col">Failed calls</th>
-                <th scope="col">Missed calls</th>
+                <th scope="col"><Trans>{"Time bucket"}</Trans></th>
+                <th scope="col"><Trans>{"Failed calls"}</Trans></th>
+                <th scope="col"><Trans>{"Missed calls"}</Trans></th>
               </tr>
             </thead>
             <tbody>
               {data.map((point) => (
                 <tr key={point.t}>
-                  <th scope="row">{formatTick(point.t, range)}</th>
+                  <th scope="row">{formatTick(point.t, range, localeCode(locale))}</th>
                   <td>{point.failed}</td>
                   <td>{point.missed}</td>
                 </tr>
@@ -361,16 +378,16 @@ export function PerformanceGraphs({
       </GraphCard>
 
       <GraphCard
-        eyebrow="Efficiency"
-        title="Conversation efficiency"
-        description="Calls compared with average minutes consumed per call."
-        metric={`${avgMinutesPerCall.toFixed(1)}m`}
+        eyebrow={translateUi("Efficiency")}
+        title={translateUi("Conversation efficiency")}
+        description={translateUi("Calls compared with average minutes consumed per call.")}
+        metric={formatNumber(locale, avgMinutesPerCall, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " min"}
       >
         <ChartContainer
-          config={efficiencyConfig}
+          config={localizedCharts.efficiency}
           className="h-64 w-full p-5"
           role="group"
-          aria-label="Conversation efficiency line chart"
+          aria-label={translateUi("Conversation efficiency line chart")}
         >
           <LineChart
             accessibilityLayer
@@ -381,7 +398,7 @@ export function PerformanceGraphs({
             <CartesianGrid vertical={false} className="stroke-border" />
             <XAxis
               dataKey="t"
-              tickFormatter={(value) => formatTick(value, range)}
+              tickFormatter={(value) => formatTick(value, range, localeCode(locale))}
               tickLine={false}
               axisLine={false}
               className="text-xs text-muted-foreground"
@@ -404,7 +421,7 @@ export function PerformanceGraphs({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => formatTick(String(value), range)}
+                  labelFormatter={(value) => formatTick(String(value), range, localeCode(locale))}
                 />
               }
             />
@@ -412,7 +429,7 @@ export function PerformanceGraphs({
               yAxisId="left"
               type="monotone"
               dataKey="calls"
-              name="Calls"
+              name={translateUi("Calls")}
               stroke="var(--color-calls)"
               strokeWidth={2}
               dot={false}
@@ -422,7 +439,7 @@ export function PerformanceGraphs({
               yAxisId="right"
               type="monotone"
               dataKey="minutesPerCall"
-              name="Minutes per call"
+              name={translateUi("Minutes per call")}
               stroke="var(--color-minutesPerCall)"
               strokeWidth={2}
               dot={false}
@@ -432,21 +449,21 @@ export function PerformanceGraphs({
         </ChartContainer>
         <div className="sr-only">
           <p id={efficiencySummaryId}>
-            Calls and average minutes per call plotted over the selected range.
+            <Trans>{"Calls and average minutes per call plotted over the selected range."}</Trans>
           </p>
           <table aria-describedby={efficiencySummaryId}>
-            <caption>Conversation efficiency data table</caption>
+            <caption><Trans>{"Conversation efficiency data table"}</Trans></caption>
             <thead>
               <tr>
-                <th scope="col">Time bucket</th>
+                <th scope="col"><Trans>{"Time bucket"}</Trans></th>
                 <th scope="col"><Trans>{"Calls"}</Trans></th>
-                <th scope="col">Minutes per call</th>
+                <th scope="col"><Trans>{"Minutes per call"}</Trans></th>
               </tr>
             </thead>
             <tbody>
               {data.map((point) => (
                 <tr key={point.t}>
-                  <th scope="row">{formatTick(point.t, range)}</th>
+                  <th scope="row">{formatTick(point.t, range, localeCode(locale))}</th>
                   <td>{point.calls}</td>
                   <td>{point.minutesPerCall}</td>
                 </tr>

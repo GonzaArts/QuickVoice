@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useRef, useState } from "react";
 import { Loader2, Plus, UploadCloud, Link } from "lucide-react";
@@ -48,6 +50,7 @@ const ACCEPT_STRING = Object.keys(ACCEPTED_TYPES)
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
+  const translateUi = useT();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"url" | "file">("url");
   const [busy, setBusy] = useState(false);
@@ -75,26 +78,26 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
 
   async function handleSubmit() {
     if (!session?.user || !session.session?.activeOrganizationId) {
-      toast.error("Not signed in");
+      toast.error(translateUi("Not signed in"));
       return;
     }
     const org = session.session.activeOrganizationId;
     const user = session.user.id;
 
-    if (!agentId) { toast.error("Please select an agent"); return; }
+    if (!agentId) { toast.error(translateUi("Please select an agent")); return; }
 
     setBusy(true);
     try {
       if (tab === "url") {
-        if (!urlName.trim() || !url.trim()) { toast.error("Name and URL are required"); return; }
+        if (!urlName.trim() || !url.trim()) { toast.error(translateUi("Name and URL are required")); return; }
         await create.mutateAsync({
           organizationId: org, userId: user, agentId: agentId,
           documents: [{ name: urlName.trim(), sourceType: "URL", url: url.trim() }],
         });
       } else {
-        if (!file || !fileName.trim()) { toast.error("File and a display name are required"); return; }
+        if (!file || !fileName.trim()) { toast.error(translateUi("File and a display name are required")); return; }
         if (file.size > MAX_UPLOAD_BYTES) {
-          toast.error("File exceeds the 10 MB upload limit");
+          toast.error(translateUi("File exceeds the 10 MB upload limit"));
           return;
         }
         const requestedContentType = file.type || "application/octet-stream";
@@ -121,7 +124,7 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
       setOpen(false);
       reset();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Something went wrong");
+      toast.error(err instanceof Error ? err.message : translateUi("Something went wrong"));
     } finally {
       setBusy(false);
     }
@@ -130,13 +133,13 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}>
       <DialogTrigger asChild>
-        <Button><Plus /> Add document</Button>
+        <Button><Plus /> <Trans>{"Add document"}</Trans></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add a document</DialogTitle>
+          <DialogTitle><Trans>{"Add a document"}</Trans></DialogTitle>
           <DialogDescription>
-            Paste a URL or upload a file to add it as a knowledge source.
+            <Trans>{"Paste a URL or upload a file to add it as a knowledge source."}</Trans>
           </DialogDescription>
         </DialogHeader>
 
@@ -152,7 +155,7 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
               }`}
             >
               {t === "url" ? <Link className="size-3.5" /> : <UploadCloud className="size-3.5" />}
-              {t === "url" ? "URL" : "File"}
+              {t === "url" ? "URL" : <Trans>{"File"}</Trans>}
             </button>
           ))}
         </div>
@@ -161,8 +164,8 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
           {tab === "url" ? (
             <>
               <div className="space-y-1.5">
-                <Label>Display name</Label>
-                <Input placeholder="Q4 pricing FAQ" value={urlName} onChange={(e) => setUrlName(e.target.value)} disabled={busy} />
+                <Label><Trans>{"Display name"}</Trans></Label>
+                <Input placeholder={translateUi("Q4 pricing FAQ")} value={urlName} onChange={(e) => setUrlName(e.target.value)} disabled={busy} />
               </div>
               <div className="space-y-1.5">
                 <Label><Trans>{"URL"}</Trans></Label>
@@ -179,8 +182,8 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
                 >
                   <UploadCloud className="size-8 text-muted-foreground" />
                   <div>
-                    <p className="text-sm font-medium">{file ? file.name : "Click to select a file"}</p>
-                    <p className="text-xs text-muted-foreground">PDF, DOCX, TXT, CSV, XLSX, XLS up to 10 MB</p>
+                    <p className="text-sm font-medium">{file ? file.name : <Trans>{"Click to select a file"}</Trans>}</p>
+                    <p className="text-xs text-muted-foreground"><Trans>{"PDF, DOCX, TXT, CSV, XLSX, XLS up to 10 MB"}</Trans></p>
                   </div>
                   <input
                     ref={fileRef}
@@ -196,8 +199,8 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label>Display name</Label>
-                <Input placeholder="Product manual" value={fileName} onChange={(e) => setFileName(e.target.value)} disabled={busy} />
+                <Label><Trans>{"Display name"}</Trans></Label>
+                <Input placeholder={translateUi("Product manual")} value={fileName} onChange={(e) => setFileName(e.target.value)} disabled={busy} />
               </div>
             </>
           )}
@@ -207,12 +210,12 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
             <Label><Trans>{"Agent"}</Trans> <span className="text-destructive">*</span></Label>
             {(agents ?? []).length === 0 ? (
               <p className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
-                No agents found. Create an agent first before adding knowledge sources.
+                <Trans>{"No agents found. Create an agent first before adding knowledge sources."}</Trans>
               </p>
             ) : (
               <Select value={agentId} onValueChange={setAgentId} disabled={busy}>
                 <SelectTrigger className={!agentId ? "border-destructive/50" : ""}>
-                  <SelectValue placeholder="Select an agent…" />
+                  <SelectValue placeholder={translateUi("Select an agent…")} />
                 </SelectTrigger>
                 <SelectContent>
                   {(agents ?? []).map((a) => (
@@ -229,7 +232,7 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
             <Trans>{"Cancel"}</Trans>
           </Button>
           <Button onClick={handleSubmit} disabled={busy}>
-            {busy ? <><Loader2 className="animate-spin" /> Processing…</> : "Add document"}
+            {busy ? <><Loader2 className="animate-spin" /> <Trans>{"Processing…"}</Trans></> : <Trans>{"Add document"}</Trans>}
           </Button>
         </DialogFooter>
       </DialogContent>

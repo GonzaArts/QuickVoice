@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -85,6 +87,7 @@ const templates = [
 type TemplateId = (typeof templates)[number]["id"];
 
 export function NewAgentDialog() {
+  const translateUi = useT();
   const [open, setOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>("blank");
   const router = useRouter();
@@ -102,7 +105,7 @@ export function NewAgentDialog() {
         isActive: values.isActive,
         templateId: selectedTemplate,
       });
-      toast.success(`Agent "${agent.name}" created`);
+      toast.success(translateUi('Agent "{name}" created', { name: agent.name }));
       setOpen(false);
       setSelectedTemplate("blank");
       form.reset();
@@ -137,7 +140,7 @@ export function NewAgentDialog() {
                     <FormLabel><Trans>{"Name"}</Trans></FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g. Sales Qualifier"
+                        placeholder={translateUi("e.g. Sales Qualifier")}
                         autoFocus
                         {...field}
                       />
@@ -199,7 +202,7 @@ export function NewAgentDialog() {
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <Label>{field.value ? "Active" : "Paused"}</Label>
+                    <Label>{field.value ? <Trans>{"Active"}</Trans> : <Trans>{"Paused"}</Trans>}</Label>
                     <p className="text-xs text-muted-foreground">
                       <Trans>{"Toggle whether this agent can handle calls immediately."}</Trans>
                     </p>
@@ -228,7 +231,7 @@ export function NewAgentDialog() {
                     <Loader2 className="animate-spin" /> <Trans>{"Creating…"}</Trans>
                   </>
                 ) : (
-                  "Create agent"
+                  <Trans>{"Create agent"}</Trans>
                 )}
               </Button>
             </DialogFooter>

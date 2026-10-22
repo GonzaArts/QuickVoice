@@ -1,5 +1,9 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
+import { Trans } from "@/src/i18n/Trans";
+
 import { Plus, Trash2, ChevronDown, ChevronUp, GripVertical, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useState, useCallback } from "react";
 import { Button } from "@/src/components/ui/button";
@@ -101,6 +105,7 @@ function FieldEditor({
   isExpanded: boolean;
   onToggleExpand: () => void;
 }) {
+  const translateUi = useT();
   const hasError = !field.name.trim();
   
   return (
@@ -109,7 +114,7 @@ function FieldEditor({
         <button
           type="button"
           className="cursor-grab text-muted-foreground hover:text-foreground"
-          title="Drag to reorder"
+          title={translateUi("Drag to reorder")}
         >
           <GripVertical className="size-4" />
         </button>
@@ -125,16 +130,16 @@ function FieldEditor({
             <CheckCircle2 className="size-4 text-emerald-500" />
           )}
           <span className="font-medium text-sm">
-            {field.name.trim() || "New Field"}
+            {field.name.trim() || <Trans>{"New Field"}</Trans>}
           </span>
           {field.required && (
             <span className="text-xs bg-destructive/10 text-destructive px-1.5 py-0.5 rounded">
-              Required
+              <Trans>{"Required"}</Trans>
             </span>
           )}
           {field.sensitive && (
             <span className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">
-              Sensitive
+              <Trans>{"Sensitive"}</Trans>
             </span>
           )}
         </button>
@@ -149,7 +154,7 @@ function FieldEditor({
           <SelectContent>
             {FIELD_TYPES.map((type) => (
               <SelectItem key={type.value} value={type.value}>
-                {type.label}
+                {translateUi(type.label)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -183,19 +188,19 @@ function FieldEditor({
         <div className="p-4 space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Field Name *</Label>
+              <Label><Trans>{"Field Name *"}</Trans></Label>
               <Input
-                placeholder="e.g., customer_name"
+                placeholder={translateUi("e.g., customer_name")}
                 value={field.name}
                 onChange={(e) => onChange({ ...field, name: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                Use lowercase with underscores. This matches your CSV column name.
+                <Trans>{"Use lowercase with underscores. This matches your CSV column name."}</Trans>
               </p>
             </div>
             
             <div className="space-y-2">
-              <Label>Where does this value come from?</Label>
+              <Label><Trans>{"Where does this value come from?"}</Trans></Label>
               <Select
                 value={field.source}
                 onValueChange={(value) => onChange({ ...field, source: value as CampaignIntelligenceSource })}
@@ -207,23 +212,23 @@ function FieldEditor({
                   {FIELD_SOURCES.map((source) => (
                     <SelectItem key={source.value} value={source.value}>
                       <div className="flex flex-col items-start">
-                        <span>{source.label}</span>
+                        <span>{translateUi(source.label)}</span>
                       </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                {FIELD_SOURCES.find(s => s.value === field.source)?.description}
+                {translateUi(FIELD_SOURCES.find(s => s.value === field.source)?.description ?? "")}
               </p>
             </div>
           </div>
           
           {field.type === "enum" && (
             <div className="space-y-2">
-              <Label>Dropdown Options</Label>
+              <Label><Trans>{"Dropdown Options"}</Trans></Label>
               <Input
-                placeholder="Option 1, Option 2, Option 3"
+                placeholder={translateUi("Option 1, Option 2, Option 3")}
                 value={field.allowedValues?.join(", ") || ""}
                 onChange={(e) => onChange({ 
                   ...field, 
@@ -231,14 +236,14 @@ function FieldEditor({
                 })}
               />
               <p className="text-xs text-muted-foreground">
-                Separate options with commas
+                <Trans>{"Separate options with commas"}</Trans>
               </p>
             </div>
           )}
           
           {field.type === "string" && (
             <div className="space-y-2">
-              <Label>Maximum Length</Label>
+              <Label><Trans>{"Maximum Length"}</Trans></Label>
               <Input
                 type="number"
                 min={1}
@@ -254,9 +259,9 @@ function FieldEditor({
           )}
           
           <div className="space-y-2">
-            <Label>Description (optional)</Label>
+            <Label><Trans>{"Description (optional)"}</Trans></Label>
             <Input
-              placeholder="What this field is used for"
+              placeholder={translateUi("What this field is used for")}
               value={field.description || ""}
               onChange={(e) => onChange({ ...field, description: e.target.value })}
             />
@@ -264,7 +269,7 @@ function FieldEditor({
           
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>If value is missing</Label>
+              <Label><Trans>{"If value is missing"}</Trans></Label>
               <Select
                 value={field.missingBehavior}
                 onValueChange={(value) => onChange({ 
@@ -279,8 +284,8 @@ function FieldEditor({
                   {MISSING_BEHAVIORS.map((behavior) => (
                     <SelectItem key={behavior.value} value={behavior.value}>
                       <div className="flex flex-col items-start">
-                        <span>{behavior.label}</span>
-                        <span className="text-xs text-muted-foreground">{behavior.description}</span>
+                        <span>{translateUi(behavior.label)}</span>
+                        <span className="text-xs text-muted-foreground">{translateUi(behavior.description)}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -289,7 +294,7 @@ function FieldEditor({
             </div>
             
             <div className="space-y-2">
-              <Label>If value is invalid</Label>
+              <Label><Trans>{"If value is invalid"}</Trans></Label>
               <Select
                 value={field.invalidBehavior}
                 onValueChange={(value) => onChange({ 
@@ -303,7 +308,7 @@ function FieldEditor({
                 <SelectContent>
                   {MISSING_BEHAVIORS.map((behavior) => (
                     <SelectItem key={behavior.value} value={behavior.value}>
-                      {behavior.label}
+                      {translateUi(behavior.label)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -313,9 +318,9 @@ function FieldEditor({
           
           {field.missingBehavior === "fallback" && (
             <div className="space-y-2">
-              <Label>Default Value</Label>
+              <Label><Trans>{"Default Value"}</Trans></Label>
               <Input
-                placeholder="Value to use if missing"
+                placeholder={translateUi("Value to use if missing")}
                 value={field.defaultValue?.toString() || ""}
                 onChange={(e) => onChange({ ...field, defaultValue: e.target.value })}
               />
@@ -330,7 +335,7 @@ function FieldEditor({
                 onChange={(e) => onChange({ ...field, required: e.target.checked })}
                 className="size-4 rounded border-gray-300"
               />
-              <span className="text-sm">Required field</span>
+              <span className="text-sm"><Trans>{"Required field"}</Trans></span>
             </label>
             
             <label className="flex items-center gap-2 cursor-pointer">
@@ -340,7 +345,7 @@ function FieldEditor({
                 onChange={(e) => onChange({ ...field, sensitive: e.target.checked })}
                 className="size-4 rounded border-gray-300"
               />
-              <span className="text-sm">Sensitive data (PII/PHI)</span>
+              <span className="text-sm"><Trans>{"Sensitive data (PII/PHI)"}</Trans></span>
             </label>
           </div>
         </div>
@@ -355,6 +360,7 @@ export function PersonalizationFieldBuilder({
   templates,
   onTemplatesChange,
 }: PersonalizationFieldBuilderProps) {
+  const translateUi = useT();
   const [expandedFields, setExpandedFields] = useState<Set<string>>(new Set());
   
   const handleAddField = useCallback(() => {
@@ -390,9 +396,9 @@ export function PersonalizationFieldBuilder({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold">Personalization Fields</h3>
+          <h3 className="text-sm font-semibold"><Trans>{"Personalization Fields"}</Trans></h3>
           <p className="text-xs text-muted-foreground">
-            Define fields that will be filled from your CSV data
+            <Trans>{"Define fields that will be filled from your CSV data"}</Trans>
           </p>
         </div>
         <Button
@@ -402,14 +408,14 @@ export function PersonalizationFieldBuilder({
           onClick={handleAddField}
         >
           <Plus className="size-4" />
-          Add Field
+          <Trans>{"Add Field"}</Trans>
         </Button>
       </div>
       
       {value.length === 0 ? (
         <div className="rounded-lg border border-dashed bg-muted/20 p-8 text-center">
           <p className="text-sm text-muted-foreground">
-            No fields defined yet. Click &quot;Add Field&quot; to start.
+            <Trans>{"No fields defined yet. Click \"Add Field\" to start."}</Trans>
           </p>
         </div>
       ) : (
@@ -429,16 +435,16 @@ export function PersonalizationFieldBuilder({
       
       {templates && onTemplatesChange && (
         <div className="space-y-3 pt-4 border-t">
-          <h4 className="text-sm font-semibold">Message Templates</h4>
+          <h4 className="text-sm font-semibold"><Trans>{"Message Templates"}</Trans></h4>
           <p className="text-xs text-muted-foreground">
-            Use {`{{field_name}}`} to insert personalization variables
+            <Trans>{"Use"}</Trans> {<Trans>{"{{field_name}}"}</Trans>} <Trans>{"to insert personalization variables"}</Trans>
           </p>
           
           <div className="grid gap-4">
             <div className="space-y-2">
-              <Label>First Message</Label>
+              <Label><Trans>{"First Message"}</Trans></Label>
               <Textarea
-                placeholder="Hi {{customer_name}}, this is a call from..."
+                placeholder={translateUi("Hi {{customer_name}}, this is a call from...")}
                 rows={3}
                 value={templates.firstMessage || ""}
                 onChange={(e) => onTemplatesChange({ ...templates, firstMessage: e.target.value })}
@@ -446,9 +452,9 @@ export function PersonalizationFieldBuilder({
             </div>
             
             <div className="space-y-2">
-              <Label>System Prompt</Label>
+              <Label><Trans>{"System Prompt"}</Trans></Label>
               <Textarea
-                placeholder="You are calling {{customer_name}} about..."
+                placeholder={translateUi("You are calling {{customer_name}} about...")}
                 rows={4}
                 value={templates.prompt || ""}
                 onChange={(e) => onTemplatesChange({ ...templates, prompt: e.target.value })}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
@@ -62,6 +64,7 @@ function HeaderSkeleton() {
 }
 
 function AgentDetailsForm({ agent }: { agent: Agent }) {
+  const translateUi = useT();
   const [draftName, setDraftName] = useState(agent.name);
   const [draftIsActive, setDraftIsActive] = useState(agent.isActive);
   const updateAgent = useUpdateAgent(agent.agentId);
@@ -70,13 +73,13 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
     event.preventDefault();
     const name = draftName.trim();
     if (name.length < 2) {
-      toast.error("Agent name must be at least 2 characters");
+      toast.error(translateUi("Agent name must be at least 2 characters"));
       return;
     }
 
     try {
       await updateAgent.mutateAsync({ name, isActive: draftIsActive });
-      toast.success("Agent details saved");
+      toast.success(translateUi("Agent details saved"));
     } catch {
       // The mutation hook displays the API error.
     }
@@ -86,7 +89,7 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
     <form
       onSubmit={saveAgentDetails}
       className="border bg-card p-5"
-      aria-label="Agent details"
+      aria-label={translateUi("Agent details")}
     >
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="grid min-w-0 flex-1 gap-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
@@ -124,8 +127,8 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
               </label>
               <p className="mt-1 text-xs text-muted-foreground">
                 {draftIsActive
-                  ? "The agent can receive calls."
-                  : "The agent is paused and cannot receive calls."}
+                  ? <Trans>{"The agent can receive calls."}</Trans>
+                  : <Trans>{"The agent is paused and cannot receive calls."}</Trans>}
               </p>
             </div>
             <Switch
@@ -133,7 +136,7 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
               checked={draftIsActive}
               onCheckedChange={setDraftIsActive}
               disabled={updateAgent.isPending}
-              aria-label={draftIsActive ? "Pause agent" : "Activate agent"}
+              aria-label={translateUi(draftIsActive ? "Pause agent" : "Activate agent")}
             />
           </div>
         </div>
@@ -231,20 +234,20 @@ export default function AgentConfigPage() {
                           : ""
                       }
                     >
-                      {agent.isActive ? "Live" : "Paused"}
+                      {agent.isActive ? <Trans>{"Live"}</Trans> : <Trans>{"Paused"}</Trans>}
                     </Badge>
                   </div>
                   <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     <span>
                       {agent.isConfigured
-                        ? "Configured"
-                        : "Needs configuration"}
+                        ? <Trans>{"Configured"}</Trans>
+                        : <Trans>{"Needs configuration"}</Trans>}
                     </span>
                     <span className="font-mono">
                       ID {agent.agentId.slice(0, 8)}
                     </span>
                     <span>
-                      Updated {new Date(agent.updatedAt).toLocaleDateString()}
+                      <Trans>{"Updated"}</Trans> {new Date(agent.updatedAt).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
@@ -319,8 +322,7 @@ export default function AgentConfigPage() {
               <AlertDialogHeader>
                 <AlertDialogTitle><Trans>{"Delete this agent?"}</Trans></AlertDialogTitle>
                 <AlertDialogDescription>
-                  This deletes {agent.name} and detaches it from phone numbers,
-                  tools, and knowledge sources. This cannot be undone.
+                  <Trans>{"This deletes"}</Trans> {agent.name} <Trans>{"and detaches it from phone numbers, tools, and knowledge sources. This cannot be undone."}</Trans>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -335,7 +337,7 @@ export default function AgentConfigPage() {
                       <Loader2 className="animate-spin" /> <Trans>{"Deleting..."}</Trans>
                     </>
                   ) : (
-                    "Delete"
+                    <Trans>{"Delete"}</Trans>
                   )}
                 </AlertDialogAction>
               </AlertDialogFooter>

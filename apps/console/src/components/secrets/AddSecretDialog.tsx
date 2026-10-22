@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -43,6 +45,7 @@ export function AddSecretDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const translateUi = useT();
   const createSecret = useCreateSecret();
   const [showValue, setShowValue] = useState(false);
   const {
@@ -59,7 +62,7 @@ export function AddSecretDialog({
     try {
       await createSecret.mutateAsync(values, {
         onSuccess: () => {
-          toast.success("Secret saved");
+          toast.success(translateUi("Secret saved"));
           reset();
           setShowValue(false);
           onOpenChange(false);
@@ -84,8 +87,7 @@ export function AddSecretDialog({
         <DialogHeader>
           <DialogTitle><Trans>{"New secret"}</Trans></DialogTitle>
           <DialogDescription>
-            Store an integration token or API key without exposing the value in
-            the console.
+            <Trans>{"Store an integration token or API key without exposing the value in the console."}</Trans>
           </DialogDescription>
         </DialogHeader>
 
@@ -94,7 +96,7 @@ export function AddSecretDialog({
             <Label htmlFor="secret-name"><Trans>{"Name"}</Trans></Label>
             <Input
               id="secret-name"
-              placeholder="stripe.api_key"
+              placeholder={translateUi("stripe.api_key")}
               autoComplete="off"
               disabled={createSecret.isPending}
               {...register("name")}
@@ -103,7 +105,7 @@ export function AddSecretDialog({
               <p className="text-xs text-destructive">{errors.name.message}</p>
             ) : (
               <p className="text-xs text-muted-foreground">
-                Names must be unique in this workspace.
+                <Trans>{"Names must be unique in this workspace."}</Trans>
               </p>
             )}
           </div>
@@ -122,7 +124,7 @@ export function AddSecretDialog({
                 type="button"
                 variant="outline"
                 size="icon"
-                aria-label={showValue ? "Hide secret value" : "Show secret value"}
+                aria-label={translateUi(showValue ? "Hide secret value" : "Show secret value")}
                 onClick={() => setShowValue((visible) => !visible)}
                 disabled={createSecret.isPending}
               >
@@ -151,7 +153,7 @@ export function AddSecretDialog({
               {createSecret.isPending ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : null}
-              Save secret
+              <Trans>{"Save secret"}</Trans>
             </Button>
           </DialogFooter>
         </form>

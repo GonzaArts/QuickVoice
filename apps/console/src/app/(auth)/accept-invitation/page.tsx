@@ -86,72 +86,72 @@ function Invitation() {
       <div className="mb-6 flex size-12 items-center justify-center bg-primary/10 text-primary">
         <Mail className="size-6" aria-hidden="true" />
       </div>
-      <h1 className="text-2xl font-semibold tracking-tight">Workspace invitation</h1>
+      <h1 className="text-2xl font-semibold tracking-tight"><Trans>{"Workspace invitation"}</Trans></h1>
       <div className="mt-3 space-y-5 text-sm" aria-busy={busy}>
         {!invitationId ? (
-          <p role="alert">This invitation link is incomplete. Ask the workspace owner to resend it.</p>
+          <p role="alert"><Trans>{"This invitation link is incomplete. Ask the workspace owner to resend it."}</Trans></p>
         ) : isPending ? (
-          <p role="status" className="text-muted-foreground">Checking your account…</p>
+          <p role="status" className="text-muted-foreground"><Trans>{"Checking your account…"}</Trans></p>
         ) : sessionError ? (
           <>
-            <p role="alert">Unable to check your account. Please try again.</p>
-            <Button className="min-h-11 w-full" onClick={() => refetch()}>Try again</Button>
+            <p role="alert"><Trans>{"Unable to check your account. Please try again."}</Trans></p>
+            <Button className="min-h-11 w-full" onClick={() => refetch()}><Trans>{"Try again"}</Trans></Button>
           </>
         ) : !session ? (
           <>
-            <p className="text-muted-foreground">Sign in or create an account with the email address that received this invitation to review and join the workspace.</p>
+            <p className="text-muted-foreground"><Trans>{"Sign in or create an account with the email address that received this invitation to review and join the workspace."}</Trans></p>
             <div className="grid gap-3">
-              <Button asChild className="min-h-11"><Link href={invitationPath(invitationId, "/login")}>Sign in to continue</Link></Button>
+              <Button asChild className="min-h-11"><Link href={invitationPath(invitationId, "/login")}><Trans>{"Sign in to continue"}</Trans></Link></Button>
               <Button asChild variant="outline" className="min-h-11"><Link href={invitationPath(invitationId, "/register")}><Trans>{"Create an account"}</Trans></Link></Button>
             </div>
           </>
         ) : joinedOrganizationId ? (
           <>
-            <p role="status">You have joined the workspace.</p>
-            <Button className="min-h-11 w-full" disabled={busy} onClick={() => act("open")}>Open workspace</Button>
+            <p role="status"><Trans>{"You have joined the workspace."}</Trans></p>
+            <Button className="min-h-11 w-full" disabled={busy} onClick={() => act("open")}><Trans>{"Open workspace"}</Trans></Button>
           </>
         ) : invitation.isPending ? (
-          <p role="status" className="text-muted-foreground">Loading invitation…</p>
+          <p role="status" className="text-muted-foreground"><Trans>{"Loading invitation…"}</Trans></p>
         ) : invitation.error ? (
           <>
             <p role="alert" className="text-muted-foreground">
-              {wrongAccount ? "This invitation was sent to a different email address. Sign in with the account that received it."
-                : needsVerification ? "Verify your email address before joining this workspace."
-                : unavailable ? "This invitation is unavailable. It may have expired, been canceled, or already been used. Ask the workspace owner for a new invitation."
-                : "We could not load this invitation. Please try again."}
+              {wrongAccount ? <Trans>{"This invitation was sent to a different email address. Sign in with the account that received it."}</Trans>
+                : needsVerification ? <Trans>{"Verify your email address before joining this workspace."}</Trans>
+                : unavailable ? <Trans>{"This invitation is unavailable. It may have expired, been canceled, or already been used. Ask the workspace owner for a new invitation."}</Trans>
+                : <Trans>{"We could not load this invitation. Please try again."}</Trans>}
             </p>
-            <p className="break-words">Signed in as <span className="font-medium">{session.user.email}</span></p>
+            <p className="break-words"><Trans>{"Signed in as"}</Trans> <span className="font-medium">{session.user.email}</span></p>
             {needsVerification && (
               <>
                 <Button className="min-h-11 w-full" disabled={busy || verificationSent} onClick={() => act("verify")}>
-                  {verificationSent ? "Verification email sent" : "Send verification email"}
+                  {verificationSent ? <Trans>{"Verification email sent"}</Trans> : <Trans>{"Send verification email"}</Trans>}
                 </Button>
-                {verificationSent && <p role="status" className="text-muted-foreground">Check your inbox and open the verification link to return here.</p>}
+                {verificationSent && <p role="status" className="text-muted-foreground"><Trans>{"Check your inbox and open the verification link to return here."}</Trans></p>}
               </>
             )}
             {wrongAccount || needsVerification ? (
-              <Button variant="outline" className="min-h-11 w-full" disabled={busy} onClick={() => act("signout")}>Use a different account</Button>
+              <Button variant="outline" className="min-h-11 w-full" disabled={busy} onClick={() => act("signout")}><Trans>{"Use a different account"}</Trans></Button>
             ) : unavailable ? (
-              <Button asChild variant="outline" className="min-h-11 w-full"><Link href="/orgs">Go to workspaces</Link></Button>
+              <Button asChild variant="outline" className="min-h-11 w-full"><Link href="/orgs"><Trans>{"Go to workspaces"}</Trans></Link></Button>
             ) : (
-              <Button className="min-h-11 w-full" disabled={invitation.isFetching} onClick={() => invitation.refetch()}>Try again</Button>
+              <Button className="min-h-11 w-full" disabled={invitation.isFetching} onClick={() => invitation.refetch()}><Trans>{"Try again"}</Trans></Button>
             )}
           </>
         ) : invitation.data ? (
           <>
-            <p className="break-words text-muted-foreground"><span className="font-medium text-foreground">{invitation.data.inviterEmail}</span> invited you to join their team.</p>
+            <p className="break-words text-muted-foreground"><span className="font-medium text-foreground">{invitation.data.inviterEmail}</span> <Trans>{"invited you to join their team."}</Trans></p>
             <dl className="space-y-4 border bg-muted/20 p-4">
               <div><dt className="text-muted-foreground"><Trans>{"Workspace"}</Trans></dt><dd className="mt-1 break-words text-base font-semibold">{invitation.data.organizationName}</dd></div>
-              <div><dt className="text-muted-foreground">Your role</dt><dd className="mt-1 break-words capitalize">{invitation.data.role}</dd></div>
-              <div><dt className="text-muted-foreground">Joining as</dt><dd className="mt-1 break-words">{session.user.email}</dd></div>
+              <div><dt className="text-muted-foreground"><Trans>{"Your role"}</Trans></dt><dd className="mt-1 break-words capitalize">{invitation.data.role}</dd></div>
+              <div><dt className="text-muted-foreground"><Trans>{"Joining as"}</Trans></dt><dd className="mt-1 break-words">{session.user.email}</dd></div>
             </dl>
             <div className="grid gap-3 sm:grid-cols-2">
               <Button className="min-h-11" disabled={busy} onClick={() => act("accept")}>
-                {busy && <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden="true" />}Accept invitation
+                {busy && <Loader2 className="size-4 motion-safe:animate-spin" aria-hidden="true" />}<Trans>{"Accept invitation"}</Trans>
               </Button>
-              <Button variant="outline" className="min-h-11" disabled={busy} onClick={() => act("decline")}>Decline</Button>
+              <Button variant="outline" className="min-h-11" disabled={busy} onClick={() => act("decline")}><Trans>{"Decline"}</Trans></Button>
             </div>
-            <Button variant="link" className="min-h-11 w-full" disabled={busy} onClick={() => act("signout")}>Use a different account</Button>
+            <Button variant="link" className="min-h-11 w-full" disabled={busy} onClick={() => act("signout")}><Trans>{"Use a different account"}</Trans></Button>
           </>
         ) : null}
         {actionError && <p role="alert" className="text-destructive">{actionError}</p>}
@@ -165,7 +165,7 @@ export default function AcceptInvitationPage() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background px-4 py-10">
       <Logo1 />
       <section className="w-full max-w-md border bg-card p-6 sm:p-8">
-        <Suspense fallback={<p role="status" className="text-sm text-muted-foreground">Loading invitation…</p>}>
+        <Suspense fallback={<p role="status" className="text-sm text-muted-foreground"><Trans>{"Loading invitation…"}</Trans></p>}>
           <Invitation />
         </Suspense>
       </section>

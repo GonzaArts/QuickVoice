@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
@@ -28,6 +30,7 @@ import { clearIdentityCache } from "@/src/lib/query-cache";
 
 
 export default function Orgs() {
+  const translateUi = useT();
  const router = useRouter();
  const queryClient = useQueryClient();
  const [loading, setLoading] = useState(false);
@@ -69,7 +72,7 @@ export default function Orgs() {
  return;
  }
  clearIdentityCache(queryClient);
- toast.success("Organization created successfully");
+ toast.success(translateUi("Organization created successfully"));
  router.push("/dashboard");
  router.refresh();
  } catch (err) {
@@ -89,7 +92,7 @@ export default function Orgs() {
  className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
  >
  <ArrowLeft className="h-4 w-4" />
- Back to organizations
+ <Trans>{"Back to organizations"}</Trans>
  </Link>
 
  <div className="border border-border bg-card p-6 sm:p-8">
@@ -97,10 +100,10 @@ export default function Orgs() {
  <Building2 className="h-6 w-6" />
  </div>
  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground mb-1">
- Create organization
+ <Trans>{"Create organization"}</Trans>
  </h1>
  <p className="text-sm text-muted-foreground mb-6">
- Set up a new workspace for your team to upload and analyze calls.
+ <Trans>{"Set up a new workspace for your team to upload and analyze calls."}</Trans>
  </p>
 
  <FormProvider {...form}>
@@ -115,7 +118,7 @@ export default function Orgs() {
  <FormItem>
  <FormLabel><Trans>{"Organization name"}</Trans></FormLabel>
  <FormControl>
- <Input placeholder="e.g. Acme Inc" className="h-10" {...field} />
+ <Input placeholder={translateUi("e.g. Acme Inc")} className="h-10" {...field} />
  </FormControl>
  <FormMessage />
  </FormItem>
@@ -127,10 +130,10 @@ export default function Orgs() {
  {loading || form.formState.isSubmitting ? (
  <>
  <Loader2 className="h-4 w-4 animate-spin mr-2" />
- Creating...
+ <Trans>{"Creating..."}</Trans>
  </>
  ) : (
- "Create organization"
+ <Trans>{"Create organization"}</Trans>
  )}
  </Button>
  </div>

@@ -70,7 +70,7 @@ export default function CallDetailPage() {
  href="/calls"
  className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground"
  >
- <ArrowLeft className="size-3.5" /> Back to call logs
+ <ArrowLeft className="size-3.5" /> <Trans>{"Back to call logs"}</Trans>
  </Link>
  </div>
 
@@ -81,7 +81,7 @@ export default function CallDetailPage() {
  ) : call ? (
  <>
  <h1 className="text-2xl font-semibold tracking-tight">
- {call.callerId ?? "Unknown caller"}
+ {call.callerId ?? <Trans>{"Unknown caller"}</Trans>}
  </h1>
  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
  <Badge variant={statusVariant(call.status)} className="uppercase">
@@ -104,7 +104,7 @@ export default function CallDetailPage() {
  </div>
  </>
  ) : (
- <p className="text-sm text-muted-foreground">Call not found.</p>
+ <p className="text-sm text-muted-foreground"><Trans>{"Call not found."}</Trans></p>
  )}
  </div>
  {call ? (
@@ -116,10 +116,9 @@ export default function CallDetailPage() {
  </AlertDialogTrigger>
  <AlertDialogContent>
  <AlertDialogHeader>
- <AlertDialogTitle>Delete this call?</AlertDialogTitle>
+ <AlertDialogTitle><Trans>{"Delete this call?"}</Trans></AlertDialogTitle>
  <AlertDialogDescription>
- Deleting a call removes its metadata and transcripts.
- Audio recordings in object storage are not affected.
+ <Trans>{"Deleting a call removes its metadata and transcripts. Audio recordings in object storage are not affected."}</Trans>
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
@@ -133,7 +132,7 @@ export default function CallDetailPage() {
  <Loader2 className="animate-spin" /> <Trans>{"Deleting…"}</Trans>
  </>
  ) : (
- "Delete"
+ <Trans>{"Delete"}</Trans>
  )}
  </AlertDialogAction>
  </AlertDialogFooter>

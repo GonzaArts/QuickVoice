@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import { Loader2 } from "lucide-react";
 import {
@@ -23,6 +25,7 @@ export function AssignAgentSelect({
   agentId: string | null;
   readOnly?: boolean;
 }) {
+  const translateUi = useT();
   const { data: agents, isLoading: agentsLoading } = useAgents();
   const update = useUpdateNumber();
   const assignedAgent = agents?.find((agent) => agent.agentId === agentId);
@@ -36,13 +39,13 @@ export function AssignAgentSelect({
     return (
       <p
         className="text-sm text-foreground"
-        aria-label="Current number routing"
+        aria-label={translateUi("Current number routing")}
       >
         {agentsLoading
-          ? "Loading routing…"
+          ? <Trans>{"Loading routing…"}</Trans>
           : agentId
-            ? (assignedAgent?.name ?? "Assigned agent")
-            : "Unassigned"}
+            ? (assignedAgent?.name ?? <Trans>{"Assigned agent"}</Trans>)
+            : <Trans>{"Unassigned"}</Trans>}
       </p>
     );
   }
@@ -63,7 +66,7 @@ export function AssignAgentSelect({
           ) : null}
           <SelectValue
             className="min-w-0 flex-1 truncate text-left"
-            placeholder={agentsLoading ? "Loading agents..." : "Unassigned"}
+            placeholder={translateUi(agentsLoading ? "Loading agents..." : "Unassigned")}
           />
         </div>
       </SelectTrigger>

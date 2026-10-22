@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
 import { Loader2, Trash2, TriangleAlert } from "lucide-react";
@@ -29,6 +30,7 @@ export function ReleaseNumberDialog({
   phoneNumber: string;
   compact?: boolean;
 }) {
+  const translateUi = useT();
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState("");
   const release = useReleaseNumber();
@@ -65,21 +67,19 @@ export function ReleaseNumberDialog({
               ? "text-destructive hover:text-destructive"
               : "w-full border-destructive/40 text-destructive hover:text-destructive"
           }
-          aria-label={`Release ${phoneNumber}`}
+          aria-label={translateUi("Release {number}", { number: phoneNumber })}
         >
           <Trash2 />
-          {compact ? null : "Release number"}
+          {compact ? null : <Trans>{"Release number"}</Trans>}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Release {phoneNumber} permanently?
+            <Trans>{"Release"}</Trans> {phoneNumber} <Trans>{"permanently?"}</Trans>
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This immediately removes the number from QuickVoice and releases it
-            at the telephony provider. Calls and routing stop, and the same
-            number may never be available to buy again. This cannot be undone.
+            <Trans>{"This immediately removes the number from QuickVoice and releases it at the telephony provider. Calls and routing stop, and the same number may never be available to buy again. This cannot be undone."}</Trans>
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -87,16 +87,14 @@ export function ReleaseNumberDialog({
           <div className="flex items-start gap-2">
             <TriangleAlert className="mt-0.5 size-4 shrink-0" />
             <p>
-              Releasing does not preserve or reserve this number. Update any
-              published caller IDs, forwarding rules, and customer records
-              first.
+              <Trans>{"Releasing does not preserve or reserve this number. Update any published caller IDs, forwarding rules, and customer records first."}</Trans>
             </p>
           </div>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor={confirmationId}>
-            <Trans>{"Type"}</Trans> <span className="font-mono">{phoneNumber}</span> to confirm
+            <Trans>{"Type"}</Trans> <span className="font-mono">{phoneNumber}</span> <Trans>{"to confirm"}</Trans>
           </Label>
           <Input
             id={confirmationId}
@@ -110,7 +108,7 @@ export function ReleaseNumberDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={release.isPending}>
-            Keep number
+            <Trans>{"Keep number"}</Trans>
           </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
@@ -122,10 +120,10 @@ export function ReleaseNumberDialog({
           >
             {release.isPending ? (
               <>
-                <Loader2 className="animate-spin" /> Releasing…
+                <Loader2 className="animate-spin" /> <Trans>{"Releasing…"}</Trans>
               </>
             ) : (
-              "Release permanently"
+              <Trans>{"Release permanently"}</Trans>
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

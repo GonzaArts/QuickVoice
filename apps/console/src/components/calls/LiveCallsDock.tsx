@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import {
   useEffect,
@@ -129,7 +131,7 @@ function TranscriptRow({ message }: { message: LiveTranscriptMessage }) {
                 : "border-[#D9D9DD] bg-[#F7F7F8] text-[#111111]"
             )}
           >
-            {isAgent ? "Agent" : "Caller"}
+            {isAgent ? <Trans>{"Agent"}</Trans> : <Trans>{"Caller"}</Trans>}
           </p>
           <time className="shrink-0 text-[11px] tabular-nums text-[#77777F]">
             {transcriptTime(message.timestamp)}
@@ -273,27 +275,27 @@ function LiveTranscriptDrawer({
                 </div>
                 <div className="grid grid-cols-2 border-t border-[#D9D9DD] sm:grid-cols-4">
                   <div className="border-r border-b border-[#D9D9DD] px-4 py-3 sm:border-b-0">
-                    <p className="text-[11px] text-[#77777F]">Elapsed</p>
+                    <p className="text-[11px] text-[#77777F]"><Trans>{"Elapsed"}</Trans></p>
                     <p className="mt-1 text-sm font-semibold tabular-nums text-[#111111]">
-                      {transcript.isEnded ? "Ended" : formatElapsed(call.startedAt, now)}
+                      {transcript.isEnded ? <Trans>{"Ended"}</Trans> : formatElapsed(call.startedAt, now)}
                     </p>
                   </div>
                   <div className="border-b border-[#D9D9DD] px-4 py-3 sm:border-r sm:border-b-0">
-                    <p className="text-[11px] text-[#77777F]">Participants</p>
+                    <p className="text-[11px] text-[#77777F]"><Trans>{"Participants"}</Trans></p>
                     <p className="mt-1 text-sm font-semibold tabular-nums text-[#111111]">
                       {call.participantCount}
                     </p>
                   </div>
                   <div className="border-r border-[#D9D9DD] px-4 py-3">
-                    <p className="text-[11px] text-[#77777F]">From</p>
+                    <p className="text-[11px] text-[#77777F]"><Trans>{"From"}</Trans></p>
                     <p className="mt-1 truncate text-sm font-semibold text-[#111111]">
-                      {widgetCall ? "Website visitor" : phone.from ?? "Unavailable"}
+                      {widgetCall ? <Trans>{"Website visitor"}</Trans> : phone.from ?? <Trans>{"Unavailable"}</Trans>}
                     </p>
                   </div>
                   <div className="px-4 py-3">
-                    <p className="text-[11px] text-[#77777F]">To</p>
+                    <p className="text-[11px] text-[#77777F]"><Trans>{"To"}</Trans></p>
                     <p className="mt-1 truncate text-sm font-semibold text-[#111111]">
-                      {widgetCall ? "Voice agent" : phone.to ?? "Unavailable"}
+                      {widgetCall ? <Trans>{"Voice agent"}</Trans> : phone.to ?? <Trans>{"Unavailable"}</Trans>}
                     </p>
                   </div>
                 </div>
@@ -307,9 +309,9 @@ function LiveTranscriptDrawer({
                   aria-live="polite"
                 >
                   <div className="mb-5 flex items-baseline justify-between gap-4">
-                    <h2 className="text-sm font-semibold text-[#111111]">Live transcript</h2>
+                    <h2 className="text-sm font-semibold text-[#111111]"><Trans>{"Live transcript"}</Trans></h2>
                     <p className="text-xs tabular-nums text-[#77777F]">
-                      {transcript.messages.length} finalized
+                      {transcript.messages.length} <Trans>{"finalized"}</Trans>
                     </p>
                   </div>
 
@@ -324,15 +326,15 @@ function LiveTranscriptDrawer({
                   transcript.messages.length === 0 ? (
                     <div className="border-t border-[#D9D9DD] py-8 text-sm text-[#65656D]">
                       <Loader2 className="mb-3 size-4 animate-spin text-[#002FA7]" />
-                      Loading transcript from the start…
+                      <Trans>{"Loading transcript from the start…"}</Trans>
                     </div>
                   ) : transcript.messages.length === 0 ? (
                     <div className="border-t border-[#D9D9DD] py-8">
                       <p className="text-sm font-medium text-[#111111]">
-                        Waiting for the first finalized message
+                        <Trans>{"Waiting for the first finalized message"}</Trans>
                       </p>
                       <p className="mt-1 text-sm text-[#65656D]">
-                        Messages appear here after each speaker finishes a turn.
+                        <Trans>{"Messages appear here after each speaker finishes a turn."}</Trans>
                       </p>
                     </div>
                   ) : (
@@ -354,7 +356,7 @@ function LiveTranscriptDrawer({
                     className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-none border border-[#002FA7] bg-[#002FA7] text-white hover:bg-[#002785]"
                   >
                     <ArrowDown className="size-4" />
-                    {unseenMessages} new {unseenMessages === 1 ? "message" : "messages"}
+                    {unseenMessages} <Trans>{"new"}</Trans> {unseenMessages === 1 ? <Trans>{"message"}</Trans> : <Trans>{"messages"}</Trans>}
                   </Button>
                 ) : null}
               </div>
@@ -363,8 +365,8 @@ function LiveTranscriptDrawer({
                 <div className="flex items-center justify-between gap-4">
                   <p className="text-xs text-[#65656D]">
                     {transcript.isEnded
-                      ? "This transcript is no longer receiving messages."
-                      : "Finalized turns are saved here during the live call."}
+                      ? <Trans>{"This transcript is no longer receiving messages."}</Trans>
+                      : <Trans>{"Finalized turns are saved here during the live call."}</Trans>}
                   </p>
                   {canEndCall && !transcript.isEnded ? (
                     <Button
@@ -379,7 +381,7 @@ function LiveTranscriptDrawer({
                       ) : (
                         <PhoneOff className="size-4" />
                       )}
-                      End call
+                      <Trans>{"End call"}</Trans>
                     </Button>
                   ) : null}
                 </div>
@@ -392,9 +394,9 @@ function LiveTranscriptDrawer({
       <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>
         <AlertDialogContent className="rounded-none border-[#B8B8BE] bg-[#FFFFFF] text-[#111111]">
           <AlertDialogHeader>
-            <AlertDialogTitle>End this live call?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"End this live call?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription className="text-[#65656D]">
-              The caller and agent on {call ? callTitle(call) : "this call"} will be disconnected immediately.
+              <Trans>{"The caller and agent on"}</Trans> {call ? callTitle(call) : <Trans>{"this call"}</Trans>} <Trans>{"will be disconnected immediately."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -410,7 +412,7 @@ function LiveTranscriptDrawer({
               className="rounded-none bg-[#111111] text-white hover:bg-[#333333]"
             >
               {endCall.isPending ? <Loader2 className="size-4 animate-spin" /> : null}
-              End call
+              <Trans>{"End call"}</Trans>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -420,6 +422,7 @@ function LiveTranscriptDrawer({
 }
 
 export function LiveCallsDock({ organizationId }: { organizationId: string }) {
+  const translateUi = useT();
   const [panelOpen, setPanelOpen] = useState(false);
   const [selectedCall, setSelectedCall] = useState<LiveCallRoom | null>(null);
   const [restoreCallId, setRestoreCallId] = useState<string | null>(null);
@@ -492,11 +495,11 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
               <div className="min-w-0 px-4 py-3">
                 <div className="flex items-center gap-2">
                   <Radio className="size-4 text-[#002FA7]" />
-                  <h2 className="text-sm font-semibold">Live calls</h2>
+                  <h2 className="text-sm font-semibold"><Trans>{"Live calls"}</Trans></h2>
                 </div>
                 <p className="mt-1 text-xs text-[#65656D]">
                   {sortedCalls.length === 1
-                    ? "1 active call"
+                    ? <Trans>{"1 active call"}</Trans>
                     : `${sortedCalls.length} active calls`}
                 </p>
               </div>
@@ -508,7 +511,7 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
                   className="rounded-none text-[#111111] hover:bg-[#F7F7F8]"
                   onClick={() => liveCalls.refetch()}
                   disabled={liveCalls.isFetching}
-                  aria-label="Refresh live calls"
+                  aria-label={translateUi("Refresh live calls")}
                 >
                   <RefreshCw
                     className={cn("size-4", liveCalls.isFetching && "animate-spin")}
@@ -520,7 +523,7 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
                   size="icon"
                   className="rounded-none border-l border-[#D9D9DD] text-[#111111] hover:bg-[#F7F7F8]"
                   onClick={() => setPanelOpen(false)}
-                  aria-label="Close live calls"
+                  aria-label={translateUi("Close live calls")}
                 >
                   <X className="size-4" />
                 </Button>
@@ -530,9 +533,9 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
             <div className="max-h-[min(31rem,calc(100vh-9rem))] overflow-y-auto">
               {liveCalls.isError ? (
                 <div className="m-3 border border-[#B8B8BE] bg-[#F7F7F8] p-4">
-                  <p className="text-sm font-medium">Live calls are unavailable</p>
+                  <p className="text-sm font-medium"><Trans>{"Live calls are unavailable"}</Trans></p>
                   <p className="mt-1 text-xs text-[#65656D]">
-                    Check the connection and refresh this list.
+                    <Trans>{"Check the connection and refresh this list."}</Trans>
                   </p>
                 </div>
               ) : liveCalls.isLoading ? (
@@ -547,9 +550,9 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
               ) : sortedCalls.length === 0 ? (
                 <div className="px-6 py-10 text-center">
                   <PhoneCall className="mx-auto size-5 text-[#77777F]" />
-                  <p className="mt-3 text-sm font-medium">No active calls</p>
+                  <p className="mt-3 text-sm font-medium"><Trans>{"No active calls"}</Trans></p>
                   <p className="mt-1 text-xs text-[#65656D]">
-                    New calls will appear here automatically.
+                    <Trans>{"New calls will appear here automatically."}</Trans>
                   </p>
                 </div>
               ) : (
@@ -581,7 +584,7 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
                           </span>
                           {call.agentName ? (
                             <span className="mt-1 block truncate text-xs text-[#65656D]">
-                              Agent: {call.agentName}
+                              <Trans>{"Agent:"}</Trans> {call.agentName}
                             </span>
                           ) : null}
                         </span>
@@ -607,7 +610,7 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
           ) : (
             <Radio className="size-4" />
           )}
-          Live calls
+          <Trans>{"Live calls"}</Trans>
           <span className="ml-1 border-l border-white/40 pl-3 tabular-nums">
             {String(sortedCalls.length).padStart(2, "0")}
           </span>

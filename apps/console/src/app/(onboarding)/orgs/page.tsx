@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,6 +16,7 @@ import { Skeleton } from "@/src/components/ui/skeleton";
 import { clearIdentityCache } from "@/src/lib/query-cache";
 
 export default function Orgs() {
+  const translateUi = useT();
     const router = useRouter();
     const queryClient = useQueryClient();
     const { data: organizations, isPending } = authClient.useListOrganizations();
@@ -29,7 +32,7 @@ export default function Orgs() {
             organizationId: orgId,
         });
         if (error) {
-            toast.error(error.message || "Could not select organization");
+            toast.error(error.message || translateUi("Could not select organization"));
             setPendingId(null);
             return;
         }
@@ -72,15 +75,14 @@ export default function Orgs() {
                     <div className="mx-auto mb-5 flex size-14 items-center justify-center bg-gradient-to-br from-primary/30 to-primary/5 text-primary">
                         <Building2 className="size-7" />
                     </div>
-                    <h1 className="text-xl font-semibold">Create your first workspace</h1>
+                    <h1 className="text-xl font-semibold"><Trans>{"Create your first workspace"}</Trans></h1>
                     <p className="mt-2 text-sm text-muted-foreground">
-                        Workspaces keep your agents, numbers, and call logs separate from
-                        anyone else&apos;s.
+                        <Trans>{"Workspaces keep your agents, numbers, and call logs separate from anyone else's."}</Trans>
                     </p>
                     <div className="mt-6">
                         <Button asChild size="lg">
                             <Link href="/orgs/create">
-                                <Plus /> Create workspace
+                                <Plus /> <Trans>{"Create workspace"}</Trans>
                             </Link>
                         </Button>
                     </div>
@@ -95,16 +97,15 @@ export default function Orgs() {
             <header className="flex items-start justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Pick a workspace
+                        <Trans>{"Pick a workspace"}</Trans>
                     </h1>
                     <p className="mt-1 text-sm text-muted-foreground">
-                        Choose which workspace to open. You can switch later from the
-                        sidebar.
+                        <Trans>{"Choose which workspace to open. You can switch later from the sidebar."}</Trans>
                     </p>
                 </div>
                 <Button variant="outline" asChild>
                     <Link href="/orgs/create">
-                        <Plus /> New workspace
+                        <Plus /> <Trans>{"New workspace"}</Trans>
                     </Link>
                 </Button>
             </header>
@@ -131,7 +132,7 @@ export default function Orgs() {
                                 </div>
                                 {isActive ? (
                                     <span className="inline-flex items-center gap-1 bg-primary/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary">
-                                        <Check className="size-3" /> Current
+                                        <Check className="size-3" /> <Trans>{"Current"}</Trans>
                                     </span>
                                 ) : null}
                             </div>

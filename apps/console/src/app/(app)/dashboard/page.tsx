@@ -1,6 +1,10 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
+
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -27,11 +31,6 @@ import {
   apiErrorStatus,
   getApiErrorStateCopy,
 } from "@/src/lib/api-error-state";
-
-const MISSING_SECTION_FORMAT = new Intl.ListFormat("en-US", {
-  style: "long",
-  type: "conjunction",
-});
 
 function resolveRange(param: string | null): DashboardRange {
   if (
@@ -113,7 +112,12 @@ function getMissingDashboardSections(summary?: DashboardSummary) {
 }
 
 function DashboardPartialDataNotice({ sections }: { sections: string[] }) {
+  const { locale, t } = useLocale();
   if (!sections.length) return null;
+  const sectionNames = new Intl.ListFormat(localeCode(locale), {
+    style: "long",
+    type: "conjunction",
+  }).format(sections.map((section) => t(section)));
 
   return (
     <div
@@ -124,11 +128,11 @@ function DashboardPartialDataNotice({ sections }: { sections: string[] }) {
       <div className="flex gap-3">
         <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
         <div>
-          <p className="font-semibold">Partial dashboard data</p>
+          <p className="font-semibold"><Trans>{"Partial dashboard data"}</Trans></p>
           <p className="mt-1">
-            The summary loaded, but {MISSING_SECTION_FORMAT.format(sections)}{" "}
-            {sections.length === 1 ? "is" : "are"} not available yet. Refresh or
-            review call logs while the remaining data catches up.
+            {t("The summary loaded, but some sections are not available yet: {sections}. Refresh or review call logs while the remaining data catches up.", {
+              sections: sectionNames,
+            })}
           </p>
         </div>
       </div>
@@ -140,6 +144,7 @@ function DashboardPartialDataNotice({ sections }: { sections: string[] }) {
 }
 
 export default function DashboardPage() {
+  const translateUi = useT();
   const params = useSearchParams();
   const range = resolveRange(params.get("range"));
   const defaultCustom = defaultCustomRange();
@@ -241,7 +246,7 @@ export default function DashboardPage() {
           />
           <section
             className="grid grid-cols-1 gap-4 rounded-lg border bg-background/60 p-3 shadow-sm xl:grid-cols-3"
-            aria-label="Traffic and agent performance"
+            aria-label={translateUi("Traffic and agent performance")}
           >
             <div className="xl:col-span-2">
               <VolumeChart summary={data} range={range} loading={isLoading} />
