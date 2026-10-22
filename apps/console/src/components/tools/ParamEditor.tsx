@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
@@ -45,6 +46,7 @@ function AllowedValueInput({
   onChange: (v: string[]) => void;
   disabled?: boolean;
 }) {
+  const t = useT();
   const [draft, setDraft] = useState("");
 
   const add = () => {
@@ -63,7 +65,7 @@ function AllowedValueInput({
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
-          placeholder="Enter allowed value"
+          placeholder={t("Enter allowed value")}
           className="h-9 flex-1 text-xs"
           disabled={disabled}
         />
@@ -115,6 +117,7 @@ function ParamCard({
   readonlyName?: boolean;
   disabled?: boolean;
 }) {
+  const t = useT();
   const set = <K extends keyof ToolParam>(key: K, val: ToolParam[K]) =>
     onChange({ ...param, [key]: val });
   const usesConfiguredValue = param.valueType !== "LLM Prompt";
@@ -150,14 +153,14 @@ function ParamCard({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {(["String", "Number", "Boolean"] as const).map((t) => (
-                <SelectItem key={t} value={t} className="text-xs">{t}</SelectItem>
+              {(["String", "Number", "Boolean"] as const).map((type) => (
+                <SelectItem key={type} value={type} className="text-xs"><Trans>{type}</Trans></SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs text-muted-foreground">Value Type</Label>
+          <Label className="text-xs text-muted-foreground"><Trans>{"Value Type"}</Trans></Label>
           <Select
             value={param.valueType}
             onValueChange={updateValueType}
@@ -167,8 +170,8 @@ function ParamCard({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {(["LLM Prompt", "Static Value", "Dynamic Variable"] as const).map((t) => (
-                <SelectItem key={t} value={t} className="text-xs">{t}</SelectItem>
+              {(["LLM Prompt", "Static Value", "Dynamic Variable"] as const).map((type) => (
+                <SelectItem key={type} value={type} className="text-xs"><Trans>{type}</Trans></SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -177,11 +180,11 @@ function ParamCard({
 
       {/* Name */}
       <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Parameter Name</Label>
+        <Label className="text-xs text-muted-foreground"><Trans>{"Parameter Name"}</Trans></Label>
         <Input
           value={param.name}
           onChange={(e) => set("name", e.target.value)}
-          placeholder="e.g., status, limit, page"
+          placeholder={t("e.g., status, limit, page")}
           className="h-9 text-xs"
           disabled={disabled || readonlyName}
           readOnly={readonlyName}
@@ -194,7 +197,7 @@ function ParamCard({
         <Input
           value={param.description}
           onChange={(e) => set("description", e.target.value)}
-          placeholder="e.g., Extract status filter from conversation"
+          placeholder={t("e.g., Extract status filter from conversation")}
           className="h-9 text-xs"
           disabled={disabled}
         />
@@ -202,17 +205,17 @@ function ParamCard({
 
       {usesConfiguredValue && (
         <div className="space-y-1.5">
-          <Label className="text-xs text-muted-foreground">{configuredValueLabel}</Label>
+          <Label className="text-xs text-muted-foreground">{t(configuredValueLabel)}</Label>
           <Input
             value={configuredValue}
             onChange={(e) => set("value", e.target.value)}
-            placeholder={configuredValuePlaceholder}
+            placeholder={t(configuredValuePlaceholder)}
             className="h-9 font-mono text-xs"
             disabled={disabled}
           />
           {param.valueType === "Dynamic Variable" && (
             <p className="text-[11px] text-muted-foreground">
-              Uses the matching runtime dynamic variable value when available.
+              <Trans>{"Uses the matching runtime dynamic variable value when available."}</Trans>
             </p>
           )}
         </div>
@@ -220,7 +223,7 @@ function ParamCard({
 
       {/* Allowed Values */}
       <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">Allowed Values (Optional)</Label>
+        <Label className="text-xs text-muted-foreground"><Trans>{"Allowed Values (Optional)"}</Trans></Label>
         <AllowedValueInput
           values={param.allowedValues}
           onChange={(v) => set("allowedValues", v)}
@@ -237,8 +240,8 @@ function ParamCard({
             disabled={disabled}
           />
           <div>
-            <p className="text-sm font-medium leading-none">Required</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">Parameter must be provided</p>
+            <p className="text-sm font-medium leading-none"><Trans>{"Required"}</Trans></p>
+            <p className="mt-0.5 text-xs text-muted-foreground"><Trans>{"Parameter must be provided"}</Trans></p>
           </div>
         </div>
         <Button
@@ -265,6 +268,7 @@ export function ParamEditor({
   readonlyNames = false,
   disabled = false,
 }: ParamEditorProps) {
+  const t = useT();
   const update = (index: number, param: ToolParam) =>
     onChange(value.map((p, i) => (i === index ? param : p)));
 
@@ -277,9 +281,9 @@ export function ParamEditor({
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {label}
+            {t(label)}
           </p>
-          {hint && <p className="mt-0.5 text-xs text-muted-foreground/70">{hint}</p>}
+          {hint && <p className="mt-0.5 text-xs text-muted-foreground/70">{t(hint)}</p>}
         </div>
         {!disableAdd && (
           <Button
@@ -299,8 +303,8 @@ export function ParamEditor({
       {value.length === 0 ? (
         <div className="flex items-center justify-center border border-dashed py-6 text-xs text-muted-foreground">
           {disableAdd
-            ? "Add {param} placeholders in the URL to populate path params"
-            : `No ${label.toLowerCase()} defined`}
+            ? t("Add {param} placeholders in the URL to populate path params")
+            : t("No {label} defined", { label: t(label).toLowerCase() })}
         </div>
       ) : (
         <div className="space-y-3">
