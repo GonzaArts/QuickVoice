@@ -341,9 +341,9 @@ function CampaignIntelligencePanel({
   return (
     <div className="grid gap-4">
       <details className="border">
-        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold">Experiment assignment preview</summary>
+        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold"><Trans>{"Experiment assignment preview"}</Trans></summary>
         <div className="border-t p-3">
-          <Label htmlFor={`assignment-${campaignId}`}>Experiment payload</Label>
+          <Label htmlFor={`assignment-${campaignId}`}><Trans>{"Experiment payload"}</Trans></Label>
           <Textarea
             id={`assignment-${campaignId}`}
             rows={10}
@@ -370,9 +370,9 @@ function CampaignIntelligencePanel({
       </details>
 
       <details className="border">
-        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold">Conversion validation / ingestion</summary>
+        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold"><Trans>{"Conversion validation / ingestion"}</Trans></summary>
         <div className="border-t p-3">
-          <Label htmlFor={`conversion-${campaignId}`}>Conversion event JSON</Label>
+          <Label htmlFor={`conversion-${campaignId}`}><Trans>{"Conversion event JSON"}</Trans></Label>
           <Textarea
             id={`conversion-${campaignId}`}
             rows={10}
@@ -404,7 +404,7 @@ function CampaignIntelligencePanel({
           {conversionError ? <p className="mt-2 text-sm text-destructive">{conversionError}</p> : null}
           {conversionValidationResult ? (
             <div className="mt-2">
-              <p className="text-sm font-medium">Validation result</p>
+              <p className="text-sm font-medium"><Trans>{"Validation result"}</Trans></p>
               <pre className="mt-2 max-h-48 overflow-auto rounded border bg-muted/30 p-2 text-xs">
                 {JSON.stringify(conversionValidationResult, null, 2)}
               </pre>
@@ -412,7 +412,7 @@ function CampaignIntelligencePanel({
           ) : null}
           {conversionIngestResult ? (
             <div className="mt-2">
-              <p className="text-sm font-medium">Ingest result</p>
+              <p className="text-sm font-medium"><Trans>{"Ingest result"}</Trans></p>
               <pre className="mt-2 max-h-48 overflow-auto rounded border bg-muted/30 p-2 text-xs">
                 {JSON.stringify(conversionIngestResult, null, 2)}
               </pre>
@@ -422,7 +422,7 @@ function CampaignIntelligencePanel({
       </details>
 
       <details className="border">
-        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold">Campaign report preview</summary>
+        <summary className="cursor-pointer px-3 py-2 text-sm font-semibold"><Trans>{"Campaign report preview"}</Trans></summary>
         <div className="border-t p-3">
           <div className="mb-2 flex flex-wrap items-center gap-4 text-sm">
             <label className="flex items-center gap-2">
@@ -431,7 +431,7 @@ function CampaignIntelligencePanel({
                 checked={reportRandomized}
                 onChange={(event) => setReportRandomized(event.target.checked)}
               />
-              <span>Randomized metrics</span>
+              <span><Trans>{"Randomized metrics"}</Trans></span>
             </label>
             <label className="flex items-center gap-2">
               <input
@@ -439,7 +439,7 @@ function CampaignIntelligencePanel({
                 checked={reportPersist}
                 onChange={(event) => setReportPersist(event.target.checked)}
               />
-              <span>Persist snapshot</span>
+              <span><Trans>{"Persist snapshot"}</Trans></span>
             </label>
           </div>
           <Button
@@ -480,7 +480,7 @@ function CampaignDetailDialog({
         <DialogHeader>
           <DialogTitle>{shown?.name ?? "Campaign"}</DialogTitle>
           <DialogDescription>
-            Campaign schedule, recipient counts, and imported outbound calls.
+            <Trans>{"Campaign schedule, recipient counts, and imported outbound calls."}</Trans>
           </DialogDescription>
         </DialogHeader>
 
@@ -509,13 +509,13 @@ function CampaignDetailDialog({
                 </p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Valid</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Valid"}</Trans></p>
                 <p className="mt-1 text-xl font-semibold tabular-nums">
                   {shown.validRecipients}
                 </p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Invalid</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Invalid"}</Trans></p>
                 <p className="mt-1 text-xl font-semibold tabular-nums">
                   {shown.invalidRecipients}
                 </p>
@@ -524,7 +524,7 @@ function CampaignDetailDialog({
 
             <div className="grid gap-3 text-sm sm:grid-cols-2">
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">From number</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"From number"}</Trans></p>
                 <p className="mt-1 font-medium">{shown.fromNumber}</p>
               </div>
               <div className="border p-3">
@@ -532,13 +532,13 @@ function CampaignDetailDialog({
                 <p className="mt-1 font-medium">{fmtDate(shown.scheduledAt)}</p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Source file</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Source file"}</Trans></p>
                 <p className="mt-1 truncate font-medium">
                   {shown.sourceFileName ?? "-"}
                 </p>
               </div>
               <div className="border p-3">
-                <p className="text-xs text-muted-foreground">Ring timeout</p>
+                <p className="text-xs text-muted-foreground"><Trans>{"Ring timeout"}</Trans></p>
                 <p className="mt-1 font-medium">
                   {shown.ringingTimeoutSeconds} seconds
                 </p>
@@ -547,7 +547,7 @@ function CampaignDetailDialog({
 
             <div className="border">
               <div className="flex items-center justify-between border-b px-3 py-2">
-                <p className="text-sm font-semibold">Imported calls</p>
+                <p className="text-sm font-semibold"><Trans>{"Imported calls"}</Trans></p>
                 <Badge variant="outline">{calls.length}</Badge>
               </div>
               <div className="max-h-72 overflow-auto">
@@ -584,7 +584,7 @@ function CampaignDetailDialog({
                           colSpan={3}
                           className="h-24 text-center text-muted-foreground"
                         >
-                          No calls imported yet.
+                          <Trans>{"No calls imported yet."}</Trans>
                         </TableCell>
                       </TableRow>
                     )}
@@ -754,7 +754,7 @@ export function CampaignsPanel() {
                 <TableHead><Trans>{"Status"}</Trans></TableHead>
                 <TableHead><Trans>{"Recipients"}</Trans></TableHead>
                 <TableHead><Trans>{"Schedule"}</Trans></TableHead>
-                <TableHead>From</TableHead>
+                <TableHead><Trans>{"From"}</Trans></TableHead>
                 <TableHead className="w-12 text-right"><Trans>{"Actions"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
@@ -813,7 +813,7 @@ export function CampaignsPanel() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Campaign actions</DropdownMenuLabel>
+                        <DropdownMenuLabel><Trans>{"Campaign actions"}</Trans></DropdownMenuLabel>
                         <DropdownMenuItem
                           onClick={() => setSelectedCampaign(campaign)}
                         >
@@ -839,7 +839,7 @@ export function CampaignsPanel() {
                               onClick={() => setCancelTarget(campaign)}
                             >
                               <SquareX className="size-4" />
-                              Cancel campaign
+                              <Trans>{"Cancel campaign"}</Trans>
                             </DropdownMenuItem>
                           </>
                         ) : null}
@@ -868,7 +868,7 @@ export function CampaignsPanel() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel campaign?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"Cancel campaign?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
               This prevents {cancelTarget?.name} from dispatching queued calls.
               Calls already in progress cannot be stopped from this action.
@@ -876,7 +876,7 @@ export function CampaignsPanel() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={cancelCampaign.isPending}>
-              Keep campaign
+              <Trans>{"Keep campaign"}</Trans>
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"

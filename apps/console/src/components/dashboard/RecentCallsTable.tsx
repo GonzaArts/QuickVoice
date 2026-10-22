@@ -151,7 +151,7 @@ function CallTimestamp({ call }: { call: CallLog }) {
   return call.startTime ? (
     <time dateTime={call.startTime}>{formatAbsoluteTimestamp(call.startTime, localeCode(locale))}</time>
   ) : (
-    <span>No start timestamp</span>
+    <span><Trans>{"No start timestamp"}</Trans></span>
   );
 }
 
@@ -304,7 +304,7 @@ export function RecentCallsTable({
               <TableHeader>
                 <TableRow className="border-b bg-background/70 hover:bg-background/70">
                   <TableHead className="h-11 pl-5 text-xs font-semibold text-foreground">
-                    Start Time
+                    <Trans>{"Start Time"}</Trans>
                   </TableHead>
                   <TableHead className="text-xs font-semibold text-foreground">
                     <Trans>{"Number"}</Trans>

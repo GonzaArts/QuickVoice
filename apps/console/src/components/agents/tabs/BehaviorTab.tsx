@@ -187,9 +187,9 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <section className="border bg-card p-6">
                     <div className="mb-5 space-y-1">
-                        <h2 className="text-base font-semibold">Persona</h2>
+                        <h2 className="text-base font-semibold"><Trans>{"Persona"}</Trans></h2>
                         <p className="text-sm text-muted-foreground">
-                            How the agent introduces itself and behaves on a call.
+                            <Trans>{"How the agent introduces itself and behaves on a call."}</Trans>
                         </p>
                     </div>
                     <div className="space-y-5">
@@ -206,7 +206,7 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        Spoken immediately when the call connects.
+                                        <Trans>{"Spoken immediately when the call connects."}</Trans>
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -250,7 +250,7 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                                             )}
                                         </div>
                                         <p className="text-sm text-muted-foreground">
-                                            Fallback values are used when call data does not include a value.
+                                            <Trans>{"Fallback values are used when call data does not include a value."}</Trans>
                                         </p>
                                     </div>
                                     <Button
@@ -258,7 +258,7 @@ export function BehaviorTab({ agentId }: { agentId: string }) {
                                         variant="outline"
                                         onClick={() => openVariableDialog("edit")}
                                     >
-                                        <Braces /> Set values
+                                        <Braces /> <Trans>{"Set values"}</Trans>
                                     </Button>
                                 </div>
                                 <div className="mt-4 flex flex-wrap gap-2">

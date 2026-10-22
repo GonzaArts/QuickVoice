@@ -291,12 +291,12 @@ export function VoiceTab({ agentId }: { agentId: string }) {
     if (!config || !voiceOptions) {
         return (
             <div role="alert" className="flex flex-wrap items-center gap-3 border bg-card p-6 text-sm">
-                <span>Could not load voice settings or the available voices.</span>
+                <span><Trans>{"Could not load voice settings or the available voices."}</Trans></span>
                 <Button type="button" variant="outline" onClick={() => {
                     void refetchConfig();
                     void refetchCatalog();
                 }}>
-                    Try again
+                    <Trans>{"Try again"}</Trans>
                 </Button>
             </div>
         );
@@ -307,7 +307,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {sarvamConfigured ? (
                     <p role="alert" className="border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
-                        This agent has a saved Sarvam model, which is unavailable. Choose supported STT, TTS, and voice options, then save before using this agent.
+                        <Trans>{"This agent has a saved Sarvam model, which is unavailable. Choose supported STT, TTS, and voice options, then save before using this agent."}</Trans>
                     </p>
                 ) : null}
                 <section className="border bg-card p-6">
@@ -453,7 +453,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                                 </p>
                             ) : (
                                 <p className="text-sm font-medium">
-                                    Save these model choices to refresh the cost estimate.
+                                    <Trans>{"Save these model choices to refresh the cost estimate."}</Trans>
                                 </p>
                             )}
                             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">

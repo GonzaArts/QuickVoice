@@ -318,7 +318,7 @@ export function CallsTable({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuLabel className="text-xs text-muted-foreground">
-                Toggle columns
+                <Trans>{"Toggle columns"}</Trans>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               {COLUMNS.map((col) => (
@@ -366,7 +366,7 @@ export function CallsTable({
                   <FileText className="size-4" /> <Trans>{"Transcript"}</Trans>
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => setMetadataCall(c)}>
-                  <Info className="size-4" /> Metadata
+                  <Info className="size-4" /> <Trans>{"Metadata"}</Trans>
                 </Button>
                 <Button
                   variant="outline"
@@ -386,7 +386,7 @@ export function CallsTable({
           <Table className="min-w-[900px]">
             <TableHeader>
               <TableRow className="border-b bg-muted/20 hover:bg-muted/20">
-                {visibleCols.has("startTime") && <TableHead className="pl-4 whitespace-nowrap">Start Time</TableHead>}
+                {visibleCols.has("startTime") && <TableHead className="pl-4 whitespace-nowrap"><Trans>{"Start Time"}</Trans></TableHead>}
                 {visibleCols.has("number")    && <TableHead className="whitespace-nowrap"><Trans>{"Number"}</Trans></TableHead>}
                 {visibleCols.has("agent")     && <TableHead className="whitespace-nowrap"><Trans>{"Agent"}</Trans></TableHead>}
                 {visibleCols.has("duration")  && <TableHead className="whitespace-nowrap"><Trans>{"Duration"}</Trans></TableHead>}
@@ -428,10 +428,10 @@ export function CallsTable({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-44">
                         <DropdownMenuItem onClick={() => setTranscriptCall(c)}>
-                          <FileText className="size-4" /> Show transcript
+                          <FileText className="size-4" /> <Trans>{"Show transcript"}</Trans>
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setMetadataCall(c)}>
-                          <Info className="size-4" /> Show metadata
+                          <Info className="size-4" /> <Trans>{"Show metadata"}</Trans>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -459,7 +459,7 @@ export function CallsTable({
               <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
                 {/* rows per page */}
                 <div className="flex items-center gap-2">
-                  <span className="whitespace-nowrap font-medium text-foreground">Rows per page</span>
+                  <span className="whitespace-nowrap font-medium text-foreground"><Trans>{"Rows per page"}</Trans></span>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3">
@@ -535,10 +535,9 @@ export function CallsTable({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this call?</AlertDialogTitle>
+            <AlertDialogTitle><Trans>{"Delete this call?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription>
-              Deleting a call removes its metadata and transcripts. Audio
-              recordings in object storage are not affected.
+              <Trans>{"Deleting a call removes its metadata and transcripts. Audio recordings in object storage are not affected."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
