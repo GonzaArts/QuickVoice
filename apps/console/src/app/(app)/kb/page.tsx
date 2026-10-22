@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { BookOpen, RefreshCw } from "lucide-react";
 
 import { PageHeader } from "@/src/components/common/PageHeader";
@@ -30,7 +31,7 @@ export default function KbPage() {
           action={
             <Button variant="outline" onClick={() => refetch()} disabled={isFetching}>
               <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-              Retry
+              <Trans>{"Retry"}</Trans>
             </Button>
           }
         />

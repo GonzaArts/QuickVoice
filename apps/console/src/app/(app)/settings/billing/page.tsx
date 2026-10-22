@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -585,7 +586,7 @@ function OrganizationBillingPage({
           <RefreshCw
             className={summary.isFetching ? "animate-spin" : undefined}
           />
-          Retry
+          <Trans>{"Retry"}</Trans>
         </Button>
       </section>
     );
@@ -818,7 +819,7 @@ function OrganizationBillingPage({
           <section className="border bg-card p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <h2 className="text-base font-semibold">Payment method</h2>
+                <h2 className="text-base font-semibold"><Trans>{"Payment method"}</Trans></h2>
                 <p className="text-sm text-muted-foreground">
                   Used only for top-ups and auto-recharge you authorize.
                 </p>
@@ -1048,7 +1049,7 @@ function OrganizationBillingPage({
             <RefreshCw
               className={transactions.isFetching ? "animate-spin" : undefined}
             />
-            Refresh
+            <Trans>{"Refresh"}</Trans>
           </Button>
         </div>
 
@@ -1075,9 +1076,9 @@ function OrganizationBillingPage({
             <TableHeader>
               <TableRow>
                 <TableHead className="pl-5">Activity</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="pr-5 text-right">Amount</TableHead>
+                <TableHead><Trans>{"Status"}</Trans></TableHead>
+                <TableHead><Trans>{"Date"}</Trans></TableHead>
+                <TableHead className="pr-5 text-right"><Trans>{"Amount"}</Trans></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

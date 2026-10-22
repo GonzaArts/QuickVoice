@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -294,7 +295,7 @@ export default function NumbersPage() {
                     description="Refresh the list or try again after checking your connection."
                     action={
                         <Button variant="outline" onClick={() => refetch()}>
-                            <RefreshCw /> Retry
+                            <RefreshCw /> <Trans>{"Retry"}</Trans>
                         </Button>
                     }
                 />
@@ -439,7 +440,7 @@ export default function NumbersPage() {
                                 </div>
                             </div>
                             <div className="text-sm text-muted-foreground">
-                                Showing <span className="font-semibold text-foreground">{filteredNumbers.length}</span> of {numbers.length}
+                                <Trans>{"Showing"}</Trans> <span className="font-semibold text-foreground">{filteredNumbers.length}</span> of {numbers.length}
                             </div>
                         </div>
 
@@ -505,7 +506,7 @@ export default function NumbersPage() {
                                 className="w-full sm:w-auto"
                             >
                                 <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-                                Refresh
+                                <Trans>{"Refresh"}</Trans>
                             </Button>
                         </div>
 
@@ -594,14 +595,14 @@ export default function NumbersPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted/20 hover:bg-muted/20">
-                                        <TableHead>Number</TableHead>
-                                        <TableHead>Provider</TableHead>
-                                        <TableHead>Billing</TableHead>
+                                        <TableHead><Trans>{"Number"}</Trans></TableHead>
+                                        <TableHead><Trans>{"Provider"}</Trans></TableHead>
+                                        <TableHead><Trans>{"Billing"}</Trans></TableHead>
                                         <TableHead>Routing</TableHead>
                                         <TableHead>Timeline</TableHead>
                                         <TableHead>SID</TableHead>
                                         {canManageNumbers ? (
-                                            <TableHead className="text-right">Actions</TableHead>
+                                            <TableHead className="text-right"><Trans>{"Actions"}</Trans></TableHead>
                                         ) : null}
                                     </TableRow>
                                 </TableHeader>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -192,7 +193,7 @@ export default function OrganizationPage() {
  name="name"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Name</FormLabel>
+ <FormLabel><Trans>{"Name"}</Trans></FormLabel>
  <FormControl>
  <Input
  {...field}
@@ -231,11 +232,11 @@ export default function OrganizationPage() {
  >
  {saving ? (
  <>
- <Loader2 className="animate-spin" /> Saving…
+ <Loader2 className="animate-spin" /> <Trans>{"Saving…"}</Trans>
  </>
  ) : (
  <>
- <Save /> Save changes
+ <Save /> <Trans>{"Save changes"}</Trans>
  </>
  )}
  </Button>
@@ -412,7 +413,7 @@ function MembersSection({
  <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
  <DialogTrigger asChild>
  <Button disabled={!canInvite}>
- <UserPlus /> Invite member
+ <UserPlus /> <Trans>{"Invite member"}</Trans>
  </Button>
  </DialogTrigger>
  <DialogContent>
@@ -432,7 +433,7 @@ function MembersSection({
  name="email"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Email</FormLabel>
+ <FormLabel><Trans>{"Email"}</Trans></FormLabel>
  <FormControl>
  <Input type="email" placeholder="teammate@company.com" {...field} />
  </FormControl>
@@ -445,7 +446,7 @@ function MembersSection({
  name="role"
  render={({ field }) => (
  <FormItem>
- <FormLabel>Role</FormLabel>
+ <FormLabel><Trans>{"Role"}</Trans></FormLabel>
  <Select
  value={field.value}
  onValueChange={field.onChange}
@@ -473,7 +474,7 @@ function MembersSection({
  onClick={() => setInviteOpen(false)}
  disabled={inviting}
  >
- Cancel
+ <Trans>{"Cancel"}</Trans>
  </Button>
  <Button type="submit" disabled={inviting || !canInvite}>
  {inviting ? (
@@ -482,7 +483,7 @@ function MembersSection({
  </>
  ) : (
  <>
- <Mail /> Send invite
+ <Mail /> <Trans>{"Send invite"}</Trans>
  </>
  )}
  </Button>
@@ -592,7 +593,7 @@ function MembersSection({
  className="min-h-11 scroll-mb-24"
  onClick={() => setCancelTarget(invitation)}
  >
- Cancel
+ <Trans>{"Cancel"}</Trans>
  </Button>
  </div>
  ))}
@@ -614,12 +615,12 @@ function MembersSection({
  </AlertDialogDescription>
  </AlertDialogHeader>
  <AlertDialogFooter>
- <AlertDialogCancel>Cancel</AlertDialogCancel>
+ <AlertDialogCancel><Trans>{"Cancel"}</Trans></AlertDialogCancel>
  <AlertDialogAction
  onClick={() => removeTarget && onRemove(removeTarget.id)}
  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
  >
- Remove
+ <Trans>{"Remove"}</Trans>
  </AlertDialogAction>
  </AlertDialogFooter>
  </AlertDialogContent>
