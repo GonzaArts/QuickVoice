@@ -9,7 +9,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings=0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "i18n:audit": "node scripts/i18n-audit.mjs",
+    "test:i18n": "node --test tests/i18n*.test.mjs"
   },
   "dependencies": {
     "@better-auth/api-key": "^1.6.22",

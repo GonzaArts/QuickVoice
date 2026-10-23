@@ -1,3 +1,4 @@
+import { i18nErrors } from "./helpers/i18n.mjs";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -18,6 +19,7 @@ function renderPanel(generate = async () => sample) {
     load() {}
   }
   const dependencies = {
+    "@/src/i18n/errors": i18nErrors,
     react: {
       useRef: (current) => ({ current }), useMemo: (fn) => fn(), useCallback: (fn) => fn,
       useEffect: (fn) => effects.push(fn),

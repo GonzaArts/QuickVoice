@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { isBuiltInNumberManager } from "../src/lib/numbers/permissions.ts";
 
-const CONSOLE_ROOT = new URL("..", import.meta.url).pathname;
+const CONSOLE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 const read = (path) => readFileSync(join(CONSOLE_ROOT, path), "utf8");
 
 test("only built-in owners and admins receive phone-number management controls", () => {

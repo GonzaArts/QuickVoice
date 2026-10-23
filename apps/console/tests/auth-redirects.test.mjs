@@ -1,3 +1,4 @@
+import { i18nErrors } from "./helpers/i18n.mjs";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -47,6 +48,7 @@ test("signup rejects duplicate emails and new-account verification returns to th
     const notices = [];
     const noop = () => {};
     const mocks = {
+      "@/src/i18n/errors": i18nErrors,
       react: { useState: () => [false, noop] },
       "@/src/i18n/provider": { useT: () => identityT },
       "react/jsx-runtime": { jsx: noop, jsxs: noop },
