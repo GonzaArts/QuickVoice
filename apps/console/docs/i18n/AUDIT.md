@@ -113,7 +113,11 @@ git fetch origin
 git switch main
 git merge --ff-only origin/main
 
+# La imagen local contiene una copia del código; no hay un bind mount.
+docker build -f Dockerfile.local -t quickvoice-local-node:dev .
+
 $qvCompose = @(
+  '-p', 'quickvoice-dev',
   '-f', 'docker-compose.dev.yml',
   '-f', 'docker-compose.local.yml',
   '-f', 'docker-compose.voice.yml',
@@ -124,4 +128,10 @@ docker compose @qvCompose up -d --no-deps --force-recreate console
 docker compose @qvCompose logs --tail 80 console
 ```
 
-Abrir `http://localhost:3000`, recargar y seleccionar Español si la cookie anterior estaba en inglés. La cookie existente se respeta; no se borra la preferencia del usuario. La consola local monta el código y ejecuta `next dev`, por lo que no necesita `docker compose build console`. El comando recrea únicamente `console` y conserva el resto de los servicios y sus datos. Si Git rechaza la actualización por cambios locales o divergencia, conservarlos y resolver ese bloqueo antes de continuar; no ejecutar operaciones que los descarten.
+Abrir `http://localhost:3000`, recargar y seleccionar Español si la cookie anterior estaba en inglés. La cookie existente se respeta; no se borra la preferencia del usuario. La consola local ejecuta `next dev` sobre una copia del código dentro de `quickvoice-local-node:dev`; reiniciarla sin actualizar la imagen no incorpora los cambios del repositorio. `Dockerfile.local` y su archivo `.dockerignore` pertenecen a la instalación local y no se modifican. La construcción actualiza la imagen, y el comando Compose recrea únicamente `console`, conservando el resto de los contenedores y sus datos. Si Git rechaza la actualización por cambios locales o divergencia, conservarlos y resolver ese bloqueo antes de continuar; no ejecutar operaciones que los descarten.
+
+### Actualización local comprobada
+
+Tras fusionar la PR #6, se verificó mediante `docker inspect` que el contenedor no tenía montajes de fuentes. Como no cambiaron las dependencias, se actualizó la imagen existente con una capa que copia únicamente los archivos versionados de `apps/console`, exportados con `git archive`; no se incluyeron secretos ni archivos locales. La imagen anterior se conserva como `quickvoice-local-node:before-i18n-36f8a41`.
+
+Se recreó solo `quickvoice-dev-console-1`. Se comprobaron HTTP 200 en `/login`, `lang="es-ES"`, el formulario en español en Chromium y hashes coincidentes de los archivos i18n entre el repositorio y el contenedor. Los contenedores de API, web, almacenamiento y voz mantuvieron sus identificadores. Esta actualización de la imagen sustituye la indicación inicial, incorrecta, de que bastaba con recrear la consola.
