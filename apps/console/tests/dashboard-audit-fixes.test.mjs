@@ -53,7 +53,7 @@ test("dashboard KPI deltas use unit-aware copy and a named previous period", () 
   assert.match(source, /summary\.period\.previousFrom/);
   assert.match(source, /summary\.period\.previousTo/);
   assert.match(source, /formatPreviousPeriodWindow/);
-  assert.match(source, /previousPeriodWindow = formatPreviousPeriodWindow\(summary\)/);
+  assert.match(source, /previousPeriodWindow = formatPreviousPeriodWindow\(summary, localeCode\(locale\), t\)/);
   assert.match(source, /comparisonTitle=\{previousPeriodWindow\}/);
   assert.match(source, /title=\{comparisonTitle \?\? undefined\}/);
   assert.match(source, /unit="call"/);
@@ -61,7 +61,7 @@ test("dashboard KPI deltas use unit-aware copy and a named previous period", () 
   assert.match(source, /unit="duration"/);
   assert.match(source, /formatDurationDeltaCopy/);
   assert.match(source, /formatDeltaUnitLabel/);
-  assert.match(source, /"pts"/);
+  assert.match(source, /"percentage points"/);
   assert.match(source, /unit="percentage point"/);
   assert.match(source, /comparisonLabel=\{previousPeriodLabel\}/);
 });

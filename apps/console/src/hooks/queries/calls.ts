@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import {
@@ -40,7 +42,7 @@ export function useEndLiveCall() {
       toast.success(translateUi("Live call ended"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not end live call"));
+      toast.error(localizeError(translateUi, err, "Could not end live call"));
     },
   });
 }
@@ -95,7 +97,7 @@ export function useDeleteCall() {
       toast.success(translateUi("Call deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not delete call"));
+      toast.error(localizeError(translateUi, err, "Could not delete call"));
     },
   });
 }

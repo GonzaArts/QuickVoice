@@ -1,6 +1,9 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale, useT } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { localizeError } from "@/src/i18n/errors";
 import { AlertCircle, ExternalLink, Loader2, RefreshCw, ServerCrash, Trash2 } from "lucide-react";
 import { McpToolBadges } from "@/src/components/tools/McpToolBadges";
 import { Badge } from "@/src/components/ui/badge";
@@ -39,6 +42,8 @@ const hasMissingGoogleDriveScope = (metadata?: Record<string, unknown> | null) =
   metadata?.scopeIssue === "missing_google_drive_scope";
 
 export function McpConnectionsList() {
+  const t = useT();
+  const { locale } = useLocale();
   const { data: connections = [], isLoading } = useMcpConnections();
   const refresh = useRefreshMcpConnection();
   const disconnect = useDisconnectMcpConnection();
@@ -75,16 +80,16 @@ export function McpConnectionsList() {
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-medium">{connection.displayName}</p>
                   <Badge className={STATUS_CLASS[connection.status]}>
-                    {missingGoogleDriveScope ? <Trans>{"DRIVE ACCESS NOT GRANTED"}</Trans> : connection.status.replace("_", " ")}
+                    {missingGoogleDriveScope ? <Trans>{"DRIVE ACCESS NOT GRANTED"}</Trans> : t(({ CONNECTED: "Connected", PENDING: "Pending", AUTH_REQUIRED: "Authorization required", INPUT_REQUIRED: "Input required", ERROR: "Error", DISCONNECTED: "Disconnected" } as Record<string, string>)[connection.status])}
                   </Badge>
                 </div>
                 <p className="mt-1 truncate text-sm text-muted-foreground">{connection.mcpUrl}</p>
                 <p className="mt-2 text-xs text-muted-foreground">
                   {(connection.tools?.length ?? 0)} <Trans>{"tools synced"}</Trans>
-                  {connection.lastSyncedAt ? ` - Last synced ${new Date(connection.lastSyncedAt).toLocaleString()}` : ""}
+                  {connection.lastSyncedAt ? ` - ${t("Last synced {date}", {date: new Date(connection.lastSyncedAt).toLocaleString(localeCode(locale))})}` : ""}
                 </p>
                 {typeof connection.metadata?.lastSyncError === "string" && (
-                  <p className="mt-2 text-xs text-destructive" role="status">{connection.metadata.lastSyncError}</p>
+                  <p className="mt-2 text-xs text-destructive" role="status">{localizeError(t, connection.metadata.lastSyncError, "Could not sync MCP connection")}</p>
                 )}
                 {missingGoogleDriveScope && (
                   <p className="mt-2 text-xs text-blue-700 dark:text-blue-300">

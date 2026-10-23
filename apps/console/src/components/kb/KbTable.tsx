@@ -1,6 +1,9 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
@@ -53,9 +56,9 @@ import type { Agent, KnowledgeSource } from "@/src/lib/api/types";
 
 const PAGE_SIZE = 10;
 
-function fmtDate(iso: string | null) {
+function fmtDate(iso: string | null, locale: string) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-US", {
+  return new Date(iso).toLocaleDateString(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -80,12 +83,18 @@ function jobLabel(source: KnowledgeSource) {
   };
 }
 
-function processingLabel(source: KnowledgeSource) {
+function processingLabel(source: KnowledgeSource, t: (key: string) => string) {
   if (source.status !== "PROCESSING") return null;
   const metadata = metadataRecord(source);
   const rawStage =
     typeof metadata.stage === "string" ? metadata.stage : "processing";
-  const stage = rawStage.replaceAll("_", " ");
+  const stageKeys: Record<string, string> = {
+    queued: "Queued", uploading: "Uploading", processing: "Processing",
+    extracting: "Extracting text", chunking: "Splitting into sections",
+    embedding: "Creating embeddings", indexing: "Indexing",
+  };
+  const stageKey = rawStage.toLowerCase();
+  const stage = t(Object.prototype.hasOwnProperty.call(stageKeys, stageKey) ? stageKeys[stageKey] : "Processing");
   const progress =
     metadata.progress &&
     typeof metadata.progress === "object" &&
@@ -202,6 +211,7 @@ interface Props {
 }
 
 export function KbTable({ sources, agents, isLoading }: Props) {
+  const { locale } = useLocale();
   const translateUi = useT();
   const [page, setPage] = useState(1);
   const [editingKbId, setEditingKbId] = useState<string | null>(null);
@@ -236,7 +246,7 @@ export function KbTable({ sources, agents, isLoading }: Props) {
           const agent = agentName(s.agentId);
           const error = failureReason(s);
           const job = jobLabel(s);
-          const progress = processingLabel(s);
+          const progress = processingLabel(s, translateUi);
           return (
             <div key={s.kbId} className="border bg-card p-4">
               <div className="flex items-start gap-3">
@@ -261,9 +271,9 @@ export function KbTable({ sources, agents, isLoading }: Props) {
                   {error ? (
                     <p
                       className="mt-1 line-clamp-2 text-xs text-destructive"
-                      title={error}
+                      title={localizeError(translateUi, error, "Could not process this document.")}
                     >
-                      {error}
+                      {localizeError(translateUi, error, "Could not process this document.")}
                     </p>
                   ) : null}
                 </div>
@@ -292,13 +302,13 @@ export function KbTable({ sources, agents, isLoading }: Props) {
                 <div>
                   <p><Trans>{"Uploaded"}</Trans></p>
                   <p className="mt-1 text-foreground">
-                    {fmtDate(s.uploadedAt)}
+                    {fmtDate(s.uploadedAt, localeCode(locale))}
                   </p>
                 </div>
                 <div>
                   <p><Trans>{"Indexed"}</Trans></p>
                   <p className="mt-1 text-foreground">
-                    {s.status === "ACTIVE" ? fmtDate(s.lastIndexedAt) : "—"}
+                    {s.status === "ACTIVE" ? fmtDate(s.lastIndexedAt, localeCode(locale)) : "—"}
                   </p>
                 </div>
               </div>
@@ -328,7 +338,7 @@ export function KbTable({ sources, agents, isLoading }: Props) {
               const agent = agentName(s.agentId);
               const error = failureReason(s);
               const job = jobLabel(s);
-              const progress = processingLabel(s);
+              const progress = processingLabel(s, translateUi);
               return (
                 <TableRow
                   key={s.kbId}
@@ -360,9 +370,9 @@ export function KbTable({ sources, agents, isLoading }: Props) {
                     {error ? (
                       <p
                         className="mt-1 max-w-[320px] line-clamp-2 text-xs text-destructive"
-                        title={error}
+                        title={localizeError(translateUi, error, "Could not process this document.")}
                       >
-                        {error}
+                        {localizeError(translateUi, error, "Could not process this document.")}
                       </p>
                     ) : null}
                   </TableCell>
@@ -393,11 +403,11 @@ export function KbTable({ sources, agents, isLoading }: Props) {
                   </TableCell>
 
                   <TableCell className="text-sm text-muted-foreground">
-                    {fmtDate(s.uploadedAt)}
+                    {fmtDate(s.uploadedAt, localeCode(locale))}
                   </TableCell>
 
                   <TableCell className="text-sm text-muted-foreground">
-                    {s.status === "ACTIVE" ? fmtDate(s.lastIndexedAt) : "—"}
+                    {s.status === "ACTIVE" ? fmtDate(s.lastIndexedAt, localeCode(locale)) : "—"}
                   </TableCell>
 
                   <TableCell className="pr-4 text-right">

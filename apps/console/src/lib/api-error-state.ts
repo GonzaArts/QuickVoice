@@ -18,6 +18,7 @@ export type ApiErrorStateCopy = {
 
 export type ApiErrorStateCopyOptions = {
   resourceName: string;
+  t?: (key: string, vars?: Record<string, string | number>) => string;
   isOnline?: boolean;
   overrides?: Partial<
     Record<
@@ -190,7 +191,9 @@ export function getApiErrorStateCopy(
   const status = apiErrorStatus(error);
   const code = normalizeCode(apiErrorCode(error));
   const message = apiErrorMessage(error);
-  const resource = resourceLabel(options.resourceName);
+  const t = options.t ?? ((key: string, vars?: Record<string, string | number>) =>
+    key.replace(/\{(\w+)\}/g, (match, name: string) => String(vars?.[name] ?? match)));
+  const resource = t(resourceLabel(options.resourceName));
   const titledResource = titleResource(resource);
   const base = errorMetadata(status, code);
 
@@ -200,8 +203,8 @@ export function getApiErrorStateCopy(
         ...base,
         kind: "permission",
         reason: "unauthorized",
-        title: `Sign in to load ${resource}`,
-        description: `Your QuickVoice session expired or the API rejected authentication. Sign in again, then retry loading ${resource}.`,
+        title: t("Sign in to load {resource}", { resource: resource }),
+        description: t("Your QuickVoice session expired or the API rejected authentication. Sign in again, then retry loading {resource}.", { resource: resource }),
       },
       options.overrides
     );
@@ -213,8 +216,8 @@ export function getApiErrorStateCopy(
         ...base,
         kind: "permission",
         reason: "forbidden",
-        title: `${titledResource} access required`,
-        description: `Your current role does not include permission to load ${resource}. Ask a workspace owner to update your role or switch organizations.`,
+        title: t("{resource} access required", { resource: titledResource }),
+        description: t("Your current role does not include permission to load {resource}. Ask a workspace owner to update your role or switch organizations.", { resource: resource }),
       },
       options.overrides
     );
@@ -231,8 +234,8 @@ export function getApiErrorStateCopy(
         ...base,
         kind: "offline",
         reason: "offline",
-        title: `${titledResource} unavailable offline`,
-        description: `Reconnect to the internet, then retry loading ${resource}. If cached data is available, QuickVoice will keep it visible while you reconnect.`,
+        title: t("{resource} unavailable offline", { resource: titledResource }),
+        description: t("Reconnect to the internet, then retry loading {resource}. If cached data is available, QuickVoice will keep it visible while you reconnect.", { resource: resource }),
       },
       options.overrides
     );
@@ -247,8 +250,8 @@ export function getApiErrorStateCopy(
         ...base,
         kind: "error",
         reason: "server",
-        title: "QuickVoice service unavailable",
-        description: `The API returned a server error while loading ${resource}. Retry in a moment; this is not caused by your browser connection.`,
+        title: t("QuickVoice service unavailable"),
+        description: t("The API returned a server error while loading {resource}. Retry in a moment; this is not caused by your browser connection.", { resource: resource }),
       },
       options.overrides
     );
@@ -259,8 +262,8 @@ export function getApiErrorStateCopy(
       ...base,
       kind: "error",
       reason: "unknown",
-      title: `Could not load ${resource}`,
-      description: `Retry loading ${resource}. If the problem continues, share the issue with support.`,
+      title: t("Could not load {resource}", { resource: resource }),
+      description: t("Retry loading {resource}. If the problem continues, share the issue with support.", { resource: resource }),
     },
     options.overrides
   );

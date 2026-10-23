@@ -10,7 +10,9 @@ const root = resolve(import.meta.dirname, "..");
 const es = JSON.parse(readFileSync(join(root, "src/i18n/messages/es.json"), "utf8"));
 const en = JSON.parse(readFileSync(join(root, "src/i18n/messages/en.json"), "utf8"));
 const extraEs = JSON.parse(readFileSync(join(root, "src/i18n/messages/extended.es.json"), "utf8"));
+const extraEn = JSON.parse(readFileSync(join(root, "src/i18n/messages/extended.en.json"), "utf8"));
 const fullEs = { ...es, ...extraEs };
+const fullEn = { ...en, ...extraEn };
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 test("Spanish and English dictionaries have identical keys and non-empty strings", () => {
@@ -19,12 +21,19 @@ test("Spanish and English dictionaries have identical keys and non-empty strings
     const declaredKeys = [...raw.matchAll(/^ {2}("(?:\\.|[^"\\])*")\s*:/gm)].map((match) => match[1]);
     assert.equal(new Set(declaredKeys).size, declaredKeys.length, `Duplicate keys in ${locale}.json`);
   }
+  for (const locale of ["es", "en"]) {
+  const raw = read(`src/i18n/messages/extended.${locale}.json`);
+  const keys = [...raw.matchAll(/^ {2}("(?:\\.|[^"\\])*")\s*:/gm)].map(match => match[1]);
+  assert.equal(new Set(keys).size, keys.length, `Duplicate supplemental keys: ${locale}`);
+  }
   const extraRaw = readFileSync(join(root, "src/i18n/messages/extended.es.json"), "utf8");
   const extraDeclaredKeys = [...extraRaw.matchAll(/^ {2}("(?:\\.|[^"\\])*")\s*:/gm)]
     .map((match) => match[1]);
   assert.equal(new Set(extraDeclaredKeys).size, extraDeclaredKeys.length,
     "Duplicate keys in extended.es.json");
   assert.deepEqual(Object.keys(es).sort(), Object.keys(en).sort());
+  assert.deepEqual(Object.keys(fullEs).sort(), Object.keys(fullEn).sort());
+  for (const [key, value] of Object.entries(fullEn)) assert.equal(value, key);
   assert.ok(Object.keys(es).length >= 100);
   for (const [key, value] of Object.entries(es)) {
     assert.ok(key.length && typeof value === "string" && value.trim(), key);
@@ -51,7 +60,7 @@ test("literal translation calls and automatically translated titles have diction
     StatCard: new Set(["label"]),
   };
   const sourceFiles = walk(join(root, "src")).filter((f) => f.endsWith(".tsx") ||
-    (f.endsWith(".ts") && f.includes("/hooks/queries/")));
+    f.endsWith(".ts"));
   for (const filename of sourceFiles) {
     const source = readFileSync(filename, "utf8");
     for (const match of source.matchAll(/\bt\(\s*("(?:\\.|[^"\\])*")/g)) {
@@ -86,12 +95,15 @@ test("literal translation calls and automatically translated titles have diction
 });
 
 test("visible UI copy and first-party notifications remain localized", () => {
-  const { texts, attributes, expressions, toasts } = inspect();
+  const { texts, attributes, expressions, toasts, properties, missingKeys, apiErrors } = inspect();
   const summary = (items) => items.map(({ filename, key }) =>
     `${filename.replace(root, "")}: ${key}`);
   assert.deepEqual(summary(texts), [], "Untranslated visible JSX text");
   assert.deepEqual(summary(expressions), [], "Untranslated conditional JSX text");
   assert.deepEqual(summary(toasts), [], "Untranslated notification message");
+  assert.deepEqual(summary(properties), [], "Untranslated configuration or column labels");
+  assert.deepEqual(summary(missingKeys), [], "Missing translation keys");
+  assert.deepEqual(summary(apiErrors), [], "Raw API error messages shown to users");
   const unlocalizedAttributes = attributes.filter((item) =>
     item.client && !item.auto &&
     !/^(?:[\w.-]+@[\w.-]+|[a-z_]+(?:\d+)?|https?:\/\/\S+)$/.test(item.key)
@@ -144,13 +156,13 @@ test("i18n helper executes with Spanish default, English override and safe fallb
     module: moduleValue,
     Intl,
     require: (name) => name === "./messages/en.json" ? en : name === "./messages/es.json" ? es :
-      name === "./messages/extended.es.json" ? extraEs : (() => {throw new Error(name)})(),
+      name === "./messages/extended.es.json" ? extraEs : name === "./messages/extended.en.json" ? extraEn : (() => {throw new Error(name)})(),
   });
   const {normalizeLocale, translate, localeCode, formatNumber, formatDate} = moduleValue.exports;
   assert.equal(normalizeLocale(undefined), "es");
   assert.equal(normalizeLocale("es-ES"), "es");
   assert.equal(normalizeLocale("en-US"), "en");
-  assert.equal(translate("es", "Agents"), "Asistentes");
+  assert.equal(translate("es", "Agents"), "Agentes");
   assert.equal(translate("en", "Agents"), "Agents");
   assert.equal(translate("es", "__unknown_message__"), "__unknown_message__");
   assert.equal(translate("es", "Language"), "Idioma");

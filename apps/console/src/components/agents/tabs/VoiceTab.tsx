@@ -1,7 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
-import { localeCode } from "@/src/i18n/config";
+import { formatLanguage, localeCode } from "@/src/i18n/config";
 import { useLocale } from "@/src/i18n/provider";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -241,7 +241,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
         [selectedVoiceId, voicesWithConfiguredValue]
     );
     const selectedLanguageLabel =
-        languages.find((language) => language.code === selectedLanguage)?.label ?? selectedLanguage;
+        formatLanguage(locale, selectedLanguage, languages.find((language) => language.code === selectedLanguage)?.label ?? selectedLanguage);
     const selectedTtsModelLabel =
         ttsModelsWithConfiguredValue.find((model) => model.id === selectedTtsModel)?.label ?? selectedTtsModel;
     const estimatedModelPrice =
@@ -355,7 +355,7 @@ export function VoiceTab({ agentId }: { agentId: string }) {
                                         <SelectContent>
                                             {languages.map((language) => (
                                                 <SelectItem key={language.code} value={language.code}>
-                                                    {language.label}
+                                                    {formatLanguage(locale, language.code, language.label)}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>

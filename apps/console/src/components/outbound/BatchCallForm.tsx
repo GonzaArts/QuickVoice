@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { FormEvent, useMemo, useRef, useState } from "react";
@@ -721,7 +722,7 @@ export function BatchCallForm() {
 
                   {preflightError && (
                     <div className="mt-3 p-3 rounded-lg bg-destructive/10 text-sm text-destructive">
-                      {preflightError}
+                      {localizeError(translateUi, preflightError)}
                     </div>
                   )}
 
@@ -774,7 +775,7 @@ export function BatchCallForm() {
         </div>
 
         {formError ? (
-          <p className="text-sm text-destructive">{formError}</p>
+          <p className="text-sm text-destructive">{localizeError(translateUi, formError)}</p>
         ) : null}
 
         {createdCampaignName ? (

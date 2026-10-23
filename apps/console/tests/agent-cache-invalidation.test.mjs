@@ -44,6 +44,7 @@ for (const action of ["save configuration", "delete document"]) {
       },
       sonner: { toast: { success() {}, error() {} } },
       "@/src/i18n/provider": { useT: () => (message) => message },
+      "@/src/i18n/errors": { localizeError: (t, error, fallback) => t(fallback) },
       "@/src/lib/query-keys": { queryKeys },
       "@/src/lib/api/resources/agents": {
         agentsApi: {

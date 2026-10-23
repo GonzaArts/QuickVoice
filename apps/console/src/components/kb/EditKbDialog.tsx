@@ -1,6 +1,9 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -32,9 +35,9 @@ import { kbApi } from "@/src/lib/api/resources/kb";
 import type { Agent, KnowledgeSource } from "@/src/lib/api/types";
 import { downloadBlobAsFile } from "@/src/lib/export-csv";
 
-function formatDate(value: string | null) {
-  if (!value) return "Not indexed";
-  return new Date(value).toLocaleString("en-US", {
+function formatDate(value: string | null, locale: string, t: (key: string) => string) {
+  if (!value) return t("Not indexed");
+  return new Date(value).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -46,7 +49,7 @@ function formatDate(value: string | null) {
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 border p-3">
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-xs text-muted-foreground"><Trans>{label}</Trans></p>
       <p className="mt-1 break-all text-sm font-medium">{value}</p>
     </div>
   );
@@ -87,6 +90,7 @@ function EditKbDialogContent({
   onOpenChange,
 }: EditKbDialogContentProps) {
   const translateUi = useT();
+  const { locale } = useLocale();
   const [name, setName] = useState(source.name);
   const [agentId, setAgentId] = useState(source.agentId ?? "");
   const [url, setUrl] = useState(
@@ -152,7 +156,7 @@ function EditKbDialogContent({
       const blob = await kbApi.file(source.kbId, "attachment", controller.signal);
       if (!controller.signal.aborted) downloadBlobAsFile(fileName, blob);
     } catch (error) {
-      if (!controller.signal.aborted) toast.error(error instanceof Error ? error.message : translateUi("Could not download this document"));
+      if (!controller.signal.aborted) toast.error(localizeError(translateUi, error, "Could not download this document"));
     } finally {
       downloadRequest.current = null;
       if (!controller.signal.aborted) setDownloading(false);
@@ -265,8 +269,8 @@ function EditKbDialogContent({
                     : source.originalFileName ?? "Not recorded"
                 }
               />
-              <Detail label="Uploaded" value={formatDate(source.uploadedAt)} />
-              <Detail label="Last indexed" value={formatDate(source.lastIndexedAt)} />
+              <Detail label="Uploaded" value={formatDate(source.uploadedAt, localeCode(locale), translateUi)} />
+              <Detail label="Last indexed" value={formatDate(source.lastIndexedAt, localeCode(locale), translateUi)} />
               {source.sourceType !== "URL" ? (
                 <Detail label="Storage reference" value={source.storagePath} />
               ) : null}

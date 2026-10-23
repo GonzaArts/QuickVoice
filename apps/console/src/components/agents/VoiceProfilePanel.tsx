@@ -2,6 +2,7 @@
 
 import { Trans } from "@/src/i18n/Trans";
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Square, Volume2 } from "lucide-react";
 
@@ -90,7 +91,7 @@ export function VoiceProfilePanel({
       audio.onerror = () => {
         clearPlayback();
         setStatus("idle");
-        setError(t("Could not play this voice sample. Please try again."));
+        setError("Could not play this voice sample. Please try again.");
       };
       await audio.play();
       if (!controller.signal.aborted) setStatus("playing");
@@ -98,7 +99,7 @@ export function VoiceProfilePanel({
       if (controller.signal.aborted) return;
       clearPlayback();
       setStatus("idle");
-      setError(cause instanceof Error ? cause.message : t("Could not preview this voice. Please try again."));
+      setError(cause instanceof Error ? cause.message : "Could not preview this voice. Please try again.");
     }
   }
 
@@ -130,7 +131,7 @@ export function VoiceProfilePanel({
             </div>
             <div>
               <p className="text-xs text-muted-foreground"><Trans>{"Accent"}</Trans></p>
-              <p className="mt-1 font-medium">{voice.accent || "-"}</p>
+              <p className="mt-1 font-medium">{voice.accent ? t(voice.accent) : "-"}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground"><Trans>{"Languages"}</Trans></p>
@@ -143,7 +144,7 @@ export function VoiceProfilePanel({
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
                 <Badge key={tag} variant="outline">
-                  {tag}
+                  {t(tag)}
                 </Badge>
               ))}
             </div>
@@ -164,7 +165,7 @@ export function VoiceProfilePanel({
             {status === "loading" ? t("Generating your voice sample…") : status === "playing" ? t("Playing {voice} in {language}.", {voice: voice.name, language: languageLabel}) : t("Listen using your current model and voice selections.")}
           </p>
           {sampleText ? <p lang={language} dir="auto" className="break-words border bg-background p-3 text-sm leading-relaxed">{sampleText}</p> : <p className="text-xs text-muted-foreground"><Trans>{"A sample is unavailable for this language."}</Trans></p>}
-          {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+          {error ? <p role="alert" className="text-sm text-destructive">{localizeError(t, error, "Could not preview this voice. Please try again.")}</p> : null}
         </div>
       </div>
     </div>

@@ -211,10 +211,10 @@ export function AdvancedTab({ agentId }: { agentId: string }) {
                           </div>
                           <div className="space-y-1">
                             <FormLabel className="text-sm font-semibold">
-                              {feature.label}
+                              <Trans>{feature.label}</Trans>
                             </FormLabel>
                             <FormDescription className="text-sm leading-relaxed">
-                              {feature.description}
+                              <Trans>{feature.description}</Trans>
                             </FormDescription>
                           </div>
                         </div>

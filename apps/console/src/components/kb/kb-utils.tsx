@@ -10,6 +10,7 @@ import type {
   KnowledgeSource,
 } from "@/src/lib/api/types";
 import { getKbErrorCopy } from "@/src/components/kb/kb-error-copy";
+import { localizeError } from "@/src/i18n/errors";
 
 export interface SourceMeta {
   Icon: LucideIcon;
@@ -89,6 +90,7 @@ export function KnowledgeSourceStatus({
   }
 
   const copy = getKbErrorCopy(source);
+  const reason = localizeError(translateUi, copy.reason, "Could not process this document.");
 
   return (
     <div
@@ -98,12 +100,12 @@ export function KnowledgeSourceStatus({
           : "min-w-0 max-w-full space-y-2"
       }
       role="status"
-      aria-label={translateUi("Document processing failed: {reason}", {reason: translateUi(copy.reason)})}
+      aria-label={translateUi("Document processing failed: {reason}", {reason})}
     >
       <StatusChip status={source.status} />
       <div className="space-y-1 border-l-2 border-red-500/40 pl-2.5">
         <p className="break-words text-xs font-medium leading-5 text-foreground">
-          {translateUi(copy.reason)}
+          {reason}
         </p>
         <p className="break-words text-xs leading-5 text-muted-foreground">
           <span className="font-medium text-foreground/80"><Trans>{"How to fix:"}</Trans></span>{" "}

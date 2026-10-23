@@ -2,6 +2,7 @@
 
 import { Trans } from "@/src/i18n/Trans";
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -50,7 +51,7 @@ export function RegisterForm({ invitationId = "" }: { invitationId?: string } = 
         callbackURL: `${CONSOLE_URL ?? window.location.origin}${invitationId ? invitationPath(invitationId) : "/login"}`,
       });
       if (error) {
-        toast.error(error.message || error.statusText || t("Something went wrong"));
+        toast.error(localizeError(t, error, "Something went wrong"));
         return;
       }
       toast.message(t("Check your email for next steps"));

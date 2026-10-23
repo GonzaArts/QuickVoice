@@ -6,6 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Building2, ChevronsUpDown, Plus, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useT } from "@/src/i18n/provider";
+import { useIsHydrated } from "@/src/hooks/use-console-session";
+import { localizeError } from "@/src/i18n/errors";
 
 import {
  DropdownMenu,
@@ -30,7 +32,10 @@ export function OrgSwitcher({ activeOrgId }: { activeOrgId: string }) {
  const { isMobile } = useSidebar();
  const router = useRouter();
  const queryClient = useQueryClient();
- const { data: organizations, isPending } = authClient.useListOrganizations();
+ const { data: cachedOrganizations, isPending: listPending } = authClient.useListOrganizations();
+ const hydrated = useIsHydrated();
+ const organizations = hydrated ? cachedOrganizations : undefined;
+ const isPending = !hydrated || listPending;
 
  const active = organizations?.find((o) => o.id === activeOrgId);
 
@@ -40,7 +45,7 @@ export function OrgSwitcher({ activeOrgId }: { activeOrgId: string }) {
  organizationId: orgId,
  });
  if (error) {
- toast.error(error.message || t("Could not switch organization"));
+ toast.error(localizeError(t, error, "Could not switch organization"));
  return;
  }
  clearIdentityCache(queryClient);

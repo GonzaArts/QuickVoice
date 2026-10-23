@@ -1,6 +1,8 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
@@ -167,6 +169,7 @@ function AgentDetailsForm({ agent }: { agent: Agent }) {
 }
 
 export default function AgentConfigPage() {
+  const { locale } = useLocale();
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const agentId = params.id;
@@ -247,7 +250,7 @@ export default function AgentConfigPage() {
                       ID {agent.agentId.slice(0, 8)}
                     </span>
                     <span>
-                      <Trans>{"Updated"}</Trans> {new Date(agent.updatedAt).toLocaleDateString()}
+                      <Trans>{"Updated"}</Trans> {new Date(agent.updatedAt).toLocaleDateString(localeCode(locale))}
                     </span>
                   </div>
                 </div>

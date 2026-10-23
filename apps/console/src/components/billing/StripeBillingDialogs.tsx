@@ -1,8 +1,9 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
-import { localeCode } from "@/src/i18n/config";
+import { localeCode, type Locale } from "@/src/i18n/config";
 import { useLocale, useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 import { useMemo, useState, type FormEvent } from "react";
 import {
   EmbeddedCheckout,
@@ -28,9 +29,11 @@ import {
 
 const stripePublishableKey =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim() ?? "";
-const stripePromise = stripePublishableKey
-  ? loadStripe(stripePublishableKey)
-  : null;
+const stripePromises: Partial<Record<Locale, ReturnType<typeof loadStripe>>> = {};
+function stripeForLocale(locale: Locale) {
+  if (!stripePublishableKey) return null;
+  return stripePromises[locale] ??= loadStripe(stripePublishableKey, { locale });
+}
 
 export const isStripeClientConfigured = Boolean(stripePublishableKey);
 function formatUsd(cents: number, locale: "es" | "en") {
@@ -52,6 +55,7 @@ export function TopUpCheckoutDialog({
   onComplete: () => void;
 }) {
   const { locale, t } = useLocale();
+  const stripePromise = useMemo(() => clientSecret ? stripeForLocale(locale) : null, [clientSecret, locale]);
   const options = useMemo(
     () => ({ clientSecret, onComplete }),
     [clientSecret, onComplete],
@@ -74,7 +78,7 @@ export function TopUpCheckoutDialog({
         <div className="min-h-80 px-2 pb-4 sm:px-5">
           {clientSecret && stripePromise ? (
             <EmbeddedCheckoutProvider
-              key={clientSecret}
+              key={`${clientSecret}:${locale}`}
               stripe={stripePromise}
               options={options}
             >
@@ -112,7 +116,7 @@ function SetupPaymentMethodForm({
       });
 
       if (result.error) {
-        toast.error(result.error.message ?? t("Could not save this card"));
+        toast.error(localizeError(t, result.error, "Could not save this card"));
         return;
       }
 
@@ -123,11 +127,7 @@ function SetupPaymentMethodForm({
           : (paymentMethod?.id ?? null),
       );
     } catch (error) {
-      toast.error(
-        error instanceof Error && error.message
-          ? error.message
-          : t("Could not save this card"),
-      );
+      toast.error(localizeError(t, error, "Could not save this card"));
     } finally {
       setSubmitting(false);
     }
@@ -155,6 +155,8 @@ export function PaymentMethodSetupDialog({
   onClose: () => void;
   onComplete: (paymentMethodId: string | null) => void;
 }) {
+  const { locale } = useLocale();
+  const stripePromise = useMemo(() => clientSecret ? stripeForLocale(locale) : null, [clientSecret, locale]);
   return (
     <Dialog
       open={Boolean(clientSecret)}
@@ -171,10 +173,11 @@ export function PaymentMethodSetupDialog({
         </DialogHeader>
         {clientSecret && stripePromise ? (
           <Elements
-            key={clientSecret}
+            key={`${clientSecret}:${locale}`}
             stripe={stripePromise}
             options={{
               clientSecret,
+              locale,
               appearance: { theme: "stripe" },
             }}
           >

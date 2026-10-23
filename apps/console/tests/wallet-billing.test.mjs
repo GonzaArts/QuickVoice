@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import {
   BILLING_POLL_INTERVAL_MS,
@@ -9,7 +10,7 @@ import {
 } from "../src/lib/billing/polling.ts";
 import { getTransactionPresentation } from "../src/lib/billing/transaction-presentation.ts";
 
-const CONSOLE_ROOT = new URL("..", import.meta.url).pathname;
+const CONSOLE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 function read(path) {
   return readFileSync(join(CONSOLE_ROOT, path), "utf8");

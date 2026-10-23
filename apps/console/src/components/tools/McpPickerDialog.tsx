@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Loader2, PlugZap } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
@@ -26,6 +28,7 @@ export function McpPickerDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useT();
   const { data: connections = [], isLoading } = useMcpConnections();
   const attach = useAttachMcpConnection(agentId);
   const refresh = useRefreshMcpConnection();
@@ -61,14 +64,14 @@ export function McpPickerDialog({
                       variant={connection.status === "CONNECTED" ? "secondary" : "outline"}
                       className={connection.status === "ERROR" ? "border-destructive/30 text-destructive" : ""}
                     >
-                      {connection.status.replace("_", " ")}
+                      {t(({ CONNECTED: "Connected", PENDING: "Pending", AUTH_REQUIRED: "Authorization required", INPUT_REQUIRED: "Input required", ERROR: "Error", DISCONNECTED: "Disconnected" } as Record<string, string>)[connection.status])}
                     </Badge>
                   </div>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground" title={connection.mcpUrl}>
                     {(connection.tools?.length ?? 0)} <Trans>{"tools ·"}</Trans> {connection.mcpUrl}
                   </p>
                   {typeof connection.metadata?.lastSyncError === "string" && (
-                    <p className="mt-1 text-xs text-destructive" role="status">{connection.metadata.lastSyncError}</p>
+                    <p className="mt-1 text-xs text-destructive" role="status">{localizeError(t, connection.metadata.lastSyncError, "Could not sync MCP connection")}</p>
                   )}
                 </div>
                 {connection.status === "CONNECTED" ? <Button

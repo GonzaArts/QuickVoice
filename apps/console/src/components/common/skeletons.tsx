@@ -133,7 +133,7 @@ export function DashboardLoadingSkeleton() {
  className={index < 2 ? "border-r px-3 py-3" : "px-3 py-3"}
  >
  <Skeleton className="mx-auto h-6 w-10" />
- <p className="mt-2 text-xs text-muted-foreground">{label}</p>
+ <p className="mt-2 text-xs text-muted-foreground"><Trans>{label}</Trans></p>
  </div>
  ))}
  </div>
@@ -167,7 +167,7 @@ export function DashboardLoadingSkeleton() {
  className={index < 2 ? "border-r px-3 py-2" : "px-3 py-2"}
  >
  <Skeleton className="mx-auto h-4 w-8" />
- <p className="mt-1 text-xs text-muted-foreground">{label}</p>
+ <p className="mt-1 text-xs text-muted-foreground"><Trans>{label}</Trans></p>
  </div>
  ))}
  </div>
@@ -229,7 +229,7 @@ export function DashboardLoadingSkeleton() {
  <div className="mb-5 flex items-start justify-between gap-4">
  <div className="space-y-2">
  <Skeleton className="h-3 w-20" />
- <h3 className="text-base font-semibold text-foreground">{title}</h3>
+ <h3 className="text-base font-semibold text-foreground"><Trans>{title}</Trans></h3>
  <Skeleton className="h-3 w-60 max-w-full" />
  </div>
  <Skeleton className="h-12 w-20" />

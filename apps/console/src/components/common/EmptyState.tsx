@@ -1,4 +1,5 @@
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import {
   AlertTriangle,
   CircleAlert,
@@ -248,10 +249,12 @@ export function ApiErrorState({
   description,
   ...props
 }: ApiErrorStateProps) {
+  const t = useT();
   const state = getApiErrorStateCopy(error, {
     resourceName,
     isOnline,
     overrides,
+    t,
   });
 
   return (

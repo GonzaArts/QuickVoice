@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -33,6 +34,7 @@ export function KVEditor({
   disableAdd = false,
   secretValues = false,
 }: KVEditorProps) {
+  const t = useT();
   const update = (index: number, field: keyof KVPair, text: string) => {
     const next = value.map((pair, i) =>
       i === index
@@ -73,7 +75,7 @@ export function KVEditor({
           }
         >
           <Input
-            placeholder={keyPlaceholder}
+            placeholder={t(keyPlaceholder)}
             value={pair.key}
             onChange={(e) => update(index, "key", e.target.value)}
             disabled={disabled}
@@ -106,7 +108,7 @@ export function KVEditor({
           ) : (
             <Input
               placeholder={
-                pair.redacted ? "Saved secret value" : valuePlaceholder
+                pair.redacted ? t("Saved secret value") : t(valuePlaceholder)
               }
               value={pair.value ?? ""}
               onChange={(e) => update(index, "value", e.target.value)}

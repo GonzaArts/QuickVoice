@@ -1,6 +1,9 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale, useT } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { localizeError } from "@/src/i18n/errors";
 import { useParams, useSearchParams } from "next/navigation";
 import { authClient } from "@/src/lib/auth-client";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +14,8 @@ import { Badge } from "@/src/components/ui/badge";
 
 
 export default function OrgId() {
+ const translateUi = useT();
+ const { locale } = useLocale();
  const params = useParams();
  const searchParams = useSearchParams();
 
@@ -66,7 +71,7 @@ export default function OrgId() {
  <Shield className="h-8 w-8 text-destructive" />
  </div>
  <h3 className="text-lg font-semibold text-foreground mb-2"><Trans>{"Error loading organization"}</Trans></h3>
- <p className="text-sm text-muted-foreground mb-6">{error}</p>
+ <p className="text-sm text-muted-foreground mb-6">{localizeError(translateUi, error)}</p>
  <Link href="/orgs">
  <Button><Trans>{"Back to organizations"}</Trans></Button>
  </Link>
@@ -129,7 +134,7 @@ export default function OrgId() {
  <div className="flex items-center gap-2 text-sm">
  <Calendar className="h-4 w-4 text-muted-foreground" />
  <span className="text-muted-foreground">
- <Trans>{"Created"}</Trans> {new Date(data.createdAt).toLocaleDateString()}
+ <Trans>{"Created"}</Trans> {new Date(data.createdAt).toLocaleDateString(localeCode(locale))}
  </span>
  </div>
  </div>
@@ -172,10 +177,10 @@ export default function OrgId() {
  </div>
  <div className="flex items-center gap-3">
  <Badge variant={member.role === "admin" ? "default" : "secondary"}>
- {member.role}
+ {Object.prototype.hasOwnProperty.call({ admin: true, member: true, owner: true }, member.role) ? translateUi(({ admin: "Admin", member: "Member", owner: "Owner" } as Record<string, string>)[member.role]) : member.role}
  </Badge>
  <span className="text-xs text-muted-foreground">
- <Trans>{"Joined"}</Trans> {new Date(member.createdAt).toLocaleDateString()}
+ <Trans>{"Joined"}</Trans> {new Date(member.createdAt).toLocaleDateString(localeCode(locale))}
  </span>
  </div>
  </div>

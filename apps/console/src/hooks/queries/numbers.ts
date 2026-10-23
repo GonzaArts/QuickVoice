@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -53,7 +55,7 @@ export function useBuyNumber() {
       toast.success(translateUi("Number purchased"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not purchase number"));
+      toast.error(localizeError(translateUi, err, "Could not purchase number"));
     },
   });
 }
@@ -69,7 +71,7 @@ export function useUpdateNumber() {
       qc.invalidateQueries({ queryKey: queryKeys.agents.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not update number"));
+      toast.error(localizeError(translateUi, err, "Could not update number"));
     },
   });
 }
@@ -87,7 +89,7 @@ export function useReleaseNumber() {
       toast.success(translateUi("Phone number released permanently"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not release number"));
+      toast.error(localizeError(translateUi, err, "Could not release number"));
     },
   });
 }

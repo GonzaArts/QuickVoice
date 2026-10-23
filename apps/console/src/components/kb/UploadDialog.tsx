@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useRef, useState } from "react";
@@ -124,7 +125,7 @@ export function UploadDialog({ defaultAgentId }: { defaultAgentId?: string }) {
       setOpen(false);
       reset();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : translateUi("Something went wrong"));
+      toast.error(localizeError(translateUi, err, "Something went wrong"));
     } finally {
       setBusy(false);
     }

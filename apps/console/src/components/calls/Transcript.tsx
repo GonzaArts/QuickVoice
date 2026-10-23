@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import { Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Skeleton } from "@/src/components/ui/skeleton";
@@ -8,6 +10,7 @@ import { cn } from "@/src/lib/utils";
 import { useTranscript } from "@/src/hooks/queries/calls";
 
 export function Transcript({ callId }: { callId: string }) {
+  const { locale } = useLocale();
   const q = useTranscript(callId);
   const rows = q.data?.pages.flatMap((p) => p.data) ?? [];
 
@@ -55,7 +58,7 @@ export function Transcript({ callId }: { callId: string }) {
               </p>
               <p className="text-sm leading-6">{r.messageText}</p>
               <p className={cn("mt-2 text-right text-[10px]", isAgent ? "text-muted-foreground" : "text-white/70")}>
-                {new Date(r.timestamp).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+                {new Date(r.timestamp).toLocaleTimeString(localeCode(locale), { hour: "numeric", minute: "2-digit" })}
               </p>
             </div>
           </div>

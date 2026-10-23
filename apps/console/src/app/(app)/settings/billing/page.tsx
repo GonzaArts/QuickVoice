@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale, useT } from "@/src/i18n/provider";
+import { useConsoleSession } from "@/src/hooks/use-console-session";
 import { localeCode } from "@/src/i18n/config";
 
 import { Trans } from "@/src/i18n/Trans";
@@ -47,7 +48,6 @@ import {
   useCreateTopUpCheckout,
   useUpdateAutoRecharge,
 } from "@/src/hooks/queries/billing";
-import { authClient } from "@/src/lib/auth-client";
 import type {
   BillingSummary,
   BillingTransactionsPage,
@@ -174,7 +174,7 @@ function BalanceCard({
 }
 
 export default function BillingPage() {
-  const { data: session } = authClient.useSession();
+  const { data: session } = useConsoleSession();
   const organizationId = session?.session?.activeOrganizationId ?? null;
 
   return (
@@ -760,7 +760,7 @@ function OrganizationBillingPage({
               )}
               {createCheckout.isPending
                 ? <Trans>{"Opening secure checkout…"}</Trans>
-                : `Add $${topUpDollars}`}
+                : translateUi("Add ${amount}", { amount: topUpDollars })}
             </Button>
             {topUpConfirmation ? (
               <div

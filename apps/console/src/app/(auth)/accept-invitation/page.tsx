@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { localizeError } from "@/src/i18n/errors";
+import { useT } from "@/src/i18n/provider";
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,6 +15,7 @@ import { CONSOLE_URL, invitationPath } from "@/src/lib/links";
 import { clearIdentityCache } from "@/src/lib/query-cache";
 
 function Invitation() {
+  const t = useT();
   const invitationId = useSearchParams().get("invitationId") ?? "";
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -142,7 +145,7 @@ function Invitation() {
             <p className="break-words text-muted-foreground"><span className="font-medium text-foreground">{invitation.data.inviterEmail}</span> <Trans>{"invited you to join their team."}</Trans></p>
             <dl className="space-y-4 border bg-muted/20 p-4">
               <div><dt className="text-muted-foreground"><Trans>{"Workspace"}</Trans></dt><dd className="mt-1 break-words text-base font-semibold">{invitation.data.organizationName}</dd></div>
-              <div><dt className="text-muted-foreground"><Trans>{"Your role"}</Trans></dt><dd className="mt-1 break-words capitalize">{invitation.data.role}</dd></div>
+              <div><dt className="text-muted-foreground"><Trans>{"Your role"}</Trans></dt><dd className="mt-1 break-words">{Object.prototype.hasOwnProperty.call({ member: true, admin: true, owner: true }, invitation.data.role) ? t(({ member: "Member", admin: "Admin", owner: "Owner" } as Record<string, string>)[invitation.data.role]) : invitation.data.role}</dd></div>
               <div><dt className="text-muted-foreground"><Trans>{"Joining as"}</Trans></dt><dd className="mt-1 break-words">{session.user.email}</dd></div>
             </dl>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -154,7 +157,7 @@ function Invitation() {
             <Button variant="link" className="min-h-11 w-full" disabled={busy} onClick={() => act("signout")}><Trans>{"Use a different account"}</Trans></Button>
           </>
         ) : null}
-        {actionError && <p role="alert" className="text-destructive">{actionError}</p>}
+        {actionError && <p role="alert" className="text-destructive">{localizeError(t, actionError, "Could not accept this invitation. Please try again.")}</p>}
       </div>
     </>
   );

@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { es, enUS } from "date-fns/locale"
+import { useLocale } from "@/src/i18n/provider"
 import {
  DayPicker,
  getDefaultClassNames,
@@ -25,6 +27,8 @@ function Calendar({
 }: React.ComponentProps<typeof DayPicker> & {
  buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
+ const { locale: appLocale } = useLocale()
+ const resolvedLocale = locale ?? (appLocale === "es" ? es : enUS)
  const defaultClassNames = getDefaultClassNames()
 
  return (
@@ -37,10 +41,10 @@ function Calendar({
  className
  )}
  captionLayout={captionLayout}
- locale={locale}
+ locale={resolvedLocale}
  formatters={{
  formatMonthDropdown: (date) =>
- date.toLocaleString(locale?.code, { month: "short" }),
+ date.toLocaleString(resolvedLocale.code, { month: "short" }),
  ...formatters,
  }}
  classNames={{

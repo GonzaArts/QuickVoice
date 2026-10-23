@@ -1,6 +1,8 @@
 "use client";
 
-import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
+import { useT, useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 
 import { Trans } from "@/src/i18n/Trans";
 import {
@@ -51,10 +53,10 @@ import type { LiveCallRoom } from "@/src/lib/api/resources/calls";
 import type { LiveTranscriptMessage } from "@/src/lib/live-calls/types";
 import { cn } from "@/src/lib/utils";
 
-function directionLabel(direction: LiveCallRoom["direction"]) {
-  if (direction === "outbound") return "Outbound";
-  if (direction === "inbound") return "Inbound";
-  return "Live call";
+function directionLabel(direction: LiveCallRoom["direction"], t: (key: string) => string) {
+  if (direction === "outbound") return t("Outbound");
+  if (direction === "inbound") return t("Inbound");
+  return t("Live call");
 }
 
 function phoneDetails(call: LiveCallRoom) {
@@ -68,11 +70,11 @@ function isWidgetCall(call: LiveCallRoom) {
   return call.roomName.startsWith("widget_") || call.callId.startsWith("widget_");
 }
 
-function callTitle(call: LiveCallRoom) {
-  if (isWidgetCall(call)) return "Website visitor";
+function callTitle(call: LiveCallRoom, t: (key: string) => string) {
+  if (isWidgetCall(call)) return t("Website visitor");
   const phone = phoneDetails(call);
   const primary = call.direction === "outbound" ? phone.to : phone.from;
-  return primary ?? `${directionLabel(call.direction)} ${call.callId.slice(0, 8)}`;
+  return primary ?? `${directionLabel(call.direction, t)} ${call.callId.slice(0, 8)}`;
 }
 
 function formatElapsed(startedAt: string | null, now: number | null) {
@@ -88,10 +90,10 @@ function formatElapsed(startedAt: string | null, now: number | null) {
     : `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-function transcriptTime(timestamp: string) {
+function transcriptTime(timestamp: string, locale: string) {
   const parsed = new Date(timestamp);
   if (!Number.isFinite(parsed.getTime())) return "";
-  return parsed.toLocaleTimeString([], {
+  return parsed.toLocaleTimeString(locale, {
     hour: "numeric",
     minute: "2-digit",
     second: "2-digit",
@@ -113,6 +115,7 @@ function useClock(active: boolean) {
 }
 
 function TranscriptRow({ message }: { message: LiveTranscriptMessage }) {
+  const { locale } = useLocale();
   const isAgent = message.speaker === "agent";
   return (
     <article
@@ -134,7 +137,7 @@ function TranscriptRow({ message }: { message: LiveTranscriptMessage }) {
             {isAgent ? <Trans>{"Agent"}</Trans> : <Trans>{"Caller"}</Trans>}
           </p>
           <time className="shrink-0 text-[11px] tabular-nums text-[#77777F]">
-            {transcriptTime(message.timestamp)}
+            {transcriptTime(message.timestamp, localeCode(locale))}
           </time>
         </div>
         <p className="whitespace-pre-wrap break-words text-[15px] leading-6 text-[#111111]">
@@ -152,15 +155,16 @@ function ConnectionStatus({
   state: ReturnType<typeof useLiveTranscript>["connectionState"];
   ended: boolean;
 }) {
+  const t = useT();
   const label = ended
-    ? "Call ended"
+    ? t("Call ended")
     : state === "connected"
-      ? "Live"
+      ? t("Live")
       : state === "reconnecting"
-        ? "Reconnecting"
+        ? t("Reconnecting")
         : state === "connecting"
-          ? "Connecting"
-          : "Offline";
+          ? t("Connecting")
+          : t("Offline");
 
   return (
     <span className="inline-flex items-center gap-2 text-xs font-medium text-[#4B4B52]">
@@ -186,6 +190,7 @@ function LiveTranscriptDrawer({
   now: number | null;
   onClose: () => void;
 }) {
+  const translateUi = useT();
   const transcript = useLiveTranscript(call?.callId ?? null);
   const endCall = useEndLiveCall();
   const [confirmEnd, setConfirmEnd] = useState(false);
@@ -260,16 +265,16 @@ function LiveTranscriptDrawer({
                         ended={transcript.isEnded}
                       />
                       <span className="text-xs text-[#77777F]">
-                        {directionLabel(call.direction)}
+                        {directionLabel(call.direction, translateUi)}
                       </span>
                     </div>
                     <SheetTitle className="truncate text-xl font-semibold tracking-[-0.02em] text-[#111111]">
-                      {callTitle(call)}
+                      {callTitle(call, translateUi)}
                     </SheetTitle>
                     <SheetDescription className="mt-1 text-sm text-[#65656D]">
                       {call.agentName
-                        ? `Agent: ${call.agentName}`
-                        : `Call ${call.callId.slice(0, 8)}`}
+                        ? translateUi("Agent: {name}", { name: call.agentName })
+                        : translateUi("Call {id}", { id: call.callId.slice(0, 8) })}
                     </SheetDescription>
                   </div>
                 </div>
@@ -318,7 +323,7 @@ function LiveTranscriptDrawer({
                   {transcript.error ? (
                     <div className="mb-4 flex items-start gap-2 border border-[#B8B8BE] bg-[#F7F7F8] p-3 text-sm text-[#4B4B52]">
                       <WifiOff className="mt-0.5 size-4 shrink-0" />
-                      <p>{transcript.error}</p>
+                      <p>{localizeError(translateUi, transcript.error, "Transcript history did not respond. Reconnecting will retry.")}</p>
                     </div>
                   ) : null}
 
@@ -396,7 +401,7 @@ function LiveTranscriptDrawer({
           <AlertDialogHeader>
             <AlertDialogTitle><Trans>{"End this live call?"}</Trans></AlertDialogTitle>
             <AlertDialogDescription className="text-[#65656D]">
-              <Trans>{"The caller and agent on"}</Trans> {call ? callTitle(call) : <Trans>{"this call"}</Trans>} <Trans>{"will be disconnected immediately."}</Trans>
+              <Trans>{"The caller and agent on"}</Trans> {call ? callTitle(call, translateUi) : <Trans>{"this call"}</Trans>} <Trans>{"will be disconnected immediately."}</Trans>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -500,7 +505,7 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
                 <p className="mt-1 text-xs text-[#65656D]">
                   {sortedCalls.length === 1
                     ? <Trans>{"1 active call"}</Trans>
-                    : `${sortedCalls.length} active calls`}
+                    : translateUi("{count} active calls", { count: sortedCalls.length })}
                 </p>
               </div>
               <div className="flex items-center border-l border-[#D9D9DD]">
@@ -569,10 +574,10 @@ export function LiveCallsDock({ organizationId }: { organizationId: string }) {
                         </span>
                         <span className="min-w-0 px-4 py-4">
                           <span className="block truncate text-sm font-semibold">
-                            {callTitle(call)}
+                            {callTitle(call, translateUi)}
                           </span>
                           <span className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#65656D]">
-                            <span>{directionLabel(call.direction)}</span>
+                            <span>{directionLabel(call.direction, translateUi)}</span>
                             <span className="inline-flex items-center gap-1 tabular-nums">
                               <Clock3 className="size-3" />
                               {formatElapsed(call.startedAt, now)}

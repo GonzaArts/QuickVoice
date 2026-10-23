@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { useSecrets } from "@/src/hooks/queries/secrets";
+import { useT } from "@/src/i18n/provider";
 
 export function SecretSelect({
   value,
@@ -22,6 +23,7 @@ export function SecretSelect({
   placeholder?: string;
   ariaLabel?: string;
 }) {
+  const t = useT();
   const { data: secrets = [], isLoading } = useSecrets();
 
   return (
@@ -30,14 +32,14 @@ export function SecretSelect({
       onValueChange={onValueChange}
       disabled={disabled || isLoading || secrets.length === 0}
     >
-      <SelectTrigger className="h-9" aria-label={ariaLabel}>
+      <SelectTrigger className="h-9" aria-label={t(ariaLabel)}>
         <SelectValue
           placeholder={
             isLoading
-              ? "Loading secrets..."
+              ? t("Loading secrets...")
               : secrets.length === 0
-                ? "No secrets saved"
-                : placeholder
+                ? t("No secrets saved")
+                : t(placeholder)
           }
         />
       </SelectTrigger>

@@ -1,0 +1,815 @@
+{
+  "baseCommit": "3aaa831c2151a902d12dd659679ee7e61c3611dd",
+  "method": "Distinct Spanish source keys across es.json + extended.es.json; additions absent at base; corrections changed Spanish values at existing keys; occurrences are not counted.",
+  "summary": {
+    "baseKeys": 1878,
+    "finalKeys": 2103,
+    "newTranslations": 225,
+    "correctedTranslations": 144
+  },
+  "added": {
+    "Check the value of this field.": "Revisa el valor de este campo.",
+    "You do not have enough credit. Add credit to continue.": "No tienes saldo suficiente. Añade saldo para continuar.",
+    "Invalid email or password": "El correo electrónico o la contraseña no son correctos.",
+    "An account with this email already exists.": "Ya existe una cuenta con este correo electrónico.",
+    "Your session has expired. Please sign in again.": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
+    "You do not have permission to perform this action.": "No tienes permiso para realizar esta acción.",
+    "Too many requests. Please wait before trying again.": "Se han realizado demasiadas solicitudes. Espera antes de volver a intentarlo.",
+    "Verify your email address before signing in.": "Verifica tu correo electrónico antes de iniciar sesión.",
+    "This link is invalid or has expired. Request a new one.": "Este enlace no es válido o ha caducado. Solicita uno nuevo.",
+    "Full name is required": "Introduce tu nombre completo",
+    "Invalid email": "Introduce un correo electrónico válido",
+    "Invalid email address": "Introduce un correo electrónico válido",
+    "Password must be at least 6 characters": "La contraseña debe tener al menos 6 caracteres",
+    "Password must be at least 6 characters long": "La contraseña debe tener al menos 6 caracteres",
+    "Password must be at least 8 characters": "La contraseña debe tener al menos 8 caracteres",
+    "Confirm password is required": "Confirma la contraseña",
+    "Token is required": "Falta el código de recuperación",
+    "Code must be exactly 6 characters long": "El código debe tener exactamente 6 caracteres",
+    "Invalid organization ID": "El identificador de la organización no es válido",
+    "Invalid user ID": "El identificador del usuario no es válido",
+    "Invalid template ID": "El identificador de la plantilla no es válido",
+    "Value is required": "Introduce un valor",
+    "Campaign name is required": "Introduce un nombre para la campaña",
+    "From number must be at least 10 digits": "El número de origen debe tener al menos 10 dígitos",
+    "Phone number must be at least 10 digits": "El número de teléfono debe tener al menos 10 dígitos",
+    "Schedule time is required": "Selecciona la fecha y hora de envío",
+    "Invalid schedule time": "La fecha u hora de envío no es válida",
+    "Enter a valid local schedule date and time": "Introduce una fecha y hora locales válidas",
+    "Enter a valid calendar date, time and timezone": "Introduce una fecha, hora y zona horaria válidas",
+    "Request failed": "No se ha podido completar la solicitud",
+    "Unknown error": "Se ha producido un error desconocido",
+    "Network Error": "No se ha podido conectar. Comprueba tu conexión.",
+    "Unauthorized": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
+    "Insufficient permissions": "No tienes permiso para realizar esta acción.",
+    "No active organization for this request": "Selecciona una organización para continuar.",
+    "Call log not found": "No se ha encontrado el registro de la llamada",
+    "Recording not available for download": "La grabación no está disponible para descargar",
+    "Voice samples are not configured": "Las muestras de voz no están configuradas",
+    "Voice sample unavailable. Please try again shortly.": "La muestra de voz no está disponible. Vuelve a intentarlo en unos instantes.",
+    "Too many voice samples. Please wait a minute before trying again.": "Has solicitado demasiadas muestras de voz. Espera un minuto antes de volver a intentarlo.",
+    "Your organization has reached its daily voice sample limit. Try again tomorrow.": "Tu organización ha alcanzado el límite diario de muestras de voz. Vuelve a intentarlo mañana.",
+    "dashboard": "el panel de control",
+    "call logs": "los registros de llamadas",
+    "workspace data": "los datos del espacio de trabajo",
+    "Sign in to load {resource}": "Inicia sesión para cargar {resource}",
+    "Your QuickVoice session expired or the API rejected authentication. Sign in again, then retry loading {resource}.": "Tu sesión de QuickVoice ha caducado o no se ha podido autenticar. Vuelve a iniciar sesión e intenta cargar {resource}.",
+    "{resource} access required": "Se necesita permiso para acceder a {resource}",
+    "Your current role does not include permission to load {resource}. Ask a workspace owner to update your role or switch organizations.": "Tu rol actual no permite cargar {resource}. Pide a una persona propietaria del espacio de trabajo que actualice tu rol o cambia de organización.",
+    "{resource} unavailable offline": "Sin conexión para cargar {resource}",
+    "Reconnect to the internet, then retry loading {resource}. If cached data is available, QuickVoice will keep it visible while you reconnect.": "Vuelve a conectarte a Internet e intenta cargar {resource}. Si hay datos guardados, QuickVoice los mantendrá visibles mientras recuperas la conexión.",
+    "QuickVoice service unavailable": "El servicio de QuickVoice no está disponible",
+    "The API returned a server error while loading {resource}. Retry in a moment; this is not caused by your browser connection.": "Se ha producido un error del servidor al cargar {resource}. Vuelve a intentarlo en unos instantes; el problema no se debe a la conexión del navegador.",
+    "Could not load {resource}": "No se ha podido cargar {resource}",
+    "Retry loading {resource}. If the problem continues, share the issue with support.": "Vuelve a intentar cargar {resource}. Si el problema continúa, contacta con el equipo de soporte.",
+    "Authorization required": "Se requiere autorización",
+    "Input required": "Se requieren datos",
+    "Last synced {date}": "Última sincronización: {date}",
+    "Could not sync MCP connection": "No se pudo sincronizar la conexión MCP",
+    "Accepted": "Aceptada",
+    "Expired": "Caducada",
+    "Notifications": "Notificaciones",
+    "Close notification": "Cerrar notificación",
+    "Role is required": "Selecciona un rol",
+    "Lowercase letters, digits, dashes": "Utiliza letras minúsculas, números y guiones",
+    "Business Agent": "Agente empresarial",
+    "General purpose calls, lead qualification, and follow-ups.": "Llamadas de propósito general, cualificación de clientes potenciales y seguimiento.",
+    "Medical Agent": "Agente médico",
+    "Patient intake, appointment reminders, and front-desk workflows.": "Admisión de pacientes, recordatorios de citas y tareas de recepción.",
+    "Questionnaire Agent": "Agente de cuestionarios",
+    "Outbound CSV questionnaires with structured answer capture.": "Cuestionarios salientes desde CSV con captura estructurada de respuestas.",
+    "Blank Agent": "Agente vacío",
+    "Start from an empty configuration and customize everything.": "Empieza con una configuración vacía y personaliza todos los detalles.",
+    "Support Agent": "Agente de soporte",
+    "Customer questions, ticket triage, and post-call summaries.": "Preguntas de clientes, clasificación de solicitudes y resúmenes posteriores a las llamadas.",
+    "Disable call audio before enabling zero-PII retention": "Desactiva la grabación de audio antes de activar la opción de no conservar datos personales",
+    "Search attached knowledge-base documents during calls.": "Busca documentos adjuntos de la base de conocimiento durante las llamadas.",
+    "Start preparing the next response before the caller finishes speaking.": "Empieza a preparar la siguiente respuesta antes de que termine de hablar la persona que llama.",
+    "Allow the agent to send DTMF tones when it reaches an automated phone menu.": "Permite que el agente envíe tonos DTMF al llegar a un menú telefónico automatizado.",
+    "Prompt must be at least 10 characters": "Las instrucciones deben tener al menos 10 caracteres",
+    "First message must be at least 5 characters": "El mensaje inicial debe tener al menos 5 caracteres",
+    "Initiation webhook URL is required when enabled": "Introduce la URL del webhook de inicio para activarlo",
+    "Post-call webhook URL is required when enabled": "Introduce la URL del webhook posterior a la llamada para activarlo",
+    "ISO-3166 alpha-2 country code": "Introduce el código de país de dos letras según ISO 3166",
+    "Use letters, numbers, dots, underscores, colons, or hyphens": "Utiliza letras, números, puntos, guiones bajos, dos puntos o guiones",
+    "Secret name must be 120 characters or less": "El nombre de la credencial no puede superar los 120 caracteres",
+    "Secret name is required": "Introduce un nombre para la credencial",
+    "Secret value is required": "Introduce el valor de la credencial",
+    "Paste the full HTTPS endpoint supplied by your MCP server provider.": "Pega la URL HTTPS completa que te proporcionó el proveedor del servidor MCP.",
+    "Enter a full URL, such as https://server.example.com/mcp.": "Introduce una URL completa, por ejemplo, https://server.example.com/mcp.",
+    "Custom MCP endpoints must use HTTPS.": "Los endpoints MCP personalizados deben usar HTTPS.",
+    "Remove credentials from the URL. Authorization is completed after you connect.": "Quita las credenciales de la URL. La autorización se completa después de conectarte.",
+    "HTTPS endpoint ready. QuickVoice will verify the MCP server when you connect.": "Endpoint HTTPS listo. QuickVoice verificará el servidor MCP al conectarte.",
+    "QuickVoice is a platform for creating and managing voice agents.": "QuickVoice es una plataforma para crear y gestionar agentes de voz.",
+    "Text": "Texto",
+    "Hindi": "Hindi",
+    "English (India)": "Inglés (India)",
+    "The operation could not be completed.": "No se ha podido completar la operación.",
+    "The outbound call could not be completed.": "No se pudo completar la llamada saliente.",
+    "Call ended": "Llamada finalizada",
+    "Reconnecting": "Reconectando",
+    "Offline": "Sin conexión",
+    "Live call": "Llamada en directo",
+    "Buy a number from your telephony provider to start routing calls.": "Compra un número a tu proveedor de telefonía para empezar a recibir llamadas.",
+    "Contact a workspace owner or admin to buy a number and start routing calls.": "Contacta con una persona propietaria o administradora del espacio de trabajo para comprar un número y empezar a recibir llamadas.",
+    "Uploading": "Subiendo",
+    "Extracting text": "Extrayendo texto",
+    "Splitting into sections": "Dividiendo en secciones",
+    "Creating embeddings": "Creando representaciones vectoriales",
+    "Indexing": "Indexando",
+    "API key listing is not available": "La lista de claves API no está disponible",
+    "API key creation is not available": "La creación de claves API no está disponible",
+    "API key delete is not available": "La eliminación de claves API no está disponible",
+    "The payment URL was not secure": "El enlace de pago no es seguro. No se ha abierto.",
+    "Leave is not available": "No está disponible la opción de salir de la organización",
+    "Invites are not available": "Las invitaciones no están disponibles",
+    "Member role updates are not available": "No está disponible la actualización de roles de miembros",
+    "Invite cancellation is not available": "La cancelación de invitaciones no está disponible",
+    "Custom role listing is not available": "La lista de roles personalizados no está disponible",
+    "Custom role creation is not available": "La creación de roles personalizados no está disponible",
+    "Custom role updates are not available": "La actualización de roles personalizados no está disponible",
+    "Custom role deletion is not available": "La eliminación de roles personalizados no está disponible",
+    "You joined the workspace, but we could not open it. Please try again.": "Te has unido al espacio de trabajo, pero no se ha podido abrir. Vuelve a intentarlo.",
+    "Could not accept this invitation. Please try again.": "No se ha podido aceptar la invitación. Vuelve a intentarlo.",
+    "Recipient file is empty": "El archivo de destinatarios está vacío",
+    "Recipient file must include phone_number column": "El archivo de destinatarios debe incluir la columna phone_number",
+    "Could not parse any preview rows from the CSV file": "No se ha podido leer ninguna fila del archivo CSV para la vista previa",
+    "No readable text was found in this knowledge source.": "No se ha encontrado texto legible en esta fuente de conocimiento.",
+    "Not indexed": "Sin indexar",
+    "No phone numbers have been added to this organization.": "Todavía no se han añadido números de teléfono a esta organización.",
+    "The provider could not complete this search. Please try again.": "El proveedor no pudo completar la búsqueda. Inténtalo de nuevo.",
+    "Could not process this document.": "No se pudo procesar este documento.",
+    "Add ${amount}": "Añadir ${amount}",
+    "Buy for {amount}": "Comprar por {amount}",
+    "Temporary preview access expires around {time}.": "El acceso temporal de vista previa caduca aproximadamente a las {time}.",
+    "Preview access expires around {time}.": "El acceso de vista previa caduca aproximadamente a las {time}.",
+    "Page {page} of {pages}": "Página {page} de {pages}",
+    "Agent: {name}": "Agente: {name}",
+    "Call {id}": "Llamada {id}",
+    "{count} active calls": "{count} llamadas activas",
+    "{from} to {to} UTC": "de {from} a {to} UTC",
+    "percentage point": "punto porcentual",
+    "percentage points": "puntos porcentuales",
+    "The number search is unavailable in this country.": "La búsqueda de números no está disponible en este país.",
+    "Loading secrets...": "Cargando secretos...",
+    "No secrets saved": "No hay secretos guardados",
+    "Saved secret value": "Valor del secreto guardado",
+    "Started": "Inicio",
+    "Call ID": "ID de llamada",
+    "Knowledge source ID": "ID de la fuente de conocimiento",
+    "Source type": "Tipo de fuente",
+    "Last indexed": "Última indexación",
+    "Storage reference": "Referencia de almacenamiento",
+    "Stored URL": "URL almacenada",
+    "Original file": "Archivo original",
+    "Values sent only for this outbound call.": "Valores que se enviarán únicamente en esta llamada saliente.",
+    "This email is already registered. Please sign in or reset your password.": "Este correo electrónico ya está registrado. Inicia sesión o restablece tu contraseña.",
+    "Failed to load organization": "No se ha podido cargar la organización",
+    "An unexpected error occurred": "Se ha producido un error inesperado",
+    "This browser does not expose microphone access.": "Este navegador no permite acceder al micrófono.",
+    "Waiting for browser permission.": "Esperando el permiso del navegador.",
+    "Session": "Sesión",
+    "Temporary LiveKit room created.": "Se creó una sala temporal de LiveKit.",
+    "Agent audio": "Audio del agente",
+    "Agent audio connected.": "Audio del agente conectado.",
+    "Network": "Red",
+    "Reconnecting to preview room.": "Reconectando con la sala de vista previa.",
+    "Preview room reconnected.": "Se restableció la conexión con la sala de vista previa.",
+    "Speak naturally. The agent can hear your microphone.": "Habla con naturalidad. El agente puede oír tu micrófono.",
+    "Could not start the live preview.": "No se pudo iniciar la vista previa en directo.",
+    "Microphone unmuted.": "Micrófono activado.",
+    "Microphone muted.": "Micrófono silenciado.",
+    "Could not create organization": "No se pudo crear la organización.",
+    "Organization was created, but could not be opened": "La organización se creó, pero no se pudo abrir.",
+    "Select a recipients file first": "Selecciona primero un archivo de destinatarios",
+    "Preflight preview currently supports CSV files only": "La comprobación previa solo admite archivos CSV",
+    "Add at least one personalization field to run preflight": "Añade al menos un campo de personalización para ejecutar la comprobación previa",
+    "Could not run personalization preflight": "No se ha podido realizar la comprobación previa de personalización",
+    "Invalid JSON in {field}": "El JSON de {field} no es válido.",
+    "Missing required column: {column}": "Falta la columna obligatoria: {column}",
+    "{count} rows have missing phone numbers": "{count} filas no tienen número de teléfono.",
+    "Could not parse this CSV preview.": "No se pudo generar la vista previa del CSV.",
+    "Preview only supports CSV files. XLSX files cannot be previewed.": "La vista previa solo admite archivos CSV. No se pueden previsualizar archivos XLSX.",
+    "Failed to parse file": "No se pudo leer el archivo.",
+    "Transcript history did not respond. Reconnecting will retry.": "El historial de transcripción no ha respondido. Se volverá a intentar al reconectar.",
+    "American": "Estadounidense",
+    "Confident": "Segura",
+    "Energetic": "Enérgica",
+    "Advertising": "Publicidad",
+    "Customer service": "Atención al cliente",
+    "Casual chat": "Conversación informal",
+    "Smooth": "Suave",
+    "Warm": "Cálida",
+    "Professional": "Profesional",
+    "Informative": "Informativa",
+    "Deep": "Grave",
+    "Trustworthy": "De confianza",
+    "IVR": "IVR",
+    "Friendly": "Amable",
+    "Natural": "Natural",
+    "British": "Británico",
+    "Baritone": "Barítono",
+    "Storytelling": "Relato de historias",
+    "Calm": "Tranquila",
+    "Narrative": "Narrativa",
+    "Narration": "Narración",
+    "Well-rounded": "Versátil",
+    "Conversational agents": "Agentes conversacionales",
+    "Soft": "Suave",
+    "Stable": "Estable",
+    "Realistic": "Realista",
+    "Voice agents": "Agentes de voz",
+    "Conversational": "Conversacional",
+    "Support": "Soporte",
+    "Expressive": "Expresiva",
+    "Emotive": "Emotiva",
+    "Companion apps": "Aplicaciones de compañía",
+    "Characters": "Personajes",
+    "Bright": "Vibrante",
+    "Casual": "Informal",
+    "Southern": "Del sur de Estados Unidos",
+    "Low": "Grave",
+    "Professional agents": "Agentes profesionales",
+    "Organization was not created. Please try again.": "No se creó la organización. Inténtalo de nuevo.",
+    "The file appears to be empty": "El archivo parece estar vacío.",
+    "Requesting microphone": "Solicitando acceso al micrófono"
+  },
+  "corrected": {
+    "Dashboard": {
+      "before": "Panel principal",
+      "after": "Panel de control"
+    },
+    "Agents": {
+      "before": "Asistentes",
+      "after": "Agentes"
+    },
+    "Agent": {
+      "before": "Asistente",
+      "after": "Agente"
+    },
+    "Knowledge base": {
+      "before": "Base de conocimientos",
+      "after": "Base de conocimiento"
+    },
+    "Create agent": {
+      "before": "Crear asistente",
+      "after": "Crear agente"
+    },
+    "New agent": {
+      "before": "Nuevo asistente",
+      "after": "Nuevo agente"
+    },
+    "Voice agents you can deploy to phone numbers.": {
+      "before": "Asistentes de voz que puedes asociar a números de teléfono.",
+      "after": "Agentes de voz que puedes asociar a números de teléfono."
+    },
+    "Could not load agents": {
+      "before": "No se pudieron cargar los asistentes",
+      "after": "No se pudieron cargar los agentes"
+    },
+    "Refresh the agent list or try again after checking your connection.": {
+      "before": "Actualiza la lista de asistentes o comprueba tu conexión e inténtalo de nuevo.",
+      "after": "Actualiza la lista de agentes o comprueba tu conexión e inténtalo de nuevo."
+    },
+    "No agents yet": {
+      "before": "Todavía no hay asistentes",
+      "after": "Todavía no hay agentes"
+    },
+    "Create your first voice agent and connect it to a phone number.": {
+      "before": "Crea tu primer asistente de voz y asígnale un número de teléfono.",
+      "after": "Crea tu primer agente de voz y asígnale un número de teléfono."
+    },
+    "Give your agent a name. You can configure voice, prompts, and webhooks next.": {
+      "before": "Ponle nombre al asistente. Después podrás configurar la voz, las instrucciones y los webhooks.",
+      "after": "Ponle nombre al agente. Después podrás configurar la voz, las instrucciones y los webhooks."
+    },
+    "Toggle whether this agent can handle calls immediately.": {
+      "before": "Indica si este asistente puede atender llamadas inmediatamente.",
+      "after": "Indica si este agente puede atender llamadas inmediatamente."
+    },
+    "Agent name": {
+      "before": "Nombre del asistente",
+      "after": "Nombre del agente"
+    },
+    "Back to agents": {
+      "before": "Volver a asistentes",
+      "after": "Volver a agentes"
+    },
+    "Agent not found": {
+      "before": "No se encontró el asistente",
+      "after": "No se ha encontrado el agente"
+    },
+    "This agent may have been removed, or you may not have access to it.": {
+      "before": "Puede que se haya eliminado el asistente o que no tengas permiso para acceder.",
+      "after": "Puede que se haya eliminado el agente o que no tengas permiso para acceder."
+    },
+    "Go back to agents": {
+      "before": "Volver a asistentes",
+      "after": "Volver a agentes"
+    },
+    "Delete agent": {
+      "before": "Eliminar asistente",
+      "after": "Eliminar agente"
+    },
+    "Delete this agent?": {
+      "before": "¿Eliminar este asistente?",
+      "after": "¿Eliminar este agente?"
+    },
+    "Agent details": {
+      "before": "Detalles del asistente",
+      "after": "Detalles del agente"
+    },
+    "The agent can receive calls.": {
+      "before": "El asistente puede recibir llamadas.",
+      "after": "El agente puede recibir llamadas."
+    },
+    "The agent is paused and cannot receive calls.": {
+      "before": "El asistente está pausado y no puede recibir llamadas.",
+      "after": "El agente está pausado y no puede recibir llamadas."
+    },
+    "Agent details saved": {
+      "before": "Se han guardado los datos del asistente",
+      "after": "Se han guardado los datos del agente"
+    },
+    "Set fallback values for variables used by this agent.": {
+      "before": "Establece valores predeterminados para las variables que utiliza el asistente.",
+      "after": "Establece valores predeterminados para las variables que utiliza el agente."
+    },
+    "Agent preview": {
+      "before": "Prueba del asistente",
+      "after": "Prueba del agente"
+    },
+    "Start a preview to open your microphone and talk with this agent in real time.": {
+      "before": "Inicia una prueba para activar el micrófono y conversar con el asistente en tiempo real.",
+      "after": "Inicia una prueba para activar el micrófono y conversar con el agente en tiempo real."
+    },
+    "Ready": {
+      "before": "Preparado",
+      "after": "Listo"
+    },
+    "Live preview": {
+      "before": "Prueba en directo",
+      "after": "Vista previa en directo"
+    },
+    "Preview ended": {
+      "before": "Prueba finalizada",
+      "after": "Vista previa finalizada"
+    },
+    "Configure behaviors that change how the agent listens, searches, and moves through phone systems.": {
+      "before": "Configura cómo escucha y busca información el asistente y cómo interactúa con sistemas telefónicos.",
+      "after": "Configura cómo escucha y busca información el agente y cómo interactúa con sistemas telefónicos."
+    },
+    "Knowledge retrieval": {
+      "before": "Búsqueda de conocimientos",
+      "after": "Recuperación de conocimiento"
+    },
+    "Pause agent": {
+      "before": "Pausar asistente",
+      "after": "Pausar agente"
+    },
+    "Resume agent": {
+      "before": "Reanudar asistente",
+      "after": "Reanudar agente"
+    },
+    "Pause the agent to stop new calls temporarily, or delete it permanently.": {
+      "before": "Pausa el asistente para detener nuevas llamadas o elimínalo definitivamente.",
+      "after": "Pausa el agente para detener nuevas llamadas o elimínalo definitivamente."
+    },
+    "This deletes the agent and detaches it from phone numbers, tools, and knowledge sources. This cannot be undone.": {
+      "before": "Se eliminará el asistente y su asociación con números, herramientas y fuentes de conocimiento. No se puede deshacer.",
+      "after": "Se eliminará el agente y su asociación con números, herramientas y fuentes de conocimiento. No se puede deshacer."
+    },
+    "Connect MCP servers or manage HTTP tools your agents can invoke.": {
+      "before": "Conecta servidores MCP o gestiona herramientas HTTP que pueden utilizar tus asistentes.",
+      "after": "Conecta servidores MCP o gestiona herramientas HTTP que pueden utilizar tus agentes."
+    },
+    "Create an HTTP tool to let your agents call external APIs mid-conversation.": {
+      "before": "Crea una herramienta HTTP para que tus asistentes consulten APIs externas durante las conversaciones.",
+      "after": "Crea una herramienta HTTP para que tus agentes consulten APIs externas durante las conversaciones."
+    },
+    "All agents": {
+      "before": "Todos los asistentes",
+      "after": "Todos los agentes"
+    },
+    "Search agents": {
+      "before": "Buscar asistentes",
+      "after": "Buscar agentes"
+    },
+    "Something went wrong": {
+      "before": "Se ha producido un error",
+      "after": "Se ha producido un error."
+    },
+    "Unable to reach the server. Please try again.": {
+      "before": "No se puede conectar con el servidor. Vuelve a intentarlo.",
+      "after": "No se pudo conectar con el servidor. Inténtalo de nuevo."
+    },
+    "At least 8 characters": {
+      "before": "Mínimo 8 caracteres",
+      "after": "Debe tener al menos 8 caracteres"
+    },
+    "agent activity": {
+      "before": "actividad de asistentes",
+      "after": "actividad de agentes"
+    },
+    "Active agents": {
+      "before": "Asistentes activos",
+      "after": "Agentes activos"
+    },
+    "Active Agents": {
+      "before": "Asistentes activos",
+      "after": "Agentes activos"
+    },
+    "Agent activity": {
+      "before": "Actividad de asistentes",
+      "after": "Actividad de agentes"
+    },
+    "Agent Activity": {
+      "before": "Actividad de asistentes",
+      "after": "Actividad de agentes"
+    },
+    "When RAG is enabled in Advanced, the agent can cite these.": {
+      "before": "Cuando la búsqueda documental está activada en Opciones avanzadas, el asistente puede citar estos documentos.",
+      "after": "Cuando la búsqueda documental está activada en Opciones avanzadas, el agente puede citar estos documentos."
+    },
+    "Open knowledge base": {
+      "before": "Abrir la base de conocimientos",
+      "after": "Abrir la base de conocimiento"
+    },
+    "Upload a document in the Knowledge Base and assign it to this agent.": {
+      "before": "Sube un documento a la base de conocimientos y asígnalo a este asistente.",
+      "after": "Sube un documento a la base de conocimiento y asígnalo a este agente."
+    },
+    "Create knowledge base": {
+      "before": "Crear base de conocimientos",
+      "after": "Crear base de conocimiento"
+    },
+    "Assign agent": {
+      "before": "Asignar asistente",
+      "after": "Asignar agente"
+    },
+    "Select agent": {
+      "before": "Seleccionar asistente",
+      "after": "Seleccionar agente"
+    },
+    "This agent has a saved Sarvam model, which is unavailable. Choose supported STT, TTS, and voice options, then save before using this agent.": {
+      "before": "Este asistente utiliza un modelo Sarvam que ya no está disponible. Selecciona modelos de transcripción y voz compatibles, y guarda los cambios antes de utilizarlo.",
+      "after": "Este agente utiliza un modelo Sarvam que ya no está disponible. Selecciona modelos de transcripción y voz compatibles, y guarda los cambios antes de utilizarlo."
+    },
+    "How the agent introduces itself and behaves on a call.": {
+      "before": "Cómo se presenta el asistente y cómo se comporta durante una llamada.",
+      "after": "Cómo se presenta el agente y cómo se comporta durante una llamada."
+    },
+    "Describe the agent's role, constraints, and tone.": {
+      "before": "Describe la función del asistente, sus límites y su tono.",
+      "after": "Describe la función del agente, sus límites y su tono."
+    },
+    "Route owned numbers to agents and keep assignment coverage visible.": {
+      "before": "Asocia los números adquiridos a los asistentes y controla su asignación.",
+      "after": "Asocia los números adquiridos a los agentes y controla su asignación."
+    },
+    "Search campaigns, agents, numbers, or files": {
+      "before": "Buscar campañas, asistentes, números o archivos",
+      "after": "Buscar campañas, agentes, números o archivos"
+    },
+    "Latest call log activity across all agents.": {
+      "before": "Última actividad de llamadas de todos los asistentes.",
+      "after": "Última actividad de llamadas de todos los agentes."
+    },
+    "Recent call logs with absolute timestamps, phone number, assigned agent, duration, direction, status, and actions.": {
+      "before": "Historial reciente de llamadas con fecha y hora, número, asistente, duración, dirección, estado y acciones.",
+      "after": "Historial reciente de llamadas con fecha y hora, número, agente, duración, dirección, estado y acciones."
+    },
+    "Could not play this voice sample. Please try again.": {
+      "before": "No se pudo reproducir la muestra de voz. Inténtalo de nuevo.",
+      "after": "No se pudo reproducir esta muestra de voz. Inténtalo de nuevo."
+    },
+    "Could not preview this voice. Please try again.": {
+      "before": "No se pudo probar esta voz. Inténtalo de nuevo.",
+      "after": "No se pudo obtener una vista previa de esta voz. Inténtalo de nuevo."
+    },
+    "Concurrency, daily minutes, and max call duration follow your subscription. Fine-grained per-agent limits are on the roadmap.": {
+      "before": "Tu suscripción determina las llamadas simultáneas, los minutos diarios y la duración máxima de cada llamada. Los límites individuales por asistente están previstos para una futura versión.",
+      "after": "Tu suscripción determina las llamadas simultáneas, los minutos diarios y la duración máxima de cada llamada. Los límites individuales por agente están previstos para una futura versión."
+    },
+    "HTTP tools this agent can call mid-conversation": {
+      "before": "Herramientas HTTP que el asistente puede utilizar durante la conversación",
+      "after": "Herramientas HTTP que el agente puede utilizar durante la conversación"
+    },
+    "Connected MCP servers this agent can call through the server bridge": {
+      "before": "Servidores MCP conectados que el asistente puede utilizar a través del servidor",
+      "after": "Servidores MCP conectados que el agente puede utilizar a través del servidor"
+    },
+    "Documents your agents can reference when RAG is enabled.": {
+      "before": "Documentos que pueden consultar tus asistentes cuando está activada la búsqueda documental.",
+      "after": "Documentos que pueden consultar tus agentes cuando está activada la búsqueda documental."
+    },
+    "Refresh the knowledge base or try again after checking your connection.": {
+      "before": "Actualiza la base de conocimientos o comprueba tu conexión e inténtalo de nuevo.",
+      "after": "Actualiza la base de conocimiento o comprueba tu conexión e inténtalo de nuevo."
+    },
+    "Upload a file or paste a URL to create a knowledge source, then attach it to an agent.": {
+      "before": "Sube un archivo o pega una URL para crear una fuente de conocimientos y vincúlala a un asistente.",
+      "after": "Sube un archivo o pega una URL para crear una fuente de conocimientos y vincúlala a un agente."
+    },
+    "Add tools from your organization's tool library to let this agent call external APIs.": {
+      "before": "Añade herramientas de la biblioteca de tu organización para que este asistente pueda utilizar API externas.",
+      "after": "Añade herramientas de la biblioteca de tu organización para que este agente pueda utilizar API externas."
+    },
+    "Attach connected MCP servers to let this agent use marketplace tools.": {
+      "before": "Vincula servidores MCP conectados para que este asistente utilice herramientas del catálogo.",
+      "after": "Vincula servidores MCP conectados para que este agente utilice herramientas del catálogo."
+    },
+    "A compact view of call volume, outcomes, routing, and agent performance.": {
+      "before": "Resumen del volumen de llamadas, resultados, enrutamiento y rendimiento de los asistentes.",
+      "after": "Resumen del volumen de llamadas, resultados, enrutamiento y rendimiento de los agentes."
+    },
+    "No agent activity": {
+      "before": "No hay actividad de asistentes",
+      "after": "No hay actividad de agentes"
+    },
+    "Create an agent and connect it to a number to see activity.": {
+      "before": "Crea un asistente y asígnale un número para empezar a ver su actividad.",
+      "after": "Crea un agente y asígnale un número para empezar a ver su actividad."
+    },
+    "No outbound-ready agents": {
+      "before": "No hay asistentes preparados para llamar",
+      "after": "No hay agentes preparados para llamar"
+    },
+    "Configure an active agent and assign a phone number before creating a batch.": {
+      "before": "Configura un asistente activo y asígnale un número antes de crear una campaña por lotes.",
+      "after": "Configura un agente activo y asígnale un número antes de crear una campaña por lotes."
+    },
+    "Configure an active agent and assign a phone number before starting an outbound call.": {
+      "before": "Configura un asistente activo y asígnale un número antes de iniciar una llamada saliente.",
+      "after": "Configura un agente activo y asígnale un número antes de iniciar una llamada saliente."
+    },
+    "Define the structured fields the agent should collect during the call.": {
+      "before": "Define los campos estructurados que el asistente debe recopilar durante la llamada.",
+      "after": "Define los campos estructurados que el agente debe recopilar durante la llamada."
+    },
+    "Define checks the agent should evaluate during the call when it has enough evidence.": {
+      "before": "Define las comprobaciones que el asistente debe evaluar cuando disponga de información suficiente durante la llamada.",
+      "after": "Define las comprobaciones que el agente debe evaluar cuando disponga de información suficiente durante la llamada."
+    },
+    "Create an embeddable voice entry point for this agent.": {
+      "before": "Crea un punto de acceso por voz para insertar este asistente en tu sitio web.",
+      "after": "Crea un punto de acceso por voz para insertar este agente en tu sitio web."
+    },
+    "No widgets have been created for this agent.": {
+      "before": "Todavía no se han creado widgets para este asistente.",
+      "after": "Todavía no se han creado widgets para este agente."
+    },
+    "Could not compute assignment preview": {
+      "before": "No se pudo calcular la vista previa de asignaciones",
+      "after": "No se pudo calcular la vista previa de la asignación."
+    },
+    "Could not validate conversion": {
+      "before": "No se pudo validar la conversión",
+      "after": "No se pudo validar la conversión."
+    },
+    "Could not ingest conversion": {
+      "before": "No se pudo registrar la conversión",
+      "after": "No se pudo registrar la conversión."
+    },
+    "Could not build report": {
+      "before": "No se pudo generar el informe",
+      "after": "No se pudo generar el informe."
+    },
+    "Linked Agents": {
+      "before": "Asistentes vinculados",
+      "after": "Agentes vinculados"
+    },
+    "Agents that can invoke this tool mid-conversation.": {
+      "before": "Asistentes que pueden utilizar esta herramienta durante una conversación.",
+      "after": "Agentes que pueden utilizar esta herramienta durante una conversación."
+    },
+    "Loading agents…": {
+      "before": "Cargando asistentes…",
+      "after": "Cargando agentes…"
+    },
+    "No agents in this organization yet.": {
+      "before": "Todavía no hay asistentes en esta organización.",
+      "after": "Todavía no hay agentes en esta organización."
+    },
+    "Name is required": {
+      "before": "El nombre es obligatorio",
+      "after": "Introduce un nombre"
+    },
+    "Description is required": {
+      "before": "La descripción es obligatoria",
+      "after": "Introduce una descripción"
+    },
+    "Key is required": {
+      "before": "La clave es obligatoria",
+      "after": "Introduce una clave"
+    },
+    "Variables the agent runtime injects into the API call at runtime.": {
+      "before": "Variables que el asistente añade a la solicitud de la API al ejecutarse.",
+      "after": "Variables que el agente añade a la solicitud de la API al ejecutarse."
+    },
+    "Agent speaks before calling this tool": {
+      "before": "El asistente habla antes de ejecutar esta herramienta",
+      "after": "El agente habla antes de ejecutar esta herramienta"
+    },
+    "need routing — assign an agent to start receiving calls.": {
+      "before": "necesitan una ruta de atención: asigna un asistente para empezar a recibir llamadas.",
+      "after": "necesitan una ruta de atención: asigna un agente para empezar a recibir llamadas."
+    },
+    "Permanently deletes all agents, numbers, calls, and documents.": {
+      "before": "Elimina definitivamente todos los asistentes, números, llamadas y documentos.",
+      "after": "Elimina definitivamente todos los agentes, números, llamadas y documentos."
+    },
+    "Workspaces keep your agents, numbers, and call logs separate from anyone else's.": {
+      "before": "Los espacios de trabajo mantienen separados tus asistentes, números y registros de llamadas.",
+      "after": "Los espacios de trabajo mantienen separados tus agentes, números y registros de llamadas."
+    },
+    "The caller and agent on": {
+      "before": "El interlocutor y el asistente de",
+      "after": "El interlocutor y el agente de"
+    },
+    "Agent:": {
+      "before": "Asistente:",
+      "after": "Agente:"
+    },
+    "active agents": {
+      "before": "asistentes activos",
+      "after": "agentes activos"
+    },
+    "Top agents": {
+      "before": "Asistentes destacados",
+      "after": "Agentes destacados"
+    },
+    "Partial agent data:": {
+      "before": "Datos incompletos de los asistentes:",
+      "after": "Datos incompletos de los agentes:"
+    },
+    "call counts loaded, but agent names could not be resolved. Use the call links to inspect the source records.": {
+      "before": "se han cargado los recuentos de llamadas, pero no los nombres de los asistentes. Consulta los enlaces de las llamadas para ver los registros originales.",
+      "after": "se han cargado los recuentos de llamadas, pero no los nombres de los agentes. Consulta los enlaces de las llamadas para ver los registros originales."
+    },
+    "recent call logs loaded, but agent names could not be resolved. Open a call detail for the full source record.": {
+      "before": "se han cargado las llamadas recientes, pero no los nombres de los asistentes. Abre el detalle de una llamada para consultar el registro completo.",
+      "after": "se han cargado las llamadas recientes, pero no los nombres de los agentes. Abre el detalle de una llamada para consultar el registro completo."
+    },
+    "This removes the document from any agents currently referencing it.": {
+      "before": "Se desvinculará el documento de todos los asistentes que lo estén utilizando.",
+      "after": "Se desvinculará el documento de todos los agentes que lo estén utilizando."
+    },
+    "Assigned agent": {
+      "before": "Asistente asignado",
+      "after": "Agente asignado"
+    },
+    "No agents found. Create an agent first before adding knowledge sources.": {
+      "before": "No hay asistentes. Crea uno antes de añadir fuentes de conocimiento.",
+      "after": "No hay agentes. Crea uno antes de añadir fuentes de conocimiento."
+    },
+    "language and voice_id can be blank to use the agent defaults. Add patient_name and question_1, question_2 columns for questionnaires.": {
+      "before": "Puedes dejar vacíos language y voice_id para usar los valores predeterminados del asistente. Para cuestionarios, añade las columnas patient_name, question_1 y question_2.",
+      "after": "Puedes dejar vacíos language y voice_id para usar los valores predeterminados del agente. Para cuestionarios, añade las columnas patient_name, question_1 y question_2."
+    },
+    "Loading agent variables...": {
+      "before": "Cargando variables del asistente...",
+      "after": "Cargando variables del agente..."
+    },
+    "from your organization and detach it from all agents.": {
+      "before": "de tu organización y lo desvinculará de todos los asistentes.",
+      "after": "de tu organización y lo desvinculará de todos los agentes."
+    },
+    "Choose a connected server to make its tools available to this agent.": {
+      "before": "Selecciona un servidor conectado para poner sus herramientas a disposición de este asistente.",
+      "after": "Selecciona un servidor conectado para poner sus herramientas a disposición de este agente."
+    },
+    "Tools requiring confirmation are blocked during agent calls. Tools without read-only metadata also require confirmation; refresh the connection to fetch current metadata.": {
+      "before": "Las herramientas que requieren confirmación se bloquean durante las llamadas del asistente. Las que no tienen metadatos de solo lectura también requieren confirmación; actualiza la conexión para obtener los metadatos.",
+      "after": "Las herramientas que requieren confirmación se bloquean durante las llamadas del agente. Las que no tienen metadatos de solo lectura también requieren confirmación; actualiza la conexión para obtener los metadatos."
+    },
+    "from your organization and detach it from all agents. This cannot be undone.": {
+      "before": "de tu organización y la desvinculará de todos los asistentes. Esta acción no se puede deshacer.",
+      "after": "de tu organización y la desvinculará de todos los agentes. Esta acción no se puede deshacer."
+    },
+    "Assign each inbound number to the agent that should answer it.": {
+      "before": "Asigna cada número entrante al asistente que debe atenderlo.",
+      "after": "Asigna cada número entrante al agente que debe atenderlo."
+    },
+    "View which agent currently answers each inbound number.": {
+      "before": "Consulta qué asistente atiende actualmente cada número entrante.",
+      "after": "Consulta qué agente atiende actualmente cada número entrante."
+    },
+    "Agent has a saved configuration": {
+      "before": "El asistente tiene una configuración guardada",
+      "after": "El agente tiene una configuración guardada"
+    },
+    "Open the agent to configure voice, prompts, and tools": {
+      "before": "Abre el asistente para configurar su voz, instrucciones y herramientas",
+      "after": "Abre el agente para configurar su voz, instrucciones y herramientas"
+    },
+    "this agent": {
+      "before": "este asistente",
+      "after": "este agente"
+    },
+    "Voice agent": {
+      "before": "Asistente de voz",
+      "after": "Agente de voz"
+    },
+    "No agent assigned": {
+      "before": "Sin asistente asignado",
+      "after": "Sin agente asignado"
+    },
+    "{count} number needs routing — assign an agent to start receiving calls.": {
+      "before": "Hay {count} número sin enrutamiento. Asigna un asistente para empezar a recibir llamadas.",
+      "after": "Hay {count} número sin enrutamiento. Asigna un agente para empezar a recibir llamadas."
+    },
+    "{count} numbers need routing — assign agents to start receiving calls.": {
+      "before": "Hay {count} números sin enrutamiento. Asigna asistentes para empezar a recibir llamadas.",
+      "after": "Hay {count} números sin enrutamiento. Asigna agentes para empezar a recibir llamadas."
+    },
+    "Traffic and agent performance": {
+      "before": "Tráfico y rendimiento de los asistentes",
+      "after": "Tráfico y rendimiento de los agentes"
+    },
+    "Select an agent": {
+      "before": "Selecciona un asistente",
+      "after": "Selecciona un agente"
+    },
+    "Select an agent…": {
+      "before": "Selecciona un asistente…",
+      "after": "Selecciona un agente…"
+    },
+    "Search calls, numbers, agents, or status": {
+      "before": "Buscar llamadas, números, asistentes o estados",
+      "after": "Buscar llamadas, números, agentes o estados"
+    },
+    "Agent name must be at least 2 characters": {
+      "before": "El nombre del asistente debe tener al menos 2 caracteres",
+      "after": "El nombre del agente debe tener al menos 2 caracteres"
+    },
+    "Agent paused": {
+      "before": "Asistente pausado",
+      "after": "Agente pausado"
+    },
+    "Agent resumed": {
+      "before": "Asistente reanudado",
+      "after": "Agente reanudado"
+    },
+    "Please select an agent": {
+      "before": "Selecciona un asistente",
+      "after": "Selecciona un agente"
+    },
+    "Agent \"{name}\" created": {
+      "before": "Asistente «{name}» creado",
+      "after": "Agente «{name}» creado"
+    },
+    "Could not create agent": {
+      "before": "No se ha podido crear el asistente",
+      "after": "No se ha podido crear el agente"
+    },
+    "Could not update agent": {
+      "before": "No se ha podido actualizar el asistente",
+      "after": "No se ha podido actualizar el agente"
+    },
+    "Agent deleted": {
+      "before": "Asistente eliminado",
+      "after": "Agente eliminado"
+    },
+    "Could not delete agent": {
+      "before": "No se ha podido eliminar el asistente",
+      "after": "No se ha podido eliminar el agente"
+    },
+    "Could not link agent": {
+      "before": "No se ha podido vincular el asistente",
+      "after": "No se ha podido vincular el agente"
+    },
+    "Could not unlink agent": {
+      "before": "No se ha podido desvincular el asistente",
+      "after": "No se ha podido desvincular el agente"
+    },
+    "Agent config": {
+      "before": "Configuración del asistente",
+      "after": "Configuración del agente"
+    },
+    "Activate agent": {
+      "before": "Activar asistente",
+      "after": "Activar agente"
+    },
+    "Loading agents...": {
+      "before": "Cargando asistentes...",
+      "after": "Cargando agentes..."
+    },
+    "Agent name unavailable": {
+      "before": "Nombre del asistente no disponible",
+      "after": "Nombre del agente no disponible"
+    },
+    "Unknown agent": {
+      "before": "Asistente desconocido",
+      "after": "Agente desconocido"
+    },
+    "Resolving agent": {
+      "before": "Identificando asistente",
+      "after": "Identificando agente"
+    },
+    "Processing failed before detailed diagnostics were recorded for this document.": {
+      "before": "El procesamiento ha fallado antes de que se registraran detalles del error para este documento.",
+      "after": "El procesamiento falló antes de que se registraran detalles adicionales para este documento."
+    }
+  }
+}

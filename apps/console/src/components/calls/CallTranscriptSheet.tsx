@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useLocale, useT } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import {
   CalendarClock,
   CheckCircle2,
@@ -35,9 +37,9 @@ function formatDuration(seconds: number | null) {
   return `${minutes}:${remaining}`;
 }
 
-function formatDate(value: string | null) {
+function formatDate(value: string | null, locale: string) {
   if (!value) return "—";
-  return new Date(value).toLocaleString([], {
+  return new Date(value).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     hour: "numeric",
@@ -45,10 +47,10 @@ function formatDate(value: string | null) {
   });
 }
 
-function directionLabel(direction: string | null) {
-  if (direction === "inbound") return "Inbound";
-  if (direction === "outbound") return "Outbound";
-  return "Unknown";
+function directionLabel(direction: string | null, t: (key: string) => string) {
+  if (direction === "inbound") return t("Inbound");
+  if (direction === "outbound") return t("Outbound");
+  return t("Unknown");
 }
 
 function DetailStat({
@@ -66,7 +68,7 @@ function DetailStat({
         <Icon className="size-4" />
       </div>
       <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        {label}
+        <Trans>{label}</Trans>
       </p>
       <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
     </div>
@@ -74,7 +76,9 @@ function DetailStat({
 }
 
 export function CallTranscriptSheet({ call, onClose }: Props) {
-  const direction = directionLabel(call?.direction ?? null);
+  const t = useT();
+  const { locale } = useLocale();
+  const direction = directionLabel(call?.direction ?? null, t);
   const isInbound = call?.direction === "inbound";
   const DirectionIcon = isInbound ? PhoneIncoming : PhoneOutgoing;
 
@@ -107,7 +111,7 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
                     )}
                   >
                     <CheckCircle2 className="size-3.5" />
-                    {call.status.replace("_", " ")}
+                    {t(({ COMPLETED: "Completed", FAILED: "Failed", NOT_ANSWERED: "Not answered", IN_PROGRESS: "In progress", SCHEDULED: "Scheduled", PROCESSED: "Processed" } as Record<string, string>)[call.status] ?? call.status)}
                   </Badge>
                 ) : null}
               </div>
@@ -120,7 +124,7 @@ export function CallTranscriptSheet({ call, onClose }: Props) {
             <DetailStat
               icon={CalendarClock}
               label="Started"
-              value={formatDate(call?.startTime ?? null)}
+              value={formatDate(call?.startTime ?? null, localeCode(locale))}
             />
             <DetailStat
               icon={Clock3}

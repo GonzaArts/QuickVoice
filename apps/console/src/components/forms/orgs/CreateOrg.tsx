@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
@@ -51,13 +52,13 @@ export default function Orgs() {
  slug: generateSlug(values.name),
  });
  if (error) {
- const message = error.message || "Could not create organization";
+ const message = localizeError(translateUi, error, "Could not create organization");
  toast.error(message);
  setError(message);
  return;
  }
  if (!data?.id) {
- const message = "Organization was not created. Please try again.";
+ const message = translateUi("Organization was not created. Please try again.");
  toast.error(message);
  setError(message);
  return;
@@ -66,7 +67,7 @@ export default function Orgs() {
  organizationId: data.id,
  });
  if (activationError) {
- const message = activationError.message || "Organization was created, but could not be opened";
+ const message = localizeError(translateUi, activationError, "Organization was created, but could not be opened");
  toast.error(message);
  setError(message);
  return;
@@ -76,8 +77,7 @@ export default function Orgs() {
  router.push("/dashboard");
  router.refresh();
  } catch (err) {
- const message =
- err instanceof Error ? err.message : "Could not create organization";
+ const message = localizeError(translateUi, err, "Could not create organization");
  toast.error(message);
  setError(message);
  } finally {
@@ -109,7 +109,7 @@ export default function Orgs() {
  <FormProvider {...form}>
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
  {error ? (
- <p className="text-sm font-medium text-destructive">{error}</p>
+ <p className="text-sm font-medium text-destructive">{localizeError(translateUi, error, "Could not create organization")}</p>
  ) : null}
  <FormField
  control={form.control}

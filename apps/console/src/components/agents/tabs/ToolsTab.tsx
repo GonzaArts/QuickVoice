@@ -176,7 +176,7 @@ export function ToolsTab({ agentId }: { agentId: string }) {
                   <div className="flex flex-wrap items-center gap-1.5">
                     <p className="text-sm font-medium">{item.mcpConnection.displayName}</p>
                     <Badge variant="outline" className="text-[10px] font-semibold">
-                      {item.mcpConnection.status.replace("_", " ")}
+                      {t(({ CONNECTED: "Connected", PENDING: "Pending", AUTH_REQUIRED: "Authorization required", INPUT_REQUIRED: "Input required", ERROR: "Error", DISCONNECTED: "Disconnected" } as Record<string, string>)[item.mcpConnection.status])}
                     </Badge>
                   </div>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">

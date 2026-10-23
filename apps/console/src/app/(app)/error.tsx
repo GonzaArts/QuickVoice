@@ -1,6 +1,8 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 import { Button } from "@/src/components/ui/button";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 
@@ -11,6 +13,7 @@ export default function AppError({
  error: Error & { digest?: string };
  reset: () => void;
 }) {
+ const t = useT();
  return (
  <div className="flex min-h-[calc(100vh-3.5rem)] items-center justify-center p-6">
  <div className="max-w-md border bg-card p-8 text-center">
@@ -19,7 +22,7 @@ export default function AppError({
  </div>
  <h2 className="text-lg font-semibold"><Trans>{"Something went wrong"}</Trans></h2>
  <p className="mt-2 text-sm text-muted-foreground">
- {error.message || <Trans>{"An unexpected error occurred."}</Trans>}
+ {localizeError(t, error, "An unexpected error occurred.")}
  </p>
  {error.digest ? (
  <p className="mt-2 font-mono text-[10px] text-muted-foreground">

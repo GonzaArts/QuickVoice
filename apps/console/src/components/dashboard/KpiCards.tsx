@@ -30,13 +30,6 @@ const PREVIOUS_PERIOD_LABELS: Record<DashboardSummary["range"], string> = {
   custom: "previous custom range",
 };
 
-const PERIOD_BOUNDARY_FORMAT = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  hour: "numeric",
-  timeZone: "UTC",
-});
-
 type DeltaUnit = "call" | "minute" | "duration" | "percentage point";
 
 function formatDuration(seconds: number) {
@@ -49,11 +42,11 @@ function formatDuration(seconds: number) {
   return `${m}m ${s}s`;
 }
 
-function formatPeriodBoundary(value?: string) {
+function formatPeriodBoundary(value: string | undefined, locale: string) {
   if (!value) return null;
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return null;
-  return PERIOD_BOUNDARY_FORMAT.format(date);
+  return new Intl.DateTimeFormat(locale, { month: "short", day: "numeric", hour: "numeric", timeZone: "UTC" }).format(date);
 }
 
 function formatPreviousPeriodLabel(summary?: DashboardSummary) {
@@ -61,14 +54,14 @@ function formatPreviousPeriodLabel(summary?: DashboardSummary) {
   return PREVIOUS_PERIOD_LABELS[summary.range];
 }
 
-function formatPreviousPeriodWindow(summary?: DashboardSummary) {
+function formatPreviousPeriodWindow(summary: DashboardSummary | undefined, locale: string, t: (key: string, vars?: Record<string, string | number>) => string) {
   if (!summary) return null;
 
-  const previousFrom = formatPeriodBoundary(summary.period.previousFrom);
-  const previousTo = formatPeriodBoundary(summary.period.previousTo);
+  const previousFrom = formatPeriodBoundary(summary.period.previousFrom, locale);
+  const previousTo = formatPeriodBoundary(summary.period.previousTo, locale);
 
   if (!previousFrom || !previousTo) return null;
-  return `${previousFrom} to ${previousTo} UTC`;
+  return t("{from} to {to} UTC", { from: previousFrom, to: previousTo });
 }
 
 function normalizeDeltaValue(value: number | undefined, unit: DeltaUnit) {
@@ -79,8 +72,8 @@ function normalizeDeltaValue(value: number | undefined, unit: DeltaUnit) {
   return Math.abs(amount) < 0.05 ? 0 : amount;
 }
 
-function formatDeltaAmount(value: number) {
-  return value.toLocaleString("en-US", {
+function formatDeltaAmount(value: number, locale: string) {
+  return value.toLocaleString(locale, {
     maximumFractionDigits: Number.isInteger(value) ? 0 : 1,
   });
 }
@@ -93,20 +86,22 @@ function formatDurationDeltaCopy(value: number | undefined) {
 
 function formatDeltaUnitLabel(
   value: number,
-  unit: Exclude<DeltaUnit, "duration">
+  unit: Exclude<DeltaUnit, "duration">,
+  t: (key: string) => string,
 ) {
-  if (unit === "percentage point") return Math.abs(value) === 1 ? "pt" : "pts";
-  return Math.abs(value) === 1 ? unit : unit + "s";
+  if (unit === "percentage point") return t(Math.abs(value) === 1 ? "percentage point" : "percentage points");
+  const plural = unit === "call" ? "calls" : "minutes";
+  return t(Math.abs(value) === 1 ? unit : plural);
 }
 
-function formatDeltaCopy(value: number | undefined, unit: DeltaUnit) {
+function formatDeltaCopy(value: number | undefined, unit: DeltaUnit, locale: string, t: (key: string) => string) {
   if (unit === "duration") return formatDurationDeltaCopy(value);
 
   const amount = normalizeDeltaValue(value, unit);
   const sign = amount > 0 ? "+" : "";
-  const unitLabel = formatDeltaUnitLabel(amount, unit);
+  const unitLabel = formatDeltaUnitLabel(amount, unit, t);
 
-  return `${sign}${formatDeltaAmount(amount)} ${unitLabel}`;
+  return `${sign}${formatDeltaAmount(amount, locale)} ${unitLabel}`;
 }
 
 function Trend({
@@ -123,11 +118,12 @@ function Trend({
   inverse?: boolean;
 }) {
   const t = useT();
+  const { locale } = useLocale();
   const n = normalizeDeltaValue(value, unit);
   const positive = n >= 0;
   const good = inverse ? n <= 0 : n >= 0;
   const Icon = positive ? TrendingUp : TrendingDown;
-  const deltaCopy = formatDeltaCopy(value, unit);
+  const deltaCopy = formatDeltaCopy(value, unit, localeCode(locale), t);
   const trendCopy = `${deltaCopy} ${t("vs")} ${t(comparisonLabel)}`;
   const accessibleCopy = comparisonTitle
     ? `${trendCopy} (${comparisonTitle})`
@@ -187,7 +183,7 @@ export function KpiCards({
   const totals = summary?.totals;
   const deltas = summary?.deltas;
   const previousPeriodLabel = formatPreviousPeriodLabel(summary);
-  const previousPeriodWindow = formatPreviousPeriodWindow(summary);
+  const previousPeriodWindow = formatPreviousPeriodWindow(summary, localeCode(locale), t);
 
   return (
     <section className="space-y-3">

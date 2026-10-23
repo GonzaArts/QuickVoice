@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
@@ -65,14 +66,14 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
             router.refresh();
           },
           onError: (ctx) => {
-            const msg = ctx.error.message || "Something went wrong";
+            const msg = localizeError(translateUi, ctx.error, "Something went wrong");
             toast.error(msg);
             setError(msg);
           },
         },
       });
-    } catch {
-      const msg = "Unable to reach the server. Please try again.";
+    } catch (cause) {
+      const msg = localizeError(translateUi, cause, "Unable to reach the server. Please try again.");
       toast.error(msg);
       setError(msg);
     } finally {
@@ -91,7 +92,7 @@ export function LoginForm({ invitationId = "" }: { invitationId?: string } = {})
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 ">
         {error && (
           <p className="text-destructive text-lg text-center mt-4 font-semibold">
-            {error}
+            {localizeError(translateUi, error, "Something went wrong")}
           </p>
         )}
 
