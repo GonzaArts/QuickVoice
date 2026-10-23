@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
@@ -49,7 +50,7 @@ export default function DangerZonePage() {
  toast.success(translateUi("You left the organization"));
  router.push("/orgs");
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not leave"));
+ toast.error(localizeError(translateUi, err, "Could not leave"));
  } finally {
  setLeaving(false);
  }
@@ -66,7 +67,7 @@ export default function DangerZonePage() {
  toast.success(translateUi("Organization deleted"));
  router.push("/orgs");
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not delete"));
+ toast.error(localizeError(translateUi, err, "Could not delete"));
  } finally {
  setDeleting(false);
  }

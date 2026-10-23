@@ -1,6 +1,8 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useConsoleSession } from "@/src/hooks/use-console-session";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
@@ -121,7 +123,7 @@ type OrgRoleApi = {
 
 export default function OrganizationPage() {
   const translateUi = useT();
- const { data: session } = authClient.useSession();
+ const { data: session } = useConsoleSession();
  const activeOrgId = session?.session?.activeOrganizationId ?? null;
 
  const [saving, setSaving] = useState(false);
@@ -164,7 +166,7 @@ export default function OrganizationPage() {
  toast.success(translateUi("Organization updated"));
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not update"));
+ toast.error(localizeError(translateUi, err, "Could not update"));
  } finally {
  setSaving(false);
  }
@@ -172,7 +174,7 @@ export default function OrganizationPage() {
 
  return (
  <div className="space-y-6 pb-24">
- {loadError && <p role="alert" className="text-sm text-destructive">{loadError.message}</p>}
+ {loadError && <p role="alert" className="text-sm text-destructive">{localizeError(translateUi, loadError)}</p>}
  <section className="border bg-card p-6">
  <div className="mb-5 space-y-1">
  <h2 className="text-base font-semibold"><Trans>{"Workspace details"}</Trans></h2>
@@ -301,6 +303,15 @@ function MembersSection({
  },
  });
  const roles = [...new Set(["member", "admin", "owner", ...customRoles.map((role) => role.role)])];
+ const roleLabel = (role: string) => {
+  const labels: Record<string, string> = { member: "Member", admin: "Admin", owner: "Owner" };
+  return Object.prototype.hasOwnProperty.call(labels, role) ? translateUi(labels[role]) : role;
+ };
+ const invitationStatusLabel = (status: string) => {
+  const labels: Record<string, string> = { pending: "Pending", accepted: "Accepted", expired: "Expired", cancelled: "Cancelled" };
+  const key = status.toLowerCase();
+  return Object.prototype.hasOwnProperty.call(labels, key) ? translateUi(labels[key]) : status;
+ };
  const isOwner = members.some((member) =>
  member.user.id === currentUserId && member.role.split(",").map((role) => role.trim()).includes("owner")
  );
@@ -342,7 +353,7 @@ function MembersSection({
  setInviteOpen(false);
  inviteForm.reset();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not send invite"));
+ toast.error(localizeError(translateUi, err, "Could not send invite"));
  } finally {
  await refresh();
  setInviting(false);
@@ -367,7 +378,7 @@ function MembersSection({
  toast.success(translateUi("Member role updated"));
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not update role"));
+ toast.error(localizeError(translateUi, err, "Could not update role"));
  } finally {
  setUpdatingMemberId(null);
  }
@@ -385,7 +396,7 @@ function MembersSection({
  setRemoveTarget(null);
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not remove member"));
+ toast.error(localizeError(translateUi, err, "Could not remove member"));
  }
  }
 
@@ -401,7 +412,7 @@ function MembersSection({
  setCancelTarget(null);
  await refresh();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not cancel invite"));
+ toast.error(localizeError(translateUi, err, "Could not cancel invite"));
  }
  }
 
@@ -463,7 +474,7 @@ function MembersSection({
  <SelectContent>
  {inviteRoles.map((role) => (
  <SelectItem key={role} value={role}>
- {role}
+ {roleLabel(role)}
  </SelectItem>
  ))}
  </SelectContent>
@@ -542,7 +553,7 @@ function MembersSection({
  <SelectContent>
  {roles.map((role) => (
  <SelectItem key={role} value={role}>
- {role}
+ {roleLabel(role)}
  </SelectItem>
  ))}
  </SelectContent>
@@ -576,7 +587,7 @@ function MembersSection({
  <div className="min-w-0 flex-1">
  <p className="truncate text-sm font-medium">{invitation.email}</p>
  <p className="truncate text-xs text-muted-foreground">
- {invitation.role} · {invitation.status}
+ {roleLabel(invitation.role)} · {invitationStatusLabel(invitation.status)}
  </p>
  </div>
  <Button

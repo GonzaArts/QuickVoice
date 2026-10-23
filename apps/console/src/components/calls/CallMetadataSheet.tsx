@@ -1,6 +1,9 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import {
   CheckCircle2,
   PhoneIncoming,
@@ -53,6 +56,7 @@ function DirectionValue({ direction }: { direction: string | null }) {
 }
 
 function StatusValue({ status }: { status: CallStatus }) {
+  const t = useT();
   if (status === "COMPLETED") {
     return (
       <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
@@ -69,7 +73,7 @@ function StatusValue({ status }: { status: CallStatus }) {
   }
   return (
     <span className="inline-flex items-center gap-1.5 font-semibold text-muted-foreground">
-      <Clock className="size-4" /> {status.replace("_", " ")}
+      <Clock className="size-4" /> {t(({ IN_PROGRESS: "In progress", SCHEDULED: "Scheduled", PROCESSED: "Processed" } as Record<string, string>)[status] ?? status)}
     </span>
   );
 }
@@ -77,7 +81,7 @@ function StatusValue({ status }: { status: CallStatus }) {
 function StatCell({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl border bg-muted/30 p-3 transition-colors dark:bg-muted/20">
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
+      <p className="text-xs font-medium text-muted-foreground"><Trans>{label}</Trans></p>
       <div className="mt-1 text-sm font-medium text-foreground">{children}</div>
     </div>
   );
@@ -129,9 +133,9 @@ function formatMetadataLabel(key: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function displayValue(v: unknown): string {
-  if (v === null || v === undefined) return "N/A";
-  if (typeof v === "boolean") return v ? "Yes" : "No";
+function displayValue(v: unknown, t: (key: string) => string): string {
+  if (v === null || v === undefined) return t("Not available");
+  if (typeof v === "boolean") return t(v ? "Yes" : "No");
   if (typeof v === "string" && v.trim() === "") return "N/A";
   if (typeof v === "object") return JSON.stringify(v);
   return String(v);
@@ -140,6 +144,7 @@ function displayValue(v: unknown): string {
 // ── component ─────────────────────────────────────────────────────────────────
 
 export function CallMetadataSheet({ call, onClose }: Props) {
+  const { locale, t } = useLocale();
   const meta = (call?.metadata ?? {}) as Record<string, unknown>;
   const extracted = safeArray<ExtractedItem>(call?.dataExtracted);
   const evaluation = safeArray<EvalItem>(call?.dataEvaluation);
@@ -153,7 +158,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
         <SheetHeader className="border-b bg-background/95 p-5 backdrop-blur sm:p-6">
           <SheetTitle className="text-lg font-semibold"><Trans>{"Call Details"}</Trans></SheetTitle>
           <SheetDescription className="truncate pr-8">
-            {call?.callId.slice(0, 8)}… · {call ? new Date(call.startTime ?? "").toLocaleString() : ""}
+            {call?.callId.slice(0, 8)}… · {call ? new Date(call.startTime ?? "").toLocaleString(localeCode(locale)) : ""}
           </SheetDescription>
         </SheetHeader>
 
@@ -219,7 +224,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
                   {additionalMetadata.map(([key, value]) => (
                     <div key={key} className="space-y-1 rounded-xl border bg-card p-4 shadow-sm dark:bg-muted/20">
                       <p className="text-xs font-medium text-muted-foreground">{formatMetadataLabel(key)}</p>
-                      <p className="break-words text-sm font-semibold text-foreground">{displayValue(value)}</p>
+                      <p className="break-words text-sm font-semibold text-foreground">{displayValue(value, t)}</p>
                     </div>
                   ))}
                 </div>
@@ -241,7 +246,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
                         {item.type}
                       </Badge>
                     </div>
-                    <p className="text-sm font-semibold text-foreground">{displayValue(item.value)}</p>
+                    <p className="text-sm font-semibold text-foreground">{displayValue(item.value, t)}</p>
                     {item.description ? (
                       <p className="text-xs text-muted-foreground">{item.description}</p>
                     ) : null}
@@ -262,7 +267,7 @@ export function CallMetadataSheet({ call, onClose }: Props) {
                     <span className="text-xs text-muted-foreground">{item.identifier}</span>
                     <Badge variant="secondary" className="text-[10px]"><Trans>{"eval"}</Trans></Badge>
                   </div>
-                  <p className="text-sm font-semibold text-foreground">{displayValue(item.value)}</p>
+                  <p className="text-sm font-semibold text-foreground">{displayValue(item.value, t)}</p>
                   {item.description ? (
                     <p className="text-xs text-muted-foreground">{item.description}</p>
                   ) : null}

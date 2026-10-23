@@ -2,6 +2,8 @@
 
 import { Trans } from "@/src/i18n/Trans";
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
@@ -183,6 +185,7 @@ function MarketplaceAction({
 }
 
 export function McpMarketplace() {
+  const { locale } = useLocale();
   const translateUi = useT();
   const t = useT();
   const connectMcp = useConnectMcp();
@@ -333,7 +336,7 @@ export function McpMarketplace() {
                     : "text-xs leading-5 text-muted-foreground"
               }
             >
-              {customUrlValidation.message}
+              {t(customUrlValidation.message)}
             </p>
           </div>
           <div className="space-y-1.5">
@@ -453,7 +456,7 @@ export function McpMarketplace() {
                     )}
                     {!!(item.useCount ?? item.toolCount) && (
                       <Badge variant="secondary" className="text-[10px]">
-                        {(item.useCount ?? item.toolCount).toLocaleString()} <Trans>{"uses"}</Trans>
+                        {(item.useCount ?? item.toolCount).toLocaleString(localeCode(locale))} <Trans>{"uses"}</Trans>
                       </Badge>
                     )}
                   </div>
@@ -499,7 +502,7 @@ export function McpMarketplace() {
       {pagination && pagination.totalCount > 0 && (
         <div className="flex flex-col gap-3 border bg-card p-3 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
           <div>
-            <Trans>{"Page"}</Trans> {pagination.page} <Trans>{"of"}</Trans> {pagination.totalPages} - {pagination.totalCount.toLocaleString()} <Trans>{"results"}</Trans>
+            <Trans>{"Page"}</Trans> {pagination.page} <Trans>{"of"}</Trans> {pagination.totalPages} - {pagination.totalCount.toLocaleString(localeCode(locale))} <Trans>{"results"}</Trans>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <select

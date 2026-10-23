@@ -1,6 +1,9 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useEffect, useState } from "react";
@@ -52,18 +55,16 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
-const monthlyPriceFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-function formatMonthlyPrice(value: AvailableNumber["monthlyPriceMicros"]) {
+function formatMonthlyPrice(value: AvailableNumber["monthlyPriceMicros"], locale: string) {
   if (value === null || value === undefined) return null;
   const micros = Number(value);
   if (!Number.isFinite(micros)) return null;
-  return monthlyPriceFormatter.format(micros / 1_000_000);
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(micros / 1_000_000);
 }
 
 function quoteExpiryMs(value: string) {
@@ -78,6 +79,7 @@ function isQuoteExpired(value: string, nowMs: number) {
 
 export function BuyNumberDrawer() {
   const translateUi = useT();
+  const { locale } = useLocale();
   const [open, setOpen] = useState(false);
   const [countryOpen, setCountryOpen] = useState(false);
   const [searchParams, setSearchParams] = useState<NumberSearchParams | null>(
@@ -369,7 +371,7 @@ export function BuyNumberDrawer() {
               <EmptyState
                 icon={Phone}
                 title={translateUi(unsupportedCountry ? "Not provided in this country" : "Search failed")}
-                description={unsupportedCountry ? search.error.message : "The provider could not complete this search. Please try again."}
+                description={unsupportedCountry ? translateUi("The number search is unavailable in this country.") : localizeError(translateUi, search.error, "The provider could not complete this search. Please try again.")}
                 className="border-0"
               />
             ) : !search.data?.length ? (
@@ -382,7 +384,7 @@ export function BuyNumberDrawer() {
             ) : (
               <div className="grid gap-3 xl:grid-cols-2">
                 {search.data.map((n) => {
-                  const monthlyPrice = formatMonthlyPrice(n.monthlyPriceMicros);
+                  const monthlyPrice = formatMonthlyPrice(n.monthlyPriceMicros, localeCode(locale));
                   const quoteExpired = isQuoteExpired(
                     n.quoteExpiresAt,
                     quoteClock,
@@ -425,8 +427,8 @@ export function BuyNumberDrawer() {
                           ) : n.quoteExpiresAt ? (
                             <p className="mt-1 text-[11px] text-muted-foreground">
                               <Trans>{"Quote expires"}</Trans>{" "}
-                              {new Date(n.quoteExpiresAt).toLocaleTimeString(
-                                [],
+                                {new Date(n.quoteExpiresAt).toLocaleTimeString(
+                                localeCode(locale),
                                 { hour: "numeric", minute: "2-digit" },
                               )}
                             </p>
@@ -446,7 +448,7 @@ export function BuyNumberDrawer() {
                             <Loader2 className="animate-spin" /> <Trans>{"Buying…"}</Trans>
                           </>
                         ) : monthlyPrice ? (
-                          `Buy for ${monthlyPrice}`
+                          translateUi("Buy for {amount}", { amount: monthlyPrice })
                         ) : (
                           <Trans>{"Buy this number"}</Trans>
                         )}

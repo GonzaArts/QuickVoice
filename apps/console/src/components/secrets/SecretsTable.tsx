@@ -1,6 +1,8 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
@@ -46,8 +48,8 @@ import { EmptyState } from "@/src/components/common/EmptyState";
 import { useDeleteSecret, useSecrets } from "@/src/hooks/queries/secrets";
 import type { Secret } from "@/src/lib/api/types";
 
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleString("en-US", {
+function fmtDate(iso: string, locale: string) {
+  return new Date(iso).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -68,6 +70,7 @@ function SecretSkeleton() {
 }
 
 export function SecretsTable({ onCreate }: { onCreate: () => void }) {
+  const { locale } = useLocale();
   const translateUi = useT();
   const { data: secrets = [], isLoading, isError, isFetching, refetch } =
     useSecrets();
@@ -156,7 +159,7 @@ export function SecretsTable({ onCreate }: { onCreate: () => void }) {
                   </code>
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {fmtDate(secret.updatedAt)}
+                  {fmtDate(secret.updatedAt, localeCode(locale))}
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>

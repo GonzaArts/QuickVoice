@@ -1,6 +1,8 @@
 "use client";
 
-import { useT } from "@/src/i18n/provider";
+import { useT, useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -91,6 +93,7 @@ export function AgentPreviewPanel({
   onOpenChange,
 }: AgentPreviewPanelProps) {
   const translateUi = useT();
+  const { locale } = useLocale();
   const createPreview = useCreateAgentPreviewSession(agentId);
   const { data: config } = useAgentConfig(agentId);
   const roomRef = useRef<Room | null>(null);
@@ -349,9 +352,7 @@ export function AgentPreviewPanel({
       await endPreview();
       setState("error");
       setError(
-        err instanceof Error
-          ? err.message
-          : "Could not start the live preview.",
+        err instanceof Error ? err.message : "Could not start the live preview.",
       );
     }
   }
@@ -375,7 +376,7 @@ export function AgentPreviewPanel({
   const isLive = state === "live";
   const isInConversation = Boolean(preview) || isLive;
   const expiresAt = preview?.expiresAt
-    ? new Date(preview.expiresAt).toLocaleTimeString([], {
+    ? new Date(preview.expiresAt).toLocaleTimeString(localeCode(locale), {
         hour: "numeric",
         minute: "2-digit",
       })
@@ -415,7 +416,7 @@ export function AgentPreviewPanel({
                   "border-destructive/30 bg-destructive/10 text-destructive",
               )}
             >
-              {statusCopy[state]}
+              {translateUi(statusCopy[state])}
             </Badge>
           </div>
         </SheetHeader>
@@ -477,7 +478,7 @@ export function AgentPreviewPanel({
 
                 <p className="mt-4 text-sm text-muted-foreground">
                   {expiresAt
-                    ? `Temporary preview access expires around ${expiresAt}.`
+                    ? translateUi("Temporary preview access expires around {time}.", { time: expiresAt })
                     : <Trans>{"Starts a temporary 3-hour LiveKit preview room."}</Trans>}
                 </p>
               </div>
@@ -522,7 +523,7 @@ export function AgentPreviewPanel({
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 {expiresAt
-                  ? `Preview access expires around ${expiresAt}.`
+                  ? translateUi("Preview access expires around {time}.", { time: expiresAt })
                   : <Trans>{"Temporary LiveKit room is starting."}</Trans>}
               </p>
             </div>
@@ -531,7 +532,7 @@ export function AgentPreviewPanel({
           <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
             {error ? (
               <div className="border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-                {error}
+                {localizeError(translateUi, error, "Could not start the live preview.")}
               </div>
             ) : null}
 
@@ -548,10 +549,10 @@ export function AgentPreviewPanel({
                       className="border bg-card p-3 text-sm shadow-sm"
                     >
                       <p className="font-medium text-foreground">
-                        {event.label}
+                        {translateUi(event.label)}
                       </p>
                       <p className="mt-1 text-muted-foreground">
-                        {event.detail}
+                        {translateUi(event.detail)}
                       </p>
                     </div>
                   ))
@@ -572,7 +573,7 @@ export function AgentPreviewPanel({
                         "mx-auto rounded-full border bg-muted/40 px-3 py-1 text-xs text-muted-foreground",
                     )}
                   >
-                    {message.text}
+                    {message.id.endsWith("-call-started") ? <Trans>{"Call started"}</Trans> : message.text}
                   </div>
                 ))}
                 {interimTranscript ? (

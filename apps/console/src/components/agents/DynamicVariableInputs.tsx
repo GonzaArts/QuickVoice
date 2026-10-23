@@ -40,12 +40,12 @@ export function DynamicVariableInputs({
                 <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
                         <Braces className="size-4 text-muted-foreground" />
-                        <p className="text-sm font-medium">{title}</p>
+                        <p className="text-sm font-medium">{t(title)}</p>
                         <Badge variant="outline">
                             {t(variableNames.length === 1 ? "{count} variable" : "{count} variables", {count: variableNames.length})}
                         </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">{description}</p>
+                    <p className="text-sm text-muted-foreground">{t(description)}</p>
                 </div>
             </div>
 

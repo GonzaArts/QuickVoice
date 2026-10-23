@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import Link from "next/link";
@@ -32,7 +33,7 @@ export default function Orgs() {
             organizationId: orgId,
         });
         if (error) {
-            toast.error(error.message || translateUi("Could not select organization"));
+            toast.error(localizeError(translateUi, error, "Could not select organization"));
             setPendingId(null);
             return;
         }

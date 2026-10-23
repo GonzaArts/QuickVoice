@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import { FileSpreadsheet, AlertCircle, CheckCircle2, Loader2, Eye, Table } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/src/components/ui/button";
@@ -18,6 +19,18 @@ interface ParsedCSV {
   totalRows: number;
   errors: string[];
   warnings: string[];
+}
+
+function localizeCsvMessage(t: (key: string, vars?: Record<string, string | number>) => string, message: string) {
+  if (message === "The file appears to be empty") return t(message);
+  if (message === "Missing required column: phone_number") {
+    return t("Missing required column: {column}", { column: "phone_number" });
+  }
+  const warning = /^(\d+) row\(s\) have missing phone numbers$/.exec(message);
+  if (warning) return t("{count} rows have missing phone numbers", { count: Number(warning[1]) });
+  if (message === "Preview only supports CSV files. XLSX files cannot be previewed.") return t(message);
+  if (message === "Failed to parse file") return t(message);
+  return t("Could not parse this CSV preview.");
 }
 
 function parseCSVContent(content: string, maxRows: number): ParsedCSV {
@@ -118,6 +131,7 @@ export function CSVPreview({
   maxRows = 10,
   autoPreview = true,
 }: CSVPreviewProps) {
+  const t = useT();
   const [parsed, setParsed] = useState<ParsedCSV | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -149,8 +163,8 @@ export function CSVPreview({
       
       setParsed(result);
       setShowPreview(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to parse file");
+    } catch {
+      setError("Failed to parse file");
       setParsed(null);
     } finally {
       setIsLoading(false);
@@ -188,7 +202,7 @@ export function CSVPreview({
           <AlertCircle className="size-4 text-destructive mt-0.5 shrink-0" />
           <div>
             <p className="text-sm font-medium text-destructive"><Trans>{"Parse Error"}</Trans></p>
-            <p className="text-xs text-muted-foreground mt-1">{error}</p>
+            <p className="text-xs text-muted-foreground mt-1">{localizeCsvMessage(t, error)}</p>
           </div>
         </div>
       </div>
@@ -247,7 +261,7 @@ export function CSVPreview({
           {parsed.errors.map((err, index) => (
             <div key={index} className="flex items-center gap-2 text-sm text-destructive">
               <AlertCircle className="size-4 shrink-0" />
-              {err}
+              {localizeCsvMessage(t, err)}
             </div>
           ))}
         </div>
@@ -258,7 +272,7 @@ export function CSVPreview({
           {parsed.warnings.map((warning, index) => (
             <div key={index} className="flex items-center gap-2 text-sm text-amber-700">
               <AlertCircle className="size-4 shrink-0" />
-              {warning}
+              {localizeCsvMessage(t, warning)}
             </div>
           ))}
         </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -106,7 +108,7 @@ export function useConnectMcp() {
       toast.success(t("MCP connection created"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || t("Could not connect MCP server"));
+      toast.error(localizeError(t, err, "Could not connect MCP server"));
     },
   });
 }
@@ -132,7 +134,7 @@ export function useRefreshMcpConnection() {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       qc.invalidateQueries({ queryKey: queryKeys.mcp.all });
     },
-    onError: (err: Error) => toast.error(err.message || t("Could not refresh MCP connection")),
+    onError: (err: Error) => toast.error(localizeError(t, err, "Could not refresh MCP connection")),
   });
 }
 
@@ -146,7 +148,7 @@ export function useDisconnectMcpConnection() {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
       toast.success(t("MCP connection disconnected"));
     },
-    onError: (err: Error) => toast.error(err.message || t("Could not disconnect MCP connection")),
+    onError: (err: Error) => toast.error(localizeError(t, err, "Could not disconnect MCP connection")),
   });
 }
 
@@ -160,7 +162,7 @@ export function useAttachMcpConnection(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
-    onError: (err: Error) => toast.error(err.message || t("Could not attach MCP connection")),
+    onError: (err: Error) => toast.error(localizeError(t, err, "Could not attach MCP connection")),
   });
 }
 
@@ -174,6 +176,6 @@ export function useDetachMcpConnection(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.mcp.connections() });
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
-    onError: (err: Error) => toast.error(err.message || t("Could not detach MCP connection")),
+    onError: (err: Error) => toast.error(localizeError(t, err, "Could not detach MCP connection")),
   });
 }

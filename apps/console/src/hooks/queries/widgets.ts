@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -31,7 +33,7 @@ export function useCreateAgentWidget(agentId: string) {
       toast.success(translateUi("Widget created"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not create widget"));
+      toast.error(localizeError(translateUi, err, "Could not create widget"));
     },
   });
 }
@@ -47,7 +49,7 @@ export function useUpdateAgentWidget(agentId: string, widgetId: string) {
       toast.success(translateUi("Widget saved"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not save widget"));
+      toast.error(localizeError(translateUi, err, "Could not save widget"));
     },
   });
 }
@@ -62,7 +64,7 @@ export function useDeleteAgentWidget(agentId: string) {
       toast.success(translateUi("Widget deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not delete widget"));
+      toast.error(localizeError(translateUi, err, "Could not delete widget"));
     },
   });
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -35,7 +37,7 @@ export function useCreateTool() {
       qc.invalidateQueries({ queryKey: queryKeys.tools.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not create tool"));
+      toast.error(localizeError(translateUi, err, "Could not create tool"));
     },
   });
 }
@@ -50,7 +52,7 @@ export function useUpdateTool(toolId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.tools.detail(toolId) });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not update tool"));
+      toast.error(localizeError(translateUi, err, "Could not update tool"));
     },
   });
 }
@@ -64,7 +66,7 @@ export function useDeleteTool() {
       qc.invalidateQueries({ queryKey: queryKeys.tools.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not delete tool"));
+      toast.error(localizeError(translateUi, err, "Could not delete tool"));
     },
   });
 }
@@ -79,7 +81,7 @@ export function useAttachTool(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not attach tool"));
+      toast.error(localizeError(translateUi, err, "Could not attach tool"));
     },
   });
 }
@@ -94,7 +96,7 @@ export function useDetachTool(agentId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not detach tool"));
+      toast.error(localizeError(translateUi, err, "Could not detach tool"));
     },
   });
 }
@@ -109,7 +111,7 @@ export function useAttachAgentToTool(toolId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not link agent"));
+      toast.error(localizeError(translateUi, err, "Could not link agent"));
     },
   });
 }
@@ -124,7 +126,7 @@ export function useDetachAgentFromTool(toolId: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.all });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not unlink agent"));
+      toast.error(localizeError(translateUi, err, "Could not unlink agent"));
     },
   });
 }

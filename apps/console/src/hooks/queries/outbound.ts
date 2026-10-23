@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -41,7 +43,7 @@ export function useCancelOutboundCall() {
       toast.success(translateUi("Outbound call cancelled"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not cancel outbound call"));
+      toast.error(localizeError(translateUi, err, "Could not cancel outbound call"));
     },
   });
 }
@@ -59,7 +61,7 @@ export function useRetryOutboundCall() {
       toast.success(translateUi("Outbound call retry started"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not retry outbound call"));
+      toast.error(localizeError(translateUi, err, "Could not retry outbound call"));
     },
   });
 }
@@ -76,7 +78,7 @@ export function useQuickOutboundCall() {
       toast.success(translateUi("Outbound call started"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not start outbound call"));
+      toast.error(localizeError(translateUi, err, "Could not start outbound call"));
     },
   });
 }
@@ -107,7 +109,7 @@ export function useCreateBatchCampaign() {
       toast.success(translateUi("Batch campaign queued"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not queue batch campaign"));
+      toast.error(localizeError(translateUi, err, "Could not queue batch campaign"));
     },
   });
 }
@@ -123,7 +125,7 @@ export function useCancelBatchCampaign() {
       toast.success(translateUi("Campaign cancelled"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not cancel campaign"));
+      toast.error(localizeError(translateUi, err, "Could not cancel campaign"));
     },
   });
 }
@@ -138,7 +140,7 @@ export function useDownloadBatchCampaignResults() {
       toast.success(translateUi("Campaign results downloaded"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not download campaign results"));
+      toast.error(localizeError(translateUi, err, "Could not download campaign results"));
     },
   });
 }

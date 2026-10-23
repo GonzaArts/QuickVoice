@@ -1,6 +1,8 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useConsoleSession } from "@/src/hooks/use-console-session";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
@@ -93,7 +95,7 @@ function toRoleList(data: unknown): Role[] {
 
 export default function RolesPage() {
   const translateUi = useT();
- const { data: session } = authClient.useSession();
+ const { data: session } = useConsoleSession();
  const orgId = session?.session?.activeOrganizationId ?? null;
 
  const [createOpen, setCreateOpen] = useState(false);
@@ -159,7 +161,7 @@ export default function RolesPage() {
  setPermissions({});
  await refreshRoles();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not create role"));
+ toast.error(localizeError(translateUi, err, "Could not create role"));
  } finally {
  setSaving(false);
  }
@@ -185,7 +187,7 @@ export default function RolesPage() {
  setEditPermissions({});
  await refreshRoles();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not update role"));
+ toast.error(localizeError(translateUi, err, "Could not update role"));
  } finally {
  setSaving(false);
  }
@@ -206,7 +208,7 @@ export default function RolesPage() {
  setDeleteTarget(null);
  await refreshRoles();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not delete role"));
+ toast.error(localizeError(translateUi, err, "Could not delete role"));
  } finally {
  setSaving(false);
  }
@@ -316,7 +318,7 @@ export default function RolesPage() {
  <EmptyState
  icon={Shield}
  title="Could not load custom roles"
- description={loadError.message}
+ description={localizeError(translateUi, loadError)}
  action={
  <Button variant="outline" onClick={refreshRoles}>
  <RefreshCw /> <Trans>{"Retry"}</Trans>

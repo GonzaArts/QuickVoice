@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { useT } from "@/src/i18n/provider";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -45,6 +46,11 @@ function fmtDuration(s: number | null) {
 }
 
 export default function CallDetailPage() {
+ const t = useT();
+ const statusLabels: Record<CallStatus, string> = {
+   COMPLETED: "Completed", FAILED: "Failed", NOT_ANSWERED: "Not answered",
+   IN_PROGRESS: "In progress", SCHEDULED: "Scheduled", PROCESSED: "Processed",
+ };
  const params = useParams<{ id: string }>();
  const router = useRouter();
  const { data: call, isLoading } = useCall(params.id);
@@ -85,10 +91,10 @@ export default function CallDetailPage() {
  </h1>
  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
  <Badge variant={statusVariant(call.status)} className="uppercase">
- {call.status.toLowerCase().replace("_", " ")}
+ {t(Object.hasOwn(statusLabels, call.status) ? statusLabels[call.status] : "Unknown")}
  </Badge>
  <span>·</span>
- <span>{call.direction ?? "—"}</span>
+ <span>{call.direction === "inbound" ? t("Inbound") : call.direction === "outbound" ? t("Outbound") : "—"}</span>
  <span>·</span>
  <span>{fmtDuration(call.durationSeconds)}</span>
  {agentName ? (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeValidationMessage } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
@@ -102,7 +103,7 @@ export function AddSecretDialog({
               {...register("name")}
             />
             {errors.name ? (
-              <p className="text-xs text-destructive">{errors.name.message}</p>
+              <p className="text-xs text-destructive">{localizeValidationMessage(translateUi, errors.name.message ?? "")}</p>
             ) : (
               <p className="text-xs text-muted-foreground">
                 <Trans>{"Names must be unique in this workspace."}</Trans>
@@ -136,7 +137,7 @@ export function AddSecretDialog({
               </Button>
             </div>
             {errors.value ? (
-              <p className="text-xs text-destructive">{errors.value.message}</p>
+              <p className="text-xs text-destructive">{localizeValidationMessage(translateUi, errors.value.message ?? "")}</p>
             ) : null}
           </div>
 

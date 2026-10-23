@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { FormEvent, useMemo, useState } from "react";
@@ -303,7 +304,7 @@ export function QuickCallForm() {
           ) : null}
 
           {formError ? (
-            <p className="text-sm text-destructive">{formError}</p>
+            <p className="text-sm text-destructive">{localizeError(translateUi, formError)}</p>
           ) : null}
 
           {startedCall ? (

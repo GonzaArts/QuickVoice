@@ -56,10 +56,10 @@ function statusClass(status: CallStatus) {
   }
 }
 
-function formatAbsoluteTimestamp(iso: string | null, locale = "en-US") {
-  if (!iso) return "No start timestamp";
+function formatAbsoluteTimestamp(iso: string | null, locale: string, t: (key: string) => string) {
+  if (!iso) return t("No start timestamp");
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "Invalid timestamp";
+  if (Number.isNaN(date.getTime())) return t("Invalid timestamp");
 
   return new Intl.DateTimeFormat(locale, {
     month: "short",
@@ -70,8 +70,8 @@ function formatAbsoluteTimestamp(iso: string | null, locale = "en-US") {
   }).format(date);
 }
 
-function formatDuration(seconds: number | null) {
-  if (seconds === null) return "Unknown";
+function formatDuration(seconds: number | null, t: (key: string) => string) {
+  if (seconds === null) return t("Unknown");
   const safeSeconds = Math.max(0, seconds);
   const h = Math.floor(safeSeconds / 3600);
   const m = Math.floor((safeSeconds % 3600) / 60);
@@ -80,8 +80,9 @@ function formatDuration(seconds: number | null) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-function formatStatus(status: string) {
-  return status.toLowerCase().replace("_", " ");
+function formatStatus(status: string, t: (key: string) => string) {
+  const labels: Record<string, string> = { COMPLETED: "Completed", FAILED: "Failed", NOT_ANSWERED: "Not answered", IN_PROGRESS: "In progress", SCHEDULED: "Scheduled", PROCESSED: "Processed" };
+  return t(Object.hasOwn(labels, status) ? labels[status] : "Unknown");
 }
 
 function metadataText(call: CallLog, key: "fromNumber" | "toNumber") {
@@ -89,27 +90,27 @@ function metadataText(call: CallLog, key: "fromNumber" | "toNumber") {
   return typeof value === "string" && value.trim().length ? value : null;
 }
 
-function callParties(call: CallLog) {
+function callParties(call: CallLog, t: (key: string) => string) {
   const fromNumber = metadataText(call, "fromNumber");
   const toNumber = metadataText(call, "toNumber");
 
   if (call.direction === "inbound") {
     return {
-      caller: fromNumber ?? call.callerId ?? "Unknown caller",
-      callee: toNumber ?? "Unknown callee",
+      caller: fromNumber ?? call.callerId ?? t("Unknown caller"),
+      callee: toNumber ?? t("Unknown callee"),
     };
   }
 
   if (call.direction === "outbound") {
     return {
-      caller: fromNumber ?? "Unknown caller",
-      callee: toNumber ?? call.callerId ?? "Unknown callee",
+      caller: fromNumber ?? t("Unknown caller"),
+      callee: toNumber ?? call.callerId ?? t("Unknown callee"),
     };
   }
 
   return {
-    caller: fromNumber ?? call.callerId ?? "Unknown caller",
-    callee: toNumber ?? "Unknown callee",
+    caller: fromNumber ?? call.callerId ?? t("Unknown caller"),
+    callee: toNumber ?? t("Unknown callee"),
   };
 }
 
@@ -139,17 +140,17 @@ function resolveAgentLabel({
   agents?: Agent[];
   agentsLoading: boolean;
   agentsError: boolean;
-}) {
-  if (!call.agentId) return "Unassigned";
-  if (agentsLoading) return "Resolving agent";
-  if (agentsError) return "Agent name unavailable";
-  return agents?.find((agent) => agent.agentId === call.agentId)?.name ?? "Unknown agent";
+}, t: (key: string) => string) {
+  if (!call.agentId) return t("Unassigned");
+  if (agentsLoading) return t("Resolving agent");
+  if (agentsError) return t("Agent name unavailable");
+  return agents?.find((agent) => agent.agentId === call.agentId)?.name ?? t("Unknown agent");
 }
 
 function CallTimestamp({ call }: { call: CallLog }) {
-  const {locale} = useLocale();
+  const {locale, t} = useLocale();
   return call.startTime ? (
-    <time dateTime={call.startTime}>{formatAbsoluteTimestamp(call.startTime, localeCode(locale))}</time>
+    <time dateTime={call.startTime}>{formatAbsoluteTimestamp(call.startTime, localeCode(locale), t)}</time>
   ) : (
     <span><Trans>{"No start timestamp"}</Trans></span>
   );
@@ -232,13 +233,13 @@ export function RecentCallsTable({
         <div className="divide-y md:divide-y-0">
           <ul className="divide-y md:hidden">
             {summary.recent.map((call) => {
-              const parties = callParties(call);
+              const parties = callParties(call, t);
               const agentLabel = resolveAgentLabel({
                 call,
                 agents,
                 agentsLoading,
                 agentsError,
-              });
+              }, t);
 
               return (
                 <li key={call.callId}>
@@ -260,7 +261,7 @@ export function RecentCallsTable({
                         variant={statusVariant(call.status)}
                         className={`w-fit shrink-0 capitalize ${statusClass(call.status)}`}
                       >
-                        {t(formatStatus(call.status))}
+                        {formatStatus(call.status, t)}
                       </Badge>
                     </div>
                     <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
@@ -279,13 +280,13 @@ export function RecentCallsTable({
                       <div>
                         <dt className="text-muted-foreground"><Trans>{"Duration"}</Trans></dt>
                         <dd className="font-medium text-foreground">
-                          {formatDuration(call.durationSeconds)}
+                          {formatDuration(call.durationSeconds, t)}
                         </dd>
                       </div>
                       <div>
                         <dt className="text-muted-foreground"><Trans>{"Direction"}</Trans></dt>
                         <dd className="font-medium capitalize text-foreground">
-                          {call.direction ?? <Trans>{"unknown"}</Trans>}
+                          {call.direction === "inbound" ? t("Inbound") : call.direction === "outbound" ? t("Outbound") : t("Unknown")}
                         </dd>
                       </div>
                     </dl>
@@ -327,13 +328,13 @@ export function RecentCallsTable({
               </TableHeader>
               <TableBody>
                 {summary.recent.map((call) => {
-                  const parties = callParties(call);
+                  const parties = callParties(call, t);
                   const agentLabel = resolveAgentLabel({
                     call,
                     agents,
                     agentsLoading,
                     agentsError,
-                  });
+                  }, t);
                   const number = primaryNumber(call, parties);
                   const DirectionIcon =
                     call.direction === "inbound" ? PhoneIncoming : PhoneOutgoing;
@@ -360,14 +361,14 @@ export function RecentCallsTable({
                         </span>
                       </TableCell>
                       <TableCell className="align-middle text-sm font-semibold tabular-nums text-foreground">
-                        {formatDuration(call.durationSeconds)}
+                        {formatDuration(call.durationSeconds, t)}
                       </TableCell>
                       <TableCell className="align-middle">
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-medium capitalize ${directionClasses(call.direction)}`}
                         >
                           <DirectionIcon className="size-3.5" aria-hidden="true" />
-                          {call.direction ?? <Trans>{"unknown"}</Trans>}
+                          {call.direction === "inbound" ? t("Inbound") : call.direction === "outbound" ? t("Outbound") : t("Unknown")}
                         </span>
                       </TableCell>
                       <TableCell className="align-middle">
@@ -375,7 +376,7 @@ export function RecentCallsTable({
                           variant={statusVariant(call.status)}
                           className={`w-fit shrink-0 rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${statusClass(call.status)}`}
                         >
-                          {call.status}
+                          {formatStatus(call.status, t)}
                         </Badge>
                       </TableCell>
                       <TableCell className="pr-5 text-right align-middle">

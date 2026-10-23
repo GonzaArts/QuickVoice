@@ -1,6 +1,7 @@
 "use client";
 
 import { Trans } from "@/src/i18n/Trans";
+import { localizeError } from "@/src/i18n/errors";
 import { useT } from "@/src/i18n/provider";
 import Link from "next/link";
 import { Suspense, useState } from "react";
@@ -46,7 +47,7 @@ function ForgotPasswordForm() {
  setSent(true);
  toast.message(t("Check your email for next steps"));
  } catch (err) {
- toast.error(err instanceof Error ? err.message : t("Could not send reset email"));
+ toast.error(localizeError(t, err, "Could not send reset email"));
  } finally {
  setLoading(false);
  }

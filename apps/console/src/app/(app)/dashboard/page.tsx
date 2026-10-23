@@ -172,6 +172,7 @@ export default function DashboardPage() {
     ? getApiErrorStateCopy(error, {
         resourceName: "dashboard",
         isOnline,
+        t: translateUi,
         overrides: {
           forbidden: {
             title: "Dashboard access required",

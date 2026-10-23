@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import { useEffect, useRef } from "react";
@@ -48,7 +50,7 @@ export function useCreateKb() {
       toast.success(translateUi("Document added"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not add document"));
+      toast.error(localizeError(translateUi, err, "Could not add document"));
     },
   });
 }
@@ -65,7 +67,7 @@ export function useUpdateKb() {
       toast.success(translateUi("Document updated and queued for processing"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not update document"));
+      toast.error(localizeError(translateUi, err, "Could not update document"));
     },
   });
 }
@@ -81,7 +83,7 @@ export function useDeleteKb() {
       toast.success(translateUi("Document deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not delete document"));
+      toast.error(localizeError(translateUi, err, "Could not delete document"));
     },
   });
 }
@@ -96,7 +98,7 @@ export function useRetryKb() {
       toast.success(translateUi("Document queued for retry"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not retry document"));
+      toast.error(localizeError(translateUi, err, "Could not retry document"));
     },
   });
 }

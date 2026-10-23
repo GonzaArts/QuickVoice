@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/src/i18n/provider";
 import { Trans } from "@/src/i18n/Trans";
 
 export function ExtractedDataPanel({
@@ -11,6 +12,7 @@ export function ExtractedDataPanel({
  data: unknown;
  evaluation: unknown;
 }) {
+ const t = useT();
  const meta =
   metadata && typeof metadata === "object" && !Array.isArray(metadata)
    ? (metadata as Record<string, unknown>)
@@ -29,7 +31,7 @@ export function ExtractedDataPanel({
  {metadataEntries.map(([key, value]) => (
  <div key={key} className="space-y-1">
  <p className="text-xs text-muted-foreground">{formatLabel(key)}</p>
- <p className="break-words text-sm">{displayValue(value)}</p>
+ <p className="break-words text-sm">{displayValue(value, t)}</p>
  </div>
  ))}
  </div>
@@ -82,8 +84,8 @@ function formatLabel(key: string) {
   .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function displayValue(value: unknown) {
- if (typeof value === "boolean") return value ? "Yes" : "No";
+function displayValue(value: unknown, t: (key: string) => string) {
+ if (typeof value === "boolean") return t(value ? "Yes" : "No");
  if (typeof value === "object") return JSON.stringify(value);
  return String(value);
 }

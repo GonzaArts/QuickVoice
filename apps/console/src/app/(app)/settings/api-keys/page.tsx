@@ -1,6 +1,10 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { useConsoleSession } from "@/src/hooks/use-console-session";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useState } from "react";
@@ -75,8 +79,9 @@ const schema = z.object({
 });
 
 export default function ApiKeysPage() {
+  const { locale } = useLocale();
   const translateUi = useT();
-  const { data: session } = authClient.useSession();
+  const { data: session } = useConsoleSession();
   const orgId = session?.session?.activeOrganizationId ?? null;
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -134,7 +139,7 @@ export default function ApiKeysPage() {
       form.reset();
       await refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : translateUi("Could not create key"));
+      toast.error(localizeError(translateUi, err, "Could not create key"));
     } finally {
       setCreating(false);
     }
@@ -153,7 +158,7 @@ export default function ApiKeysPage() {
       toast.success(translateUi("Key revoked"));
       await refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : translateUi("Could not revoke key"));
+      toast.error(localizeError(translateUi, err, "Could not revoke key"));
     }
   }
 
@@ -166,7 +171,7 @@ export default function ApiKeysPage() {
 
   return (
     <div className="space-y-6">
-      {loadError ? <p role="alert" className="text-sm text-destructive">{loadError.message}</p> : null}
+      {loadError ? <p role="alert" className="text-sm text-destructive">{localizeError(translateUi, loadError)}</p> : null}
       <section className="border bg-card p-6">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div className="space-y-1">
@@ -275,7 +280,7 @@ export default function ApiKeysPage() {
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
                     {k.createdAt
-                      ? new Date(k.createdAt).toLocaleDateString()
+                      ? new Date(k.createdAt).toLocaleDateString(localeCode(locale))
                       : "—"}
                   </TableCell>
                   <TableCell className="text-right">

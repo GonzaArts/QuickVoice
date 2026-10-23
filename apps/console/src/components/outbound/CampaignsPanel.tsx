@@ -2,6 +2,7 @@
 
 import { Trans } from "@/src/i18n/Trans";
 import { useLocale, useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 import type { Locale } from "@/src/i18n/config";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -85,7 +86,34 @@ import { downloadRowsAsCsv } from "@/src/lib/export-csv";
 
 type CampaignStatus = BatchCampaign["status"];
 
-type CampaignErrorState = string | null;
+type CampaignErrorState =
+  | { kind: "invalid-json"; field: string }
+  | { kind: "api"; error: unknown; fallback: string }
+  | null;
+
+class CampaignPayloadParseError extends Error {
+  constructor(readonly field: string) {
+    super("Invalid campaign JSON payload");
+  }
+}
+
+function campaignErrorState(error: unknown, fallback: string): CampaignErrorState {
+  if (error instanceof CampaignPayloadParseError) {
+    return { kind: "invalid-json", field: error.field };
+  }
+  return { kind: "api", error, fallback };
+}
+
+function campaignErrorText(
+  t: (key: string, vars?: Record<string, string | number>) => string,
+  error: CampaignErrorState,
+) {
+  if (!error) return "";
+  if (error.kind === "invalid-json") {
+    return t("Invalid JSON in {field}", { field: t(error.field) });
+  }
+  return localizeError(t, error.error, error.fallback);
+}
 
 
 function fmtDate(value: string | null, locale: Locale, t: (key: string) => string) {
@@ -171,9 +199,8 @@ function downloadCampaignCsv(
 function safeJsonParse<T>(source: string, label: string): T {
   try {
     return JSON.parse(source) as T;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Invalid JSON";
-    throw new Error(`${label}: ${message}`);
+  } catch {
+    throw new CampaignPayloadParseError(label);
   }
 }
 
@@ -278,13 +305,13 @@ function CampaignIntelligencePanel({
     try {
       const payload = safeJsonParse<CampaignExperimentAssignmentRequest>(
         assignmentInput,
-        t("Experiment payload"),
+        "Experiment payload",
       );
       const response = await outboundApi.computeCampaignAssignments(shownCampaign.campaignId, payload);
       setAssignmentResult(response);
       toast.success(t("Assignment preview generated"));
     } catch (error) {
-      setAssignmentError(error instanceof Error ? error.message : t("Could not compute assignment preview"));
+      setAssignmentError(campaignErrorState(error, "Could not compute assignment preview"));
     } finally {
       setAssignmentLoading(false);
     }
@@ -298,13 +325,13 @@ function CampaignIntelligencePanel({
     try {
       const payload = safeJsonParse<CampaignConversionEventInput>(
         conversionInput,
-        t("Conversion payload"),
+        "Conversion payload",
       );
       const response = await outboundApi.validateCampaignConversion(shownCampaign.campaignId, payload);
       setConversionValidationResult(response);
       toast.success(t("Conversion validated"));
     } catch (error) {
-      setConversionError(error instanceof Error ? error.message : t("Could not validate conversion"));
+      setConversionError(campaignErrorState(error, "Could not validate conversion"));
     } finally {
       setConversionValidationLoading(false);
     }
@@ -318,13 +345,13 @@ function CampaignIntelligencePanel({
     try {
       const payload = safeJsonParse<CampaignConversionEventInput>(
         conversionInput,
-        t("Conversion payload"),
+        "Conversion payload",
       );
       const response = await outboundApi.ingestCampaignConversion(shownCampaign.campaignId, payload);
       setConversionIngestResult(response);
       toast.success(t("Conversion event ingested"));
     } catch (error) {
-      setConversionError(error instanceof Error ? error.message : t("Could not ingest conversion"));
+      setConversionError(campaignErrorState(error, "Could not ingest conversion"));
     } finally {
       setConversionIngestLoading(false);
     }
@@ -346,7 +373,7 @@ function CampaignIntelligencePanel({
       setReportResult(response);
       toast.success(t("Report preview generated"));
     } catch (error) {
-      setReportError(error instanceof Error ? error.message : t("Could not build report"));
+      setReportError(campaignErrorState(error, "Could not build report"));
     } finally {
       setReportLoading(false);
     }
@@ -374,7 +401,7 @@ function CampaignIntelligencePanel({
             {assignmentLoading ? <Loader2 className="animate-spin" /> : null}
             <Trans>{"Compute assignments"}</Trans>
           </Button>
-          {assignmentError ? <p className="mt-2 text-sm text-destructive">{assignmentError}</p> : null}
+          {assignmentError ? <p className="mt-2 text-sm text-destructive">{campaignErrorText(t, assignmentError)}</p> : null}
           {assignmentResult ? (
             <pre className="mt-2 max-h-48 overflow-auto rounded border bg-muted/30 p-2 text-xs">
               {JSON.stringify(assignmentResult, null, 2)}
@@ -415,7 +442,7 @@ function CampaignIntelligencePanel({
               <Trans>{"Ingest conversion"}</Trans>
             </Button>
           </div>
-          {conversionError ? <p className="mt-2 text-sm text-destructive">{conversionError}</p> : null}
+          {conversionError ? <p className="mt-2 text-sm text-destructive">{campaignErrorText(t, conversionError)}</p> : null}
           {conversionValidationResult ? (
             <div className="mt-2">
               <p className="text-sm font-medium"><Trans>{"Validation result"}</Trans></p>
@@ -465,7 +492,7 @@ function CampaignIntelligencePanel({
             {reportLoading ? <Loader2 className="animate-spin" /> : null}
             <Trans>{"Build report preview"}</Trans>
           </Button>
-          {reportError ? <p className="mt-2 text-sm text-destructive">{reportError}</p> : null}
+          {reportError ? <p className="mt-2 text-sm text-destructive">{campaignErrorText(t, reportError)}</p> : null}
           {reportResult ? (
             <pre className="mt-2 max-h-64 overflow-auto rounded border bg-muted/30 p-2 text-xs">
               {JSON.stringify(reportResult, null, 2)}

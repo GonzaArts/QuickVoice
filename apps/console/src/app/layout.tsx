@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { I18nProvider } from "@/src/i18n/provider";
-import { LOCALE_COOKIE, localeCode, normalizeLocale } from "@/src/i18n/config";
+import { LOCALE_COOKIE, localeCode, normalizeLocale, translate } from "@/src/i18n/config";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/src/lib/utils";
-import { Toaster } from "sonner";
+import { LocalizedToaster } from "@/src/i18n/toaster";
 import { ThemeProvider } from "@/src/providers/theme-provider";
 import { QueryProvider } from "@/src/providers/query-provider";
 import { TooltipProvider } from "@/src/components/ui/tooltip";
@@ -22,11 +22,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "QuickVoice",
-  description:
-    "QuickVoice is a platform for creating and managing voice agents.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const locale = normalizeLocale(cookieStore.get(LOCALE_COOKIE)?.value);
+  return {
+    title: "QuickVoice",
+    description: translate(locale, "QuickVoice is a platform for creating and managing voice agents."),
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -53,7 +56,7 @@ export default async function RootLayout({
           <QueryProvider>
             <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           </QueryProvider>
-          <Toaster richColors closeButton />
+          <LocalizedToaster />
           </ThemeProvider>
         </I18nProvider>
       </body>

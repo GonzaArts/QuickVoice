@@ -485,7 +485,9 @@ export function CallsTable({
 
                 {/* page indicator */}
                 <span className="whitespace-nowrap font-medium text-foreground">
-                  <Trans>{"Page"}</Trans> {displayPage}{allFetched ? ` of ${totalKnownPages}` : ""}
+                  {allFetched
+                    ? translateUi("Page {page} of {pages}", { page: displayPage, pages: totalKnownPages })
+                    : <><Trans>{"Page"}</Trans> {displayPage}</>}
                 </span>
 
                 {/* nav buttons */}

@@ -1,6 +1,9 @@
 "use client";
 
 import { useT } from "@/src/i18n/provider";
+import { useLocale } from "@/src/i18n/provider";
+import { localeCode } from "@/src/i18n/config";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Trans } from "@/src/i18n/Trans";
 import { useMemo, useState } from "react";
@@ -83,19 +86,24 @@ const STATUS_OPTIONS: Array<"all" | CallStatus> = [
   "PROCESSED",
 ];
 
-function statusLabel(status: string) {
-  return status.replaceAll("_", " ").toLowerCase();
+function statusLabel(status: string, t: (key: string) => string) {
+  const labels: Record<string, string> = {
+    SCHEDULED: "Scheduled", IN_PROGRESS: "In progress", COMPLETED: "Completed",
+    FAILED: "Failed", NOT_ANSWERED: "Not answered", PROCESSED: "Processed",
+    PENDING: "Pending", CANCELLED: "Cancelled", QUEUED: "Queued",
+  };
+  return labels[status] ? t(labels[status]) : status.replaceAll("_", " ").toLowerCase();
 }
 
-function fmtDate(value: string | null) {
+function fmtDate(value: string | null, locale: string) {
   if (!value) return "-";
-  return new Date(value).toLocaleString("en-US", {
+  return new Date(value).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    hour12: true,
+    hour12: locale.startsWith("en"),
   });
 }
 
@@ -145,6 +153,8 @@ function OutboundCallDetailDialog({
   call: OutboundCall | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const translateUi = useT();
+  const { locale } = useLocale();
   const { data: detail, isLoading } = useOutboundCall(call?.outboundId);
   const shown = detail ?? call;
 
@@ -168,13 +178,13 @@ function OutboundCallDetailDialog({
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="border p-3">
                 <p className="text-xs text-muted-foreground"><Trans>{"Status"}</Trans></p>
-                <Badge className="mt-2 capitalize" variant={statusVariant(shown.status)}>
-                  {statusLabel(shown.status)}
+                <Badge className="mt-2" variant={statusVariant(shown.status)}>
+                  {statusLabel(shown.status, translateUi)}
                 </Badge>
               </div>
               <div className="border p-3">
                 <p className="text-xs text-muted-foreground"><Trans>{"Mode"}</Trans></p>
-                <p className="mt-1 font-medium capitalize">{shown.mode}</p>
+                <p className="mt-1 font-medium">{translateUi(shown.mode === "campaign" ? "Campaign" : "Quick")}</p>
               </div>
               <div className="border p-3">
                 <p className="text-xs text-muted-foreground"><Trans>{"Duration"}</Trans></p>
@@ -195,17 +205,17 @@ function OutboundCallDetailDialog({
               </div>
               <div className="border p-3">
                 <p className="text-xs text-muted-foreground"><Trans>{"Scheduled"}</Trans></p>
-                <p className="mt-1 font-medium">{fmtDate(shown.scheduledAt)}</p>
+                <p className="mt-1 font-medium">{fmtDate(shown.scheduledAt, localeCode(locale))}</p>
               </div>
               <div className="border p-3">
                 <p className="text-xs text-muted-foreground"><Trans>{"Updated"}</Trans></p>
-                <p className="mt-1 font-medium">{fmtDate(shown.updatedAt)}</p>
+                <p className="mt-1 font-medium">{fmtDate(shown.updatedAt, localeCode(locale))}</p>
               </div>
             </div>
 
             {shown.failureReason || shown.cancellationReason ? (
               <div className="border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-                {shown.failureReason ?? shown.cancellationReason}
+                {localizeError(translateUi, shown.failureReason ?? shown.cancellationReason, "The outbound call could not be completed.")}
               </div>
             ) : null}
 
@@ -232,6 +242,7 @@ function OutboundCallDetailDialog({
 
 export function OutboundCallsPanel() {
   const translateUi = useT();
+  const { locale } = useLocale();
   const { data: agents = [] } = useAgents();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"all" | CallStatus>("all");
@@ -331,7 +342,7 @@ export function OutboundCallsPanel() {
           <SelectContent>
             {STATUS_OPTIONS.map((item) => (
               <SelectItem key={item} value={item} className="capitalize">
-                {item === "all" ? <Trans>{"All statuses"}</Trans> : statusLabel(item)}
+              {item === "all" ? <Trans>{"All statuses"}</Trans> : statusLabel(item, translateUi)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -388,18 +399,18 @@ export function OutboundCallsPanel() {
                         <p className="font-mono text-xs">{call.phoneNumber}</p>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        <Trans>{"From"}</Trans> {call.fromNumber} · {call.mode}
+                        <Trans>{"From"}</Trans> {call.fromNumber} · {translateUi(call.mode === "campaign" ? "Campaign" : "Quick")}
                       </p>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge className="capitalize" variant={statusVariant(call.status)}>
-                      {statusLabel(call.status)}
+                    <Badge variant={statusVariant(call.status)}>
+                      {statusLabel(call.status, translateUi)}
                     </Badge>
                   </TableCell>
                   <TableCell>{agentNames.get(call.agentId ?? "") ?? "-"}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {fmtDate(call.scheduledAt)}
+                    {fmtDate(call.scheduledAt, localeCode(locale))}
                   </TableCell>
                   <TableCell className="tabular-nums text-muted-foreground">
                     {fmtDuration(call.callLog?.durationSeconds)}

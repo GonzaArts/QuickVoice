@@ -15,6 +15,8 @@ import {
 
 import { cn } from "@/src/lib/utils"
 import { Label } from "@/src/components/ui/label"
+import { useT } from "@/src/i18n/provider"
+import { localizeValidationMessage } from "@/src/i18n/errors"
 
 const Form = FormProvider
 
@@ -137,7 +139,8 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message ?? "") : props.children
+  const t = useT()
+  const body = error ? localizeValidationMessage(t, String(error?.message ?? "")) : props.children
 
   if (!body) {
     return null

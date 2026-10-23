@@ -9,6 +9,7 @@ import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { LanguageSwitcher } from "@/src/components/shell/LanguageSwitcher";
 import { useT } from "@/src/i18n/provider";
+import { localizeError } from "@/src/i18n/errors";
 
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -77,7 +78,7 @@ export default function ProfilePage() {
  toast.success(translateUi("Profile updated"));
  profileForm.reset(values);
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not update profile"));
+ toast.error(localizeError(translateUi, err, "Could not update profile"));
  } finally {
  setSaving(false);
  }
@@ -94,7 +95,7 @@ export default function ProfilePage() {
  toast.success(translateUi("Password changed"));
  passwordForm.reset();
  } catch (err) {
- toast.error(err instanceof Error ? err.message : translateUi("Could not change password"));
+ toast.error(localizeError(translateUi, err, "Could not change password"));
  } finally {
  setChangingPw(false);
  }

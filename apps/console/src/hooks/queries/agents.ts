@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -53,7 +55,7 @@ export function useCreateAgentPreviewSession(agentId: string) {
     mutationFn: (input?: CreatePreviewSessionInput) =>
       agentsApi.createPreviewSession(agentId, input),
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not start preview"));
+      toast.error(localizeError(translateUi, err, "Could not start preview"));
     },
   });
 }
@@ -67,7 +69,7 @@ export function useCreateAgent() {
       qc.invalidateQueries({ queryKey: queryKeys.agents.list() });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not create agent"));
+      toast.error(localizeError(translateUi, err, "Could not create agent"));
     },
   });
 }
@@ -82,7 +84,7 @@ export function useUpdateAgent(id: string) {
       qc.invalidateQueries({ queryKey: queryKeys.agents.detail(id) });
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not update agent"));
+      toast.error(localizeError(translateUi, err, "Could not update agent"));
     },
   });
 }
@@ -97,7 +99,7 @@ export function useDeleteAgent() {
       toast.success(translateUi("Agent deleted"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not delete agent"));
+      toast.error(localizeError(translateUi, err, "Could not delete agent"));
     },
   });
 }
@@ -117,7 +119,7 @@ export function useSaveAgentConfig(id: string) {
       toast.success(translateUi("Saved"));
     },
     onError: (err: Error) => {
-      toast.error(err.message || translateUi("Could not save configuration"));
+      toast.error(localizeError(translateUi, err, "Could not save configuration"));
     },
   });
 }

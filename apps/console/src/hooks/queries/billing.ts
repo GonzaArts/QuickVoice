@@ -1,5 +1,7 @@
 "use client";
 
+import { localizeError } from "@/src/i18n/errors";
+
 import { useT } from "@/src/i18n/provider";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -34,7 +36,7 @@ export function useCreateTopUpCheckout() {
     mutationFn: (input: CreateTopUpCheckoutInput) =>
       billingApi.createTopUpCheckout(input),
     onError: (error: Error) => {
-      toast.error(error.message || translateUi("Could not start the top-up"));
+      toast.error(localizeError(translateUi, error, "Could not start the top-up"));
     },
   });
 }
@@ -44,7 +46,7 @@ export function useCreatePaymentMethodSetup() {
   return useMutation({
     mutationFn: billingApi.createPaymentMethodSetup,
     onError: (error: Error) => {
-      toast.error(error.message || translateUi("Could not start card setup"));
+      toast.error(localizeError(translateUi, error, "Could not start card setup"));
     },
   });
 }
@@ -63,7 +65,7 @@ export function useUpdateAutoRecharge() {
       toast.success(translateUi("Auto-recharge settings saved"));
     },
     onError: (error: Error) => {
-      toast.error(error.message || translateUi("Could not save auto-recharge settings"));
+      toast.error(localizeError(translateUi, error, "Could not save auto-recharge settings"));
     },
   });
 }

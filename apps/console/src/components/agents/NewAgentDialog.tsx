@@ -185,11 +185,11 @@ export function NewAgentDialog() {
                           <Icon className="size-4" />
                         </span>
                         <p className="text-sm font-medium text-foreground">
-                          {template.title}
+                          <Trans>{template.title}</Trans>
                         </p>
                       </div>
                       <p className="text-xs leading-5 text-muted-foreground">
-                        {template.description}
+                        <Trans>{template.description}</Trans>
                       </p>
                     </div>
                   );
